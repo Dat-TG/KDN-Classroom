@@ -41,4 +41,16 @@ theme.typography.h1 = {
   },
 };
 
+theme.typography.subtitle1 = {
+  fontSize: 12,
+  color: "grey",
+  fontWeight: "normal",
+  "@media (min-width:600px)": {
+    fontSize: 10,
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: 14,
+  },
+};
+
 export default theme;

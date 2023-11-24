@@ -1,5 +1,11 @@
 {
     "classroomUppercase": "Lớp học",
     "english": "Tiếng Anh",
-    "vietnamese": "Tiếng Việt"
+    "vietnamese": "Tiếng Việt",
+    "home": "Màn hình chính",
+    "calendar": "Lịch",
+    "enrolled": "Đã đăng ký",
+    "todo": "Việc cần làm",
+    "archivedClasses": "Lớp học đã lưu trữ",
+    "settings": "Cài đặt"
 }

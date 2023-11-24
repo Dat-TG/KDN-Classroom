@@ -121,7 +121,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
 
   //const { user } = React.useContext(AuthContext);
 
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
 
   return (
     <Box sx={{ flexGrow: 1 }}>

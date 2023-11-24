@@ -1,5 +1,11 @@
 {
     "classroomUppercase": "Classroom",
     "english": "English",
-    "vietnamese": "Vietnamese"
+    "vietnamese": "Vietnamese",
+    "home": "Home",
+    "calendar": "Calendar",
+    "enrolled": "Enrolled",
+    "todo": "To-do",
+    "archivedClasses": "Archived classes",
+    "settings": "Settings"
 }
