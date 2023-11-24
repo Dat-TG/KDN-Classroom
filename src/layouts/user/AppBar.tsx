@@ -18,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 //import { AuthContext } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
 import { useTranslation } from "react-i18next";
+import LanguageMenu from "./LanguageMenu";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -159,18 +160,22 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                 />
               </Search>
               <Box sx={{ flexGrow: 1 }} />
-              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <Box
+                sx={{
+                  display: {
+                    xs: "none",
+                    md: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                  },
+                }}
+              >
                 <IconButton
-                  size="large"
-                  aria-label="show 4 new mails"
-                  color="inherit"
-                >
-                  <Badge badgeContent={4} color="error">
-                    <MailIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  size="large"
+                  sx={{
+                    width: "40px",
+                    height: "40px", // Set button size
+                  }}
                   aria-label="show 17 new notifications"
                   color="inherit"
                 >
@@ -178,6 +183,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
+                <LanguageMenu />
                 <IconButton
                   size="large"
                   edge="end"
