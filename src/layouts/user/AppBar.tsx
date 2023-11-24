@@ -17,6 +17,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link, useNavigate } from "react-router-dom";
 //import { AuthContext } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
+import { useTranslation } from "react-i18next";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -119,6 +120,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
 
   //const { user } = React.useContext(AuthContext);
 
+  const [t, i18n] = useTranslation("global");
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       {props.isLoggedIn && (
@@ -144,7 +147,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   navigate("/");
                 }}
               >
-                CLASS ROOM
+                {t("classroomUppercase")}
               </Typography>
               <Search>
                 <SearchIconWrapper>
@@ -185,7 +188,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   color="inherit"
                 >
                   <Avatar
-                   // alt={`${user?.firstname} ${user?.lastname}`}
+                    // alt={`${user?.firstname} ${user?.lastname}`}
                     //src={user?.avatar}
                     style={{
                       border: "2px solid white",
