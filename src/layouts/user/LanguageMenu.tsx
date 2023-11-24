@@ -43,9 +43,9 @@ const LanguageMenu: React.FC = () => {
           height: "30px", // Set button size
           padding: 0, // Remove padding to fit the image properly
           overflow: "hidden", //  Hide overflow if the image exceeds the button size
-          backgroundColor: "grey.100",
+          backgroundColor: "grey.300",
           ":hover": {
-            backgroundColor: "grey.300",
+            backgroundColor: "grey.500",
           },
         }}
         onClick={handleClick}

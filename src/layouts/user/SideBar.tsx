@@ -9,13 +9,13 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { Avatar, Divider, Typography } from "@mui/material";
 import {
+  Archive,
   ArrowDropDown,
   ArrowRight,
   CalendarMonth,
-  Drafts,
-  Email,
   Home,
   School,
+  Settings,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -50,20 +50,21 @@ class MenuOption {
 class Course {
   name: string;
   topic?: string;
-  onClick: () => void;
+
+  slug?: string;
 
   constructor({
     name,
     topic,
-    onClick,
+    slug,
   }: {
     name: string;
     topic?: string;
-    onClick: () => void;
+    slug?: string;
   }) {
     this.name = name;
     this.topic = topic;
-    this.onClick = onClick;
+    this.slug = slug;
   }
 }
 
@@ -95,18 +96,16 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
       case "/calendar":
         setSelectedIndex(1);
         break;
-      case "/school":
+      case "/todo":
         setSelectedIndex(2);
         break;
-      case "/inbox":
+      case "/archived":
         setSelectedIndex(3);
         break;
-      case "/sendemail":
+      case "/settings":
         setSelectedIndex(4);
         break;
-      case "/drafts":
-        setSelectedIndex(5);
-        break;
+
       default:
         setSelectedIndex(-1);
         break;
@@ -124,7 +123,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     new MenuOption({
       name: t("calendar"),
       icon: <CalendarMonth />,
-      onClick: () => {},
+      onClick: () => {
+        navigate("/calendar");
+      },
     }),
   ];
   const enrolledOption = new MenuOption({
@@ -135,18 +136,28 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     },
   });
   const expanedMenuOptions: MenuOption[] = [
-    new MenuOption({ name: t("todo"), icon: <InboxIcon />, onClick: () => {} }),
+    new MenuOption({
+      name: t("todo"),
+      icon: <InboxIcon />,
+      onClick: () => {
+        navigate("/todo");
+      },
+    }),
   ];
   const menuOptions2: MenuOption[] = [
     new MenuOption({
       name: t("archivedClasses"),
-      icon: <Email />,
-      onClick: () => {},
+      icon: <Archive />,
+      onClick: () => {
+        navigate("/archived");
+      },
     }),
     new MenuOption({
       name: t("settings"),
-      icon: <Drafts />,
-      onClick: () => {},
+      icon: <Settings />,
+      onClick: () => {
+        navigate("/settings");
+      },
     }),
   ];
 
@@ -154,11 +165,11 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     new Course({
       name: "2309-PTUDWNC-20_3",
       topic: "Phát triển ứng dụng web nâng cao",
-      onClick: () => {},
+      slug: "PTUDWNC",
     }),
     new Course({
       name: "Vi tích phân 1B (HK1, 2020-2021)",
-      onClick: () => {},
+      slug: "VTP1B",
     }),
   ];
 
@@ -193,7 +204,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
             pr: 2.5,
           }}
           onClick={() => {
-            setSelectedIndex(index);
+            if (!canExpanded) setSelectedIndex(index);
             item.onClick();
           }}
         >
@@ -251,7 +262,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           }}
           onClick={() => {
             setSelectedIndex(index);
-            item.onClick();
+            navigate(`/course/${item.slug}`);
           }}
         >
           <ListItemIcon
@@ -328,27 +339,27 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         <List>
           <MenuOptionItem
             item={enrolledOption}
-            index={2}
+            index={-2}
             key={t("enrolled")}
             canExpanded={true}
           />
           {isExpanded &&
             expanedMenuOptions.map((item, index) => (
-              <MenuOptionItem item={item} index={index + 3} key={item.name} />
+              <MenuOptionItem item={item} index={index + 2} key={item.name} />
             ))}
           {isExpanded &&
             listCourses.map((item, index) => (
-              <CourseItem index={index + 4} item={item} key={item.name} />
+              <CourseItem
+                index={index + 3 + listCourses.length}
+                item={item}
+                key={item.name}
+              />
             ))}
         </List>
         <Divider />
         <List>
           {menuOptions2.map((item, index) => (
-            <MenuOptionItem
-              item={item}
-              index={index + 4 + listCourses.length}
-              key={item.name}
-            />
+            <MenuOptionItem item={item} index={index + 3} key={item.name} />
           ))}
         </List>
       </div>

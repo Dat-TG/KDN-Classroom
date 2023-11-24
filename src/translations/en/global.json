@@ -7,5 +7,7 @@
     "enrolled": "Enrolled",
     "todo": "To-do",
     "archivedClasses": "Archived classes",
-    "settings": "Settings"
+    "settings": "Settings",
+    "joinClass": "Join class",
+    "createClass": "Create class"
 }
