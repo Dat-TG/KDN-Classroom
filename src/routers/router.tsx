@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import UserLayout from "../layouts/user/UserLayout";
 import HomePage from "../pages/HomePage";
+import AdminLayout from "../layouts/admin/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,28 @@ const router = createBrowserRouter([
       },
       {
         path: "/settings",
+        element: <div>Settings</div>,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <div>Dashboard</div>,
+      },
+      {
+        path: "classes",
+        element: <div>Classes management</div>,
+      },
+      {
+        path: "users",
+        element: <div>Users management</div>,
+      },
+      {
+        path: "settings",
         element: <div>Settings</div>,
       },
     ],

@@ -11,5 +11,9 @@
     "joinClass": "Tham gia lớp học",
     "createClass": "Tạo lớp học",
     "profile": "Hồ sơ",
-    "logOut": "Đăng xuất"
+    "logOut": "Đăng xuất",
+    "classroomAdmin": "Quản trị lớp học",
+    "users": "Người dùng",
+    "classes": "Lớp học",
+    "dashboard": "Bảng điều khiển"
 }
