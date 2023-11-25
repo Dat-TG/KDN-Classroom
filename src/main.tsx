@@ -21,7 +21,7 @@ import { I18nextProvider } from "react-i18next";
 
 i18next.init({
   interpolation: { escapeValue: false }, // React already does escaping
-  lng: "en", // language to use
+  lng: localStorage.getItem("language") ?? "en", // language to use
   resources: {
     en: {
       global: global_en,
