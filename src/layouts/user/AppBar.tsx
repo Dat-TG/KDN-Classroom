@@ -28,6 +28,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
     props.toggleSidebar();
   };
 
+  const [t] = useTranslation("global");
+
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -70,15 +72,13 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
           navigate("/profile");
         }}
       >
-        Profile
+        {t("profile")}
       </MenuItem>
-      <MenuItem onClick={props.onLogout}>Log out</MenuItem>
+      <MenuItem onClick={props.onLogout}>{t("logOut")}</MenuItem>
     </Menu>
   );
 
   //const { user } = React.useContext(AuthContext);
-
-  const [t] = useTranslation("global");
 
   const location = useLocation();
   const [breadcrumb, setBreadcrumb] = React.useState("");

@@ -9,5 +9,7 @@
     "archivedClasses": "Archived classes",
     "settings": "Settings",
     "joinClass": "Join class",
-    "createClass": "Create class"
+    "createClass": "Create class",
+    "profile": "Profile",
+    "logOut": "Log out"
 }
