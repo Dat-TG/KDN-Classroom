@@ -11,5 +11,9 @@
     "joinClass": "Join class",
     "createClass": "Create class",
     "profile": "Profile",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "classroomAdmin": "Classroom Admin",
+    "users": "Users",
+    "classes": "Classes",
+    "dashboard": "Dashboard"
 }
