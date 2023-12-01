@@ -15,6 +15,21 @@ function LogInPage() {
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper elevation={3} style={{ padding: "32px", borderRadius: "7px", textAlign: "center" }}>
           <LogInForm />
+          <Stack
+            spacing={0.5}
+            direction="row"
+            useFlexGap
+            flexWrap="wrap"
+            justifyContent={"right"}
+            marginTop={"16px"}
+          >
+            <Link
+              to={"/forgotten"}
+              style={{ textDecoration: "none", color: "#0074D9" }}
+            >
+              Forgot Password?
+            </Link>
+          </Stack>
           <div
             className="or-divider"
             style={{

@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage";
 import AdminLayout from "../layouts/admin/AdminLayout";
 import LogInPage from "../pages/LogInPage";
 import RegisterPage from "../pages/RegisterPage";
+import ForgotPage from "../pages/ForgotPasswordPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LogInPage />,
+      },
+      {
+        path: "/forgotten",
+        element: <ForgotPage />,
       },
       {
         path: "/register",

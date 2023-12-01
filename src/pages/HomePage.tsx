@@ -1,14 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { userApi } from "../api/axios";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <button
-      onClick={async () => {
-        const res = await userApi.login({
-          userName: "dat@gmail.com",
-          password: "1234567",
-        });
-        console.log(res);
+      onClick={() => {
+        navigate("/login");
       }}
     >
       Login
