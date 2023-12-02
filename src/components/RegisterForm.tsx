@@ -7,11 +7,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
-import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { registerUser } from "../store/user/thunkApi";
 // import { AuthContext } from "../context/AuthContext";
 // import { useUser } from "../hooks/useUser";
 
@@ -36,6 +38,8 @@ function RegisterForm() {
     getValues,
   } = useForm<Inputs>();
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // Handle register logic here
     setIsLoading(true);
@@ -46,6 +50,14 @@ function RegisterForm() {
     //   lastname: data.lastname,
     //   callback: () => setIsLoading(false),
     // });
+
+    await dispatch(registerUser({
+      emailAddress: data.email,
+      password: data.password,
+      firstname: data.firstname,
+      surname: data.lastname,
+    }));
+
 
     //console.log(data);
   };

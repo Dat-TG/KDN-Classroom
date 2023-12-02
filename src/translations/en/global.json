@@ -40,5 +40,7 @@
     "saveChanges": "Save changes",
     "profilePicture": "Profile picture",
     "setNewProfilePicture": "Set new profile picture",
-    "backToLogin": "BACK TO LOGIN"
+    "backToLogin": "BACK TO LOGIN",
+    "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
+    "loginSuccessfully": "Login successfully"
 }
