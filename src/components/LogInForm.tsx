@@ -7,11 +7,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../store";
+import { loginUser } from "../store/user/thunkApi";
+import { sGetUserInfo } from "../store/user/selector";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -27,7 +31,7 @@ function LogInForm() {
     document.title = "Log In";
   }, []);
 
-  // const { user } = useContext(AuthContext);
+  const user = useSelector(sGetUserInfo);
 
   // const { login } = useUser();
 
@@ -37,24 +41,26 @@ function LogInForm() {
     formState: { errors },
   } = useForm<Inputs>();
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
-    // Handle login logic here
-    // await login({
-    //   emailAddress: data.email,
-    //   password: data.password,
-    //   callback: ()=>setIsLoading(false),
-    // });
-    
+    await dispatch(
+      loginUser({
+        userName: data.email,
+        password: data.password,
+      })
+    );
+    setIsLoading(false);
   };
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // if (user != null) {
-  //   return <Navigate to="/" replace />;
-  // }
+  const { t } = useTranslation("global");
 
-  const {t}=useTranslation("global");
+  if (user != null) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -4,7 +4,7 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 
-import { IUserStore } from ".";
+
 import { withParamsToastCatcher } from "../toastCatcher";
 import { userApi } from "../../api/axios";
 import { IPaginationParams } from "../../types/pagination";
@@ -24,6 +24,7 @@ import {
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
+import { IUserStore } from "./type";
 
 export const registerUser = createAsyncThunk(
   "user/register",
@@ -112,64 +113,63 @@ export const updateUserRolePermissions = createAsyncThunk(
 export const extraReducers = (
   builders: ActionReducerMapBuilder<IUserStore>
 ) => {
-  builders.addCase(
-    loginUser.fulfilled,
-    (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
-      localStorage.setItem("accessToken", action.payload.accessToken);
-      localStorage.setItem("refreshToken", action.payload.refreshToken);
-    }
-  );
-  builders.addCase(
-    registerUser.fulfilled,
-    (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
-      localStorage.setItem("accessToken", action.payload.accessToken);
-      localStorage.setItem("refreshToken", action.payload.refreshToken);
-    }
-  );
-
-  builders.addCase(logoutUser.fulfilled, () => {
-    removeAllToken();
-  });
-  builders.addCase(
-    getAllUsers.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUsersRes>) => {
-      state.users = action.payload;
-    }
-  );
-  builders.addCase(updateUser.fulfilled, () => {
-    return;
-  });
-
-  builders.addCase(
-    getUsers.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUsersRes>) => {
-      state.users = action.payload;
-    }
-  );
-  builders.addCase(
-    getUserProfile.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
-      state.userProfile = action.payload;
-      state.hasLoadedProfile = true;
-    }
-  );
-  builders.addCase(
-    updateInformationUser.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
-      state.userProfile = action.payload;
-      state.hasLoadedProfile = true;
-    }
-  );
-  builders.addCase(
-    getUserRoles.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUserRole[]>) => {
-      state.userRoles = action.payload;
-    }
-  );
-  builders.addCase(
-    getUserRolePermissions.fulfilled,
-    (state: IUserStore, action: PayloadAction<IUserRolePermissions>) => {
-      state.userRolePermissions = action.payload;
-    }
-  );
+  builders
+    .addCase(
+      loginUser.fulfilled,
+      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+      }
+    )
+    .addCase(
+      registerUser.fulfilled,
+      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+      }
+    )
+    .addCase(logoutUser.fulfilled, () => {
+      removeAllToken();
+    })
+    .addCase(
+      getAllUsers.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUsersRes>) => {
+        state.users = action.payload;
+      }
+    )
+    .addCase(updateUser.fulfilled, () => {
+      return;
+    })
+    .addCase(
+      getUsers.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUsersRes>) => {
+        state.users = action.payload;
+      }
+    )
+    .addCase(
+      getUserProfile.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
+        state.userProfile = action.payload;
+        state.hasLoadedProfile = true;
+      }
+    )
+    .addCase(
+      updateInformationUser.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
+        state.userProfile = action.payload;
+        state.hasLoadedProfile = true;
+      }
+    )
+    .addCase(
+      getUserRoles.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserRole[]>) => {
+        state.userRoles = action.payload;
+      }
+    )
+    .addCase(
+      getUserRolePermissions.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserRolePermissions>) => {
+        state.userRolePermissions = action.payload;
+      }
+    );
 };

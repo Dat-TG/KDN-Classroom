@@ -43,23 +43,15 @@ function RegisterForm() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // Handle register logic here
     setIsLoading(true);
-    // await register({
-    //   emailAddress: data.email,
-    //   password: data.password,
-    //   firstname: data.firstname,
-    //   lastname: data.lastname,
-    //   callback: () => setIsLoading(false),
-    // });
 
-    await dispatch(registerUser({
+    await dispatch(registerUser( {
       emailAddress: data.email,
       password: data.password,
-      firstname: data.firstname,
+      firstName: data.firstname,
       surname: data.lastname,
     }));
 
-
-    //console.log(data);
+    setIsLoading(false);
   };
 
   const [showPassword, setShowPassword] = useState(false);

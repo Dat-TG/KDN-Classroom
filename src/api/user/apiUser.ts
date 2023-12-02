@@ -19,7 +19,10 @@ export const login = async (data: ILoginUserReq) => {
 };
 
 export const register = async (data: IRegisterUserReq) => {
+  console.log('call api register');
+  console.log(data);
   const res = await AxiosClient.post("/auth/register", data);
+  console.log(res.data);
   return res.data;
 };
 

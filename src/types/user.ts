@@ -11,7 +11,7 @@ export interface IUserLogin {
 export interface IRegisterUserReq {
   emailAddress: string;
   password: string;
-  firstname: string;
+  firstName: string;
   surname: string;
 }
 

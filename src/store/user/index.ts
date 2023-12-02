@@ -1,19 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { extraReducers } from './thunkApi';
-import { userReducer } from './reducer';
-import { IUserProfileRes, IUserRole, IUserRolePermissions, IUsersRes } from '../../types/user';
+import { ActionReducerMapBuilder, PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { userReducer } from "./reducer";
+import { IUserStore } from "./type";
+import { ILoginGoogle, ILoginUserReq } from "../../types/user";
+import { withParamsToastCatcher } from "../toastCatcher";
+import { userApi } from "../../api/axios";
+import i18next from "../../translations/i18";
 
-export interface IUserStore {
-  token: string;
-  refreshToken: string;
-  users: IUsersRes;
-  errorMessage: string;
-  userProfile: IUserProfileRes | null;
-  userRoles: IUserRole[];
-  userRolePermissions: IUserRolePermissions;
-  hasLoadedProfile: boolean;
-  roleName: string;
-}
 const fullPermissions = {
   create: false,
   update: false,
@@ -21,8 +13,8 @@ const fullPermissions = {
   delete: false,
 };
 const initialState: IUserStore = {
-  token: '',
-  refreshToken: '',
+  token: "",
+  refreshToken: "",
   users: {
     data: [],
     hasNextPage: false,
@@ -32,7 +24,7 @@ const initialState: IUserStore = {
     pageCount: 0,
     size: 10,
   },
-  errorMessage: '',
+  errorMessage: "",
   userProfile: null,
   // {
   //   id: NaN,
@@ -63,14 +55,26 @@ const initialState: IUserStore = {
     },
   },
   hasLoadedProfile: false,
-  roleName: '',
+  roleName: "",
 };
-
+const loginUser = createAsyncThunk(
+  "user/login",
+  withParamsToastCatcher(async (params: ILoginUserReq) => {
+    return await userApi.login(params);
+  }, i18next.t("loginSuccessful"))
+);
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: userReducer,
-  extraReducers: extraReducers,
+  extraReducers(builder: ActionReducerMapBuilder<IUserStore>) {
+      builder.addCase(loginUser.fulfilled,
+        (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+          localStorage.setItem("accessToken", action.payload.accessToken);
+          localStorage.setItem("refreshToken", action.payload.refreshToken);
+        });
+  },
 });
-export const { setRoleName, setAvatar } = userSlice.actions;
-export default userSlice.reducer;
+const { actions, reducer } = userSlice;
+export const { setRoleName, setAvatar } = actions;
+export default reducer;

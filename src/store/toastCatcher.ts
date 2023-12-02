@@ -26,6 +26,7 @@ export function withParamsToastCatcher<ThunkArg, Returned>(
   return async (args2: ThunkArg) => {
     try {
       const res = await payloadCreator(args2);
+      console.log('toast:',message );
       message && toast.success(message);
       return res;
     } catch (err) {
