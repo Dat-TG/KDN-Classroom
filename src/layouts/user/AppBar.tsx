@@ -204,10 +204,14 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   navigate("/landing");
                 }}
               >
-                CLASS ROOM
+                {t("classroomUppercase")}
               </Typography>
 
               <Box sx={{ flexGrow: 1 }} />
+
+              <div style={{ marginRight: "16px" }}>
+                <LanguageMenu />
+              </div>
 
               <Link
                 to="/register"
@@ -217,7 +221,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   marginRight: "16px",
                 }}
               >
-                REGISTER
+                {t("register")}
               </Link>
 
               <Link
@@ -228,7 +232,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   marginRight: "2px",
                 }}
               >
-                LOGIN
+                {t("login")}
               </Link>
             </Toolbar>
           </AppBar>

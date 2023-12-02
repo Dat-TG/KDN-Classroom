@@ -8,7 +8,7 @@ export interface IUserStore {
   refreshToken: string;
   users: IUsersRes;
   errorMessage: string;
-  userProfile: IUserProfileRes;
+  userProfile: IUserProfileRes | null;
   userRoles: IUserRole[];
   userRolePermissions: IUserRolePermissions;
   hasLoadedProfile: boolean;
@@ -33,25 +33,26 @@ const initialState: IUserStore = {
     size: 10,
   },
   errorMessage: '',
-  userProfile: {
-    id: NaN,
-    createdBy: '',
-    createdTime: '',
-    updatedBy: '',
-    updatedTime: '',
-    deletedBy: NaN,
-    deletedTime: '',
-    isDeleted: false,
-    userName: '',
-    emailAddress: '',
-    name: '',
-    surname: '',
-    phoneNumber: '',
-    avatar: '',
-    roles: [],
-    iat: NaN,
-    exp: 0,
-  },
+  userProfile: null,
+  // {
+  //   id: NaN,
+  //   createdBy: '',
+  //   createdTime: '',
+  //   updatedBy: '',
+  //   updatedTime: '',
+  //   deletedBy: NaN,
+  //   deletedTime: '',
+  //   isDeleted: false,
+  //   userName: '',
+  //   emailAddress: '',
+  //   name: '',
+  //   surname: '',
+  //   phoneNumber: '',
+  //   avatar: '',
+  //   roles: [],
+  //   iat: NaN,
+  //   exp: 0,
+  // },
   userRoles: [],
   userRolePermissions: {
     authorization: { ...fullPermissions },

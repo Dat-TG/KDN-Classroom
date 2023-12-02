@@ -31,7 +31,7 @@
     "login": "Đăng nhập",
     "resetYourPassword": "Đặt lại mật khẩu của bạn",
     "resetPasswordGuide": "Nhập địa chỉ email mà bạn đã đăng ký và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu cho tài khoản của bạn.",
-    "sendLink": "Gửi liên kết",
+    "sendLink": "GỬI LIÊN KẾT",
     "account": "Tài khoản",
     "manageYourProfile": "Quản lý hồ sơ của bạn",
     "upTo": "lên đến",
@@ -39,5 +39,6 @@
     "details": "Chi tiết",
     "saveChanges": "Lưu thay đổi",
     "profilePicture": "Ảnh đại diện",
-    "setNewProfilePicture": "Đặt ảnh đại diện mới"
+    "setNewProfilePicture": "Đặt ảnh đại diện mới",
+    "backToLogin": "QUAY LẠI ĐĂNG NHẬP"
 }

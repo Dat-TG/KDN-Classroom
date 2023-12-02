@@ -39,5 +39,6 @@
     "details": "Details",
     "saveChanges": "Save changes",
     "profilePicture": "Profile picture",
-    "setNewProfilePicture": "Set new profile picture"
+    "setNewProfilePicture": "Set new profile picture",
+    "backToLogin": "BACK TO LOGIN"
 }

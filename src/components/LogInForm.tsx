@@ -58,7 +58,7 @@ function LogInForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Typography variant="h5" align="center" fontWeight={"bold"} sx={{color: "#5b5c55"}}>
+      <Typography variant="h5" align="center" fontWeight={"bold"}>
         {t("logIn")}
       </Typography>
       <Controller

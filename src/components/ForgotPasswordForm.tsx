@@ -3,6 +3,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   email: string;
@@ -22,6 +23,8 @@ function ForgotPasswordForm() {
   };
 
   const { t } = useTranslation("global");
+
+  const navigate = useNavigate();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -77,7 +80,7 @@ function ForgotPasswordForm() {
         type="submit"
         variant="contained"
         color="primary"
-        style={{ marginTop: "32px", borderRadius: "10px", padding: "15px" }}
+        style={{ marginTop: "32px", borderRadius: "10px", padding: "10px" }}
         size="large"
         disabled={isLoading}
       >
@@ -88,6 +91,23 @@ function ForgotPasswordForm() {
             {t("sendLink")}
           </Typography>
         )}
+      </Button>
+
+      <Button
+        variant="contained"
+        style={{
+          marginLeft: "16px",
+          marginTop: "32px",
+          borderRadius: "10px",
+          padding: "10px",
+          backgroundColor: "#D3D3D3",
+        }}
+        size="large"
+        onClick={() => navigate(-1)}
+      >
+        <Typography fontSize={"16px"} variant="body1" color={"black"}>
+          {t("backToLogin")}
+        </Typography>
       </Button>
     </form>
   );

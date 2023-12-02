@@ -4,6 +4,8 @@ import Sidebar from "./SideBar";
 
 import Appbar from "./AppBar";
 import { Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
 //import { useUser } from "../../../hooks/useUser";
 //import { AuthContext } from "../../../context/AuthContext";
 
@@ -14,30 +16,23 @@ function UserLayout() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const user = useSelector(sGetUserInfo);
+
+  console.log(user);
+
   //const { user } = useContext(AuthContext);
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  /*
-  useEffect(() => {
-    if (user != null) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-    console.log(user);
-  }, [user]);
-
-  const { logout } = useUser();*/
+  //const { logout } = useUser();
 
   return (
     <>
       <Appbar
         toggleSidebar={toggleSidebar}
-        isLoggedIn={isLoggedIn}
+        isLoggedIn={user != null}
         onLogout={/*logout*/ () => {}}
       />
       <div style={{ display: "flex" }}>
-        {isLoggedIn && <Sidebar open={isSidebarOpen} />}
+        {user != null && <Sidebar open={isSidebarOpen} />}
         <main
           style={{ flex: 1, transition: "margin-left 0.3s", marginTop: "64px" }}
         >
