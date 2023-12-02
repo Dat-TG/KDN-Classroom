@@ -11,6 +11,7 @@ import { useContext, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 // import { AuthContext } from "../context/AuthContext";
 // import { useUser } from "../hooks/useUser";
 
@@ -56,10 +57,12 @@ function RegisterForm() {
   //   return <Navigate to="/" replace />;
   // }
 
+  const { t } = useTranslation("global");
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h5" align="center" fontWeight={"bold"}>
-        REGISTER
+        {t("register")}
       </Typography>
       {/* Email input */}
       <Controller
@@ -98,7 +101,7 @@ function RegisterForm() {
           <TextField
             style={{ marginTop: "32px" }}
             {...field}
-            label="First Name"
+            label={t("firstName")}
             fullWidth
             variant="outlined"
             error={!!errors.firstname}
@@ -120,7 +123,7 @@ function RegisterForm() {
           <TextField
             style={{ marginTop: "32px" }}
             {...field}
-            label="Last Name"
+            label={t("lastName")}
             fullWidth
             variant="outlined"
             error={!!errors.lastname}
@@ -140,7 +143,7 @@ function RegisterForm() {
           <TextField
             style={{ marginTop: "32px" }}
             {...field}
-            label="Password"
+            label={t("password")}
             fullWidth
             variant="outlined"
             error={!!errors.password}
@@ -180,7 +183,7 @@ function RegisterForm() {
           <TextField
             style={{ marginTop: "32px" }}
             {...field}
-            label="Confirm Password"
+            label={t("confirmPassword")}
             fullWidth
             variant="outlined"
             error={!!errors.confirmPassword}
@@ -215,7 +218,7 @@ function RegisterForm() {
         {isLoading ? (
           <CircularProgress size={30} style={{ color: "white" }} />
         ) : (
-          <Typography fontSize={"16px"}>Register</Typography>
+          <Typography fontSize={"16px"}>{t("registerUppercase")}</Typography>
         )}
       </Button>
     </form>

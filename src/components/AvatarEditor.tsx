@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RotateLeft, RotateRight } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 // import { useUser } from "../hooks/useUser";
 
 function AvatarEditorComponent({
@@ -23,7 +24,7 @@ function AvatarEditorComponent({
   const [image, setImage] = useState("");
   const editorRef = useRef<AvatarEditor | null>(null);
 
-//   const { changeAvatar } = useUser();
+  //   const { changeAvatar } = useUser();
 
   const [scale, setScale] = useState(0);
   const [rotate, setRotate] = useState(0);
@@ -61,6 +62,8 @@ function AvatarEditorComponent({
     display: "none",
   };
 
+  const { t } = useTranslation("global");
+
   return (
     <div>
       <Box
@@ -71,23 +74,24 @@ function AvatarEditorComponent({
         }}
       >
         <label htmlFor="avatar-input">
-            <Typography variant="h6">Profile Picture</Typography>
-            <Typography sx={{color: "gray"}} variant="body2"> PNG, JDG up to 5MB</Typography>
+          <Typography variant="h6">{t("profilePicture")}</Typography>
+          <Typography sx={{ color: "gray" }} variant="body2">
+            {" "}
+            PNG, JPG {t("upTo")} 5MB
+          </Typography>
           <Button
             component="span"
             TouchRippleProps={{ center: true }}
             size="medium"
             sx={{
-              
-              textTransform: 'none',
-              mt : 1
-              
+              textTransform: "none",
+              mt: 1,
             }}
             variant="outlined"
           >
-            
-            <Typography sx={{}} variant="body1">Change Avatar</Typography>
-            
+            <Typography sx={{}} variant="body1">
+              {t("changeAvatar")}
+            </Typography>
           </Button>
         </label>
         <input
@@ -108,7 +112,7 @@ function AvatarEditorComponent({
         <DialogContent>
           {image && (
             <AvatarEditor
-            //   ref={(ref) => (editorRef.current = ref)}
+              //   ref={(ref) => (editorRef.current = ref)}
               image={image}
               width={400}
               height={400}
@@ -160,7 +164,7 @@ function AvatarEditorComponent({
             fullWidth
             onClick={handleSaveAvatar}
           >
-            Set new profile picture
+            {t("setNewProfilePicture")}
           </Button>
         </DialogActions>
       </Dialog>

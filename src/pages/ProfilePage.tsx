@@ -14,6 +14,7 @@ import {
 import AvatarEditorComponent from "../components/AvatarEditor";
 import { Controller } from "react-hook-form";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
+import { useTranslation } from "react-i18next";
 
 
 // import { AuthContext } from "../context/AuthContext";
@@ -40,6 +41,8 @@ function ProfilePage() {
         borderColor: "#0074D9",
     };
 
+    const {t}=useTranslation("global");
+
     return (
         <Grid
             container
@@ -47,10 +50,10 @@ function ProfilePage() {
         >
             <Grid item sx={{}} xs={12}>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }} gutterBottom >
-                    Account
+                    {t("account")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "bold", color: "darkgray" }} gutterBottom >
-                    Manage your profile
+                    {t("manageYourProfile")}
                 </Typography>
                 <Divider sx={{ mt: 2, fontWeight: "bold" }} ></Divider>
             </Grid>

@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import LogInForm from "../components/LogInForm";
 import facebookLogo from "../assets/images/logos/facebook.png";
 import googleLogo from "../assets/images/logos/google.png";
+import { useTranslation } from "react-i18next";
 
 function LogInPage() {
+  const { t } = useTranslation("global");
   return (
     <Grid
       container
@@ -13,7 +15,10 @@ function LogInPage() {
       style={{ minHeight: "80vh" }}
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: "32px", borderRadius: "7px", textAlign: "center" }}>
+        <Paper
+          elevation={3}
+          style={{ padding: "32px", borderRadius: "7px", textAlign: "center" }}
+        >
           <LogInForm />
           <Stack
             spacing={0.5}
@@ -24,10 +29,10 @@ function LogInPage() {
             marginTop={"16px"}
           >
             <Link
-              to={"/forgotten"}
+              to={"/forgot-password"}
               style={{ textDecoration: "none", color: "#0074D9" }}
             >
-              Forgot Password?
+              {t("forgotPassword")}
             </Link>
           </Stack>
           <div
@@ -47,7 +52,7 @@ function LogInPage() {
               className="divider-text"
               style={{ margin: "0 16px", color: "#5b5c55", fontWeight: "600" }}
             >
-              Or
+              {t("orContinueWith")}
             </span>
             <span
               className="divider-line"
@@ -55,17 +60,34 @@ function LogInPage() {
             ></span>
           </div>
 
-          <div >
-          <Button variant="outlined" sx={{height: "50px", mr: 2, border: "transparent"}}>
-                <img src={facebookLogo} style={{objectFit: "scale-down", width: "100%", height: "100%"}}></img>
-              </Button>
-              <Button variant="outlined" sx={{height: "50px", border: "transparent"}}>
-                <img src={googleLogo} style={{objectFit: "scale-down", width: "100%", height: "100%"}}></img>
-              </Button>
+          <div>
+            <Button
+              variant="outlined"
+              sx={{ height: "50px", mr: 2, border: "transparent" }}
+            >
+              <img
+                src={facebookLogo}
+                style={{
+                  objectFit: "scale-down",
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></img>
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ height: "50px", border: "transparent" }}
+            >
+              <img
+                src={googleLogo}
+                style={{
+                  objectFit: "scale-down",
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></img>
+            </Button>
           </div>
-
-              
-            
 
           <Stack
             spacing={0.5}
@@ -75,12 +97,12 @@ function LogInPage() {
             justifyContent={"center"}
             marginTop={"16px"}
           >
-            <Typography>Not a member yet?</Typography>
+            <Typography>{t("notAMemberYet")}</Typography>
             <Link
               to={"/register"}
               style={{ textDecoration: "none", color: "#0074D9" }}
             >
-              Register
+              {t("register")}
             </Link>
           </Stack>
         </Paper>

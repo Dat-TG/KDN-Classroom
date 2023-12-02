@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import ForgotPasswordForm from "../components/ForgotPasswordForm";
 
-function ForgotPage() {
+function ForgotPasswordPage() {
   return (
     <div>
       <Grid
@@ -21,4 +21,4 @@ function ForgotPage() {
   );
 }
 
-export default ForgotPage;
+export default ForgotPasswordPage;
