@@ -12,7 +12,7 @@ export interface IRegisterUserReq {
   emailAddress: string;
   password: string;
   firstname: string;
-  lastname: string;
+  surname: string;
 }
 
 export interface ILoginUserReq {
