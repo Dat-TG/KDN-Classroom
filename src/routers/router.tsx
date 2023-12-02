@@ -5,6 +5,7 @@ import AdminLayout from "../layouts/admin/AdminLayout";
 import LogInPage from "../pages/LogInPage";
 import RegisterPage from "../pages/RegisterPage";
 import ForgotPage from "../pages/ForgotPasswordPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
       {
         path: "/calendar",
