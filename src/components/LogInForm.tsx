@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -53,10 +54,12 @@ function LogInForm() {
   //   return <Navigate to="/" replace />;
   // }
 
+  const {t}=useTranslation("global");
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h5" align="center" fontWeight={"bold"} sx={{color: "#5b5c55"}}>
-        Log In With
+        {t("logIn")}
       </Typography>
       <Controller
         name="email"
@@ -91,7 +94,7 @@ function LogInForm() {
           <TextField
             style={{ marginTop: "32px" }}
             {...field}
-            label="Password"
+            label={t("password")}
             fullWidth
             variant="outlined"
             error={!!errors.password}
@@ -130,7 +133,7 @@ function LogInForm() {
         {isLoading ? (
           <CircularProgress size={30} style={{ color: "white" }} />
         ) : (
-          <Typography fontSize={"16px"}>Login</Typography>
+          <Typography fontSize={"16px"}>{t("logInUppercase")}</Typography>
         )}
       </Button>
     </form>
