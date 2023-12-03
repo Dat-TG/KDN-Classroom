@@ -59,10 +59,10 @@ export const logoutUser = createAsyncThunk(
 
 export const updateInformationUser = createAsyncThunk(
   "user/editInformation",
-  async (informationUpdate: IInformationUpdateReq) => {
+   withParamsToastCatcher(async(informationUpdate: IInformationUpdateReq) => {
     const res = await userApi.updateInformation(informationUpdate);
     return res;
-  }
+  }, i18next.t("global:updateInformationSuccessfully"))
 );
 
 export const updatePasswordUser = createAsyncThunk(

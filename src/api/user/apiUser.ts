@@ -41,7 +41,7 @@ export const refreshToken = async (refreshToken: string) => {
 };
 
 export const updateInformation = async (informationUpdate: IInformationUpdateReq) => {
-  const res = await AxiosClient.put("/edit", informationUpdate);
+  const res = await AxiosClient.put(`${url}/edit`, informationUpdate);
   return res.data;
 };
 

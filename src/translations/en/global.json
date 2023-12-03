@@ -44,5 +44,6 @@
     "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
     "loginSuccessfully": "Login successfully",
     "homePage": "Home page",
-    "logoutSuccessfully": "You have logged out successfully"
+    "logoutSuccessfully": "You have logged out successfully",
+    "updateInformationSuccessfully": "Update information successfully"
 }

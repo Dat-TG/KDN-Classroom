@@ -1,6 +1,12 @@
 import { userReducer } from "./reducer";
 import { IUserStore } from "./type";
-import { ILoginGoogle, ILoginUserReq, IRegisterUserReq, IUserProfileRes } from "../../types/user";
+import {
+  IInformationUpdateReq,
+  ILoginGoogle,
+  ILoginUserReq,
+  IRegisterUserReq,
+  IUserProfileRes,
+} from "../../types/user";
 
 import {
   ActionReducerMapBuilder,
@@ -95,6 +101,14 @@ const registerUser = createAsyncThunk(
   }, i18next.t("global:registerSuccessfully"))
 );
 
+const updateInformationUser = createAsyncThunk(
+  "user/editInformation",
+  withParamsToastCatcher(async (informationUpdate: IInformationUpdateReq) => {
+    const res = await userApi.updateInformation(informationUpdate);
+    return res;
+  }, i18next.t("global:updateInformationSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -117,16 +131,20 @@ const userSlice = createSlice({
         state.hasLoadedProfile = true;
       }
     );
-    builder.addCase(logoutUser.fulfilled, () => {
-      
-    });
-    builder
-    .addCase(
+    builder.addCase(logoutUser.fulfilled, () => {});
+    builder.addCase(
       registerUser.fulfilled,
       (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
-        window.location.href='/login';
+        window.location.href = "/login";
+      }
+    );
+    builder.addCase(
+      updateInformationUser.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
+        state.userProfile = action.payload;
+        state.hasLoadedProfile = true;
       }
     );
   },

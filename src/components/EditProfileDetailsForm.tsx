@@ -1,20 +1,17 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
   CircularProgress,
-  IconButton,
-  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
-// import { useUser } from "../hooks/useUser";
-// import { AuthContext } from "../context/AuthContext";
+import { AppDispatch } from "../store";
+import { updateInformationUser } from "../store/user/thunkApi";
 
 type Inputs = {
   firstName: string;
@@ -24,9 +21,7 @@ type Inputs = {
 function EditProfileDetailsForm() {
   const [isLoading, setIsLoading] = useState(false);
 
-  // const { user } = useContext(AuthContext);
-
-  // const { login } = useUser();
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     control,
@@ -36,13 +31,23 @@ function EditProfileDetailsForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+    await dispatch(
+      updateInformationUser({
+        name: data.firstName,
+        surname: data.lastName,
+      })
+    );
+    setIsLoading(false);
+    console.log(data);
   };
 
   const { t } = useTranslation("global");
 
-  const user=useSelector(sGetUserInfo);
+  const user = useSelector(sGetUserInfo);
 
-  return (
+  return user == null ? (
+    <div>Loading...</div>
+  ) : (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {t("details")}
@@ -68,9 +73,12 @@ function EditProfileDetailsForm() {
                 {...field}
                 hiddenLabel
                 fullWidth
-                type="email"
+                type="text"
                 variant="outlined"
                 error={!!errors.firstName}
+                helperText={
+                  errors.firstName ? "Please enter your firstname." : ""
+                }
                 //biding ..
               />
             )}
@@ -91,10 +99,14 @@ function EditProfileDetailsForm() {
             render={({ field }) => (
               <TextField
                 {...field}
+                type="text"
                 hiddenLabel
                 fullWidth
                 variant="outlined"
                 error={!!errors.lastName}
+                helperText={
+                  errors.lastName ? "Please enter your lastname." : ""
+                }
               />
             )}
           />

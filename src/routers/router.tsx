@@ -7,6 +7,7 @@ import RegisterPage from "../pages/RegisterPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ProfilePage from "../pages/ProfilePage";
 import PrivateRoute from "./PrivateRoute";
+import RedirectRoute from "./RedirectRoute";
 
 const router = createBrowserRouter([
   {
@@ -47,16 +48,21 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/login",
-        element: <LogInPage />,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: "/register",
-        element: <RegisterPage />,
+        element: <RedirectRoute />,
+        children: [
+          {
+            path: "/login",
+            element: <LogInPage />,
+          },
+          {
+            path: "/forgot-password",
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: "/register",
+            element: <RegisterPage />,
+          },
+        ],
       },
     ],
   },

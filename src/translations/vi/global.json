@@ -44,5 +44,6 @@
     "registerSuccessfully": "Đăng ký thành công\nVui lòng kiểm tra email để kích hoạt tài khoản",
     "loginSuccessfully": "Đăng nhập thành công",
     "homePage": "Trang chủ",
-    "logoutSuccessfully": "Bạn đã đăng xuất thành công"
+    "logoutSuccessfully": "Bạn đã đăng xuất thành công",
+    "updateInformationSuccessfully": "Cập nhật thông tin thành công"
 }

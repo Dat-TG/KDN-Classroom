@@ -23,8 +23,8 @@ export default function SocialLogin() {
         <GoogleLogin
           width={"400"}
           logo_alignment="center"
-          onSuccess={(message) => {
-            console.log(message);
+          onSuccess={(credential) => {
+            console.log(credential);
           }}
           onError={() => {
             console.log("error");

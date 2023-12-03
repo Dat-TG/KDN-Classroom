@@ -1,5 +1,5 @@
 // MainLayout.tsx
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Sidebar from "./SideBar";
 
 import Appbar from "./AppBar";
@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import { AppDispatch } from "../../store";
-import { getUserProfile, logoutUser } from "../../store/user/thunkApi";
+import {  logoutUser } from "../../store/user/thunkApi";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -18,14 +18,7 @@ function UserLayout() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(getUserProfile());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const user = useSelector(sGetUserInfo);
-
-  console.log(user);
 
   return (
     <>

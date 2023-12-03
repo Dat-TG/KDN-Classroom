@@ -1,19 +1,12 @@
 import { Grid, Typography, Paper, Stack } from "@mui/material";
-import { Link, Navigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import LogInForm from "../components/LogInForm";
 
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { sGetUserInfo } from "../store/user/selector";
 import SocialLogin from "../components/SocialLogin";
 
 function LogInPage() {
   const { t } = useTranslation("global");
-  const user = useSelector(sGetUserInfo);
-
-  if (user != null) {
-    return <Navigate to="/" replace />;
-  }
   return (
     <Grid
       container
