@@ -20,6 +20,7 @@ function ForgotPasswordForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+    console.log(data);
   };
 
   const { t } = useTranslation("global");
