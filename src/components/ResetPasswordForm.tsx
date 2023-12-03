@@ -14,6 +14,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { resetPassword } from "../store/user/thunkApi";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -34,10 +36,24 @@ function ResetPasswordForm() {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
-    const res = await dispatch();
+    const token = searchParams.get("token");
+    const res = await dispatch(
+      resetPassword({
+        token: token ?? "",
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
+      })
+    );
     setIsLoading(false);
+    if (res.meta.requestStatus === "fulfilled") {
+      navigate("/login");
+    }
   };
 
   const { t } = useTranslation("global");
@@ -184,9 +200,7 @@ function ResetPasswordForm() {
         {isLoading ? (
           <CircularProgress size={30} style={{ color: "white" }} />
         ) : (
-          <Typography fontSize={"16px"}>
-            {t("confirm")}
-          </Typography>
+          <Typography fontSize={"16px"}>{t("confirm")}</Typography>
         )}
       </Button>
     </form>

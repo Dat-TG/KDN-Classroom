@@ -45,11 +45,13 @@ const onResponseError = async (
   const originalConfig = err.config as InternalAxiosRequestConfig;
   store.dispatch(clearSpinner());
   console.log(err);
-  console.log(window.location);
   if (err.response?.status === 401) {
     const currentRefreshToken = localStorage.getItem("refreshToken");
     removeAllToken();
     if (!currentRefreshToken) {
+      if (window.location.pathname == "/login") {
+        return Promise.reject(err?.response?.data);
+      }
       return;
     }
     const token = await userApi.refreshToken(currentRefreshToken!);

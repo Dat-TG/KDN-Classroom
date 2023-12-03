@@ -21,6 +21,7 @@ import {
   IUserRolePermissions,
   ILoginUserReq,
   ILoginGoogleReq,
+  IResetPassword,
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
@@ -138,6 +139,13 @@ export const forgotPassword = createAsyncThunk(
   }, i18next.t("global:pleaseCheckYourEmail"))
 );
 
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  withParamsToastCatcher(async (data: IResetPassword) => {
+    await userApi.resetPassword(data);
+  }, i18next.t("global:resetPasswordSuccessfully"))
+);
+
 export const extraReducers = (
   builders: ActionReducerMapBuilder<IUserStore>
 ) => {
@@ -196,5 +204,5 @@ export const extraReducers = (
         state.refreshToken = action.payload.refreshToken;
       }
     )
-    .addCase(forgotPassword.fulfilled, () => {});
+    .addCase(forgotPassword.fulfilled, () => {}).addCase(resetPassword.fulfilled, () => {});
 };
