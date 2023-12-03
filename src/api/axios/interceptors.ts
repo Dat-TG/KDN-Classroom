@@ -44,17 +44,18 @@ const onResponseError = async (
 ): Promise<AxiosError | undefined> => {
   const originalConfig = err.config as InternalAxiosRequestConfig;
   store.dispatch(clearSpinner());
-  if (
-    err.response?.status === 401 &&
-    !err.request.responseURL.includes("/api/auth/login")
-  ) {
+  console.log(err);
+  console.log(window.location);
+  if (err.response?.status === 401) {
     const currentRefreshToken = localStorage.getItem("refreshToken");
     removeAllToken();
+    if (!currentRefreshToken && window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
     if (!currentRefreshToken) {
-      window.location.href = "/";
       return;
     }
-    const token = await userApi.refreshToken(currentRefreshToken);
+    const token = await userApi.refreshToken(currentRefreshToken!);
     localStorage.setItem("accessToken", token.accessToken);
     localStorage.setItem("refreshToken", token.refreshToken);
     originalConfig.headers.Authorization = `Bearer ${token.accessToken}`;

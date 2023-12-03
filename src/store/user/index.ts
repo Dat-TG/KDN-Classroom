@@ -12,15 +12,12 @@ import i18next from "i18next";
 import { userApi } from "../../api/axios";
 import { withParamsToastCatcher } from "../toastCatcher";
 
-
 const fullPermissions = {
   create: false,
   update: false,
   read: false,
   delete: false,
 };
-
-
 
 const initialState: IUserStore = {
   token: "",
@@ -68,14 +65,14 @@ const initialState: IUserStore = {
   roleName: "",
 };
 
- const loginUser = createAsyncThunk(
+const loginUser = createAsyncThunk(
   "user/login",
   withParamsToastCatcher(async (params: ILoginUserReq) => {
     const result = await userApi.login(params);
     return result;
   }, i18next.t("loginSuccessful"))
 );
- const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
+const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
   const result = await userApi.getUserProfile();
   return result;
 });
