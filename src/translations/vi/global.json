@@ -37,13 +37,21 @@
     "upTo": "lên đến",
     "changeAvatar": "Thay đổi ảnh đại diện",
     "details": "Chi tiết",
-    "saveChanges": "Lưu thay đổi",
+    "save": "Lưu",
     "profilePicture": "Ảnh đại diện",
     "setNewProfilePicture": "Đặt ảnh đại diện mới",
+<<<<<<< HEAD
     "backToLogin": "QUAY LẠI ĐĂNG NHẬP",
     "registerSuccessfully": "Đăng ký thành công\nVui lòng kiểm tra email để kích hoạt tài khoản",
     "loginSuccessfully": "Đăng nhập thành công",
     "homePage": "Trang chủ",
     "logoutSuccessfully": "Bạn đã đăng xuất thành công",
     "updateInformationSuccessfully": "Cập nhật thông tin thành công"
+=======
+    "email": "Email",
+    "changePassword": "Đổi mật khẩu",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "confirm": "Xác nhận"
+>>>>>>> ba3d5d17b382da496d2b2fc8b08662ca1f04e70e
 }

@@ -31,19 +31,27 @@
     "login": "Login",
     "resetYourPassword": "Reset your password",
     "resetPasswordGuide": "Enter the email you signed up with. We'll send you a link to log in and reset your password.",
-    "sendLink": "SEND LINK",
+    "sendLink": "Send Link",
     "account": "Account",
     "manageYourProfile": "Manage your profile",
     "upTo": "up to",
     "changeAvatar": "Change avatar",
     "details": "Details",
-    "saveChanges": "Save changes",
+    "save": "Save",
     "profilePicture": "Profile picture",
     "setNewProfilePicture": "Set new profile picture",
+<<<<<<< HEAD
     "backToLogin": "BACK TO LOGIN",
     "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
     "loginSuccessfully": "Login successfully",
     "homePage": "Home page",
     "logoutSuccessfully": "You have logged out successfully",
     "updateInformationSuccessfully": "Update information successfully"
+=======
+    "email": "Email",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirm": "confirm"
+>>>>>>> ba3d5d17b382da496d2b2fc8b08662ca1f04e70e
 }

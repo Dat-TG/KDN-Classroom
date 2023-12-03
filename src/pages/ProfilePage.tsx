@@ -1,22 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import {
     Avatar,
-    Button,
     Grid,
     Typography,
-    Paper,
-    CircularProgress,
-    Backdrop,
     Divider,
-    Box,
-    TextField,
 } from "@mui/material";
 import AvatarEditorComponent from "../components/AvatarEditor";
 import { Controller } from "react-hook-form";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
+<<<<<<< HEAD
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
+=======
+import ChangePasswordForm from "../components/ChangePasswordForm";
+
+>>>>>>> ba3d5d17b382da496d2b2fc8b08662ca1f04e70e
 
 
 // import { AuthContext } from "../context/AuthContext";
@@ -50,19 +49,19 @@ function ProfilePage() {
     return (
         <Grid
             container
-            style={{ margin: "100px" }}
+           sx={{padding: 10}}
         >
             <Grid item sx={{}} xs={12}>
                 <Typography variant="h4" sx={{ fontWeight: "bold" }} gutterBottom >
                     {t("account")}
                 </Typography>
-                <Typography variant="body1" sx={{ fontWeight: "bold", color: "darkgray" }} gutterBottom >
+                <Typography variant="body1" sx={{  color: "darkgray" }} gutterBottom >
                     {t("manageYourProfile")}
                 </Typography>
-                <Divider sx={{ mt: 2, fontWeight: "bold" }} ></Divider>
+                <Divider sx={{ mt: 2, backgroundColor: "gray", borderBottomWidth: 2, borderRadius: "1.5px"}} ></Divider>
             </Grid>
 
-            <Grid item xs={12} sx={{ mt: 3 }}>
+            <Grid item xs={12} sx={{ mt: 5 }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
                         // alt={`${user?.firstname} ${user?.lastname}`}
@@ -85,10 +84,17 @@ function ProfilePage() {
                 </div>
             </Grid>
 
-            <Grid item xs={12} sx={{ mt: 3, display: "block" }}>
+            <Grid item xs={12} sx={{ mt: 5, display: "block" }}>
                
                 <EditProfileDetailsForm/>
             </Grid>
+
+            <Grid item xs={12} sx={{ mt: 5, display: "block" }}>
+               <ChangePasswordForm/>
+                
+            </Grid>
+
+
         </Grid>
     );
 }
