@@ -10,6 +10,8 @@ export default function HomePage() {
     document.title = t("homePage");
   }, []);
 
+  const { t } = useTranslation("global");
+
   return (
     <>
         <Grid container sx={{ margin: "30px", rowGap: 3 }}>
