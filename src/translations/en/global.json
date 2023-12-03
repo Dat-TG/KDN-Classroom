@@ -31,13 +31,18 @@
     "login": "Login",
     "resetYourPassword": "Reset your password",
     "resetPasswordGuide": "Enter the email you signed up with. We'll send you a link to log in and reset your password.",
-    "sendLink": "SEND LINK",
+    "sendLink": "Send Link",
     "account": "Account",
     "manageYourProfile": "Manage your profile",
     "upTo": "up to",
     "changeAvatar": "Change avatar",
     "details": "Details",
-    "saveChanges": "Save changes",
+    "save": "Save",
     "profilePicture": "Profile picture",
-    "setNewProfilePicture": "Set new profile picture"
+    "setNewProfilePicture": "Set new profile picture",
+    "email": "Email",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirm": "confirm"
 }

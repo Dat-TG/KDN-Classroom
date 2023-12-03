@@ -37,7 +37,12 @@
     "upTo": "lên đến",
     "changeAvatar": "Thay đổi ảnh đại diện",
     "details": "Chi tiết",
-    "saveChanges": "Lưu thay đổi",
+    "save": "Lưu",
     "profilePicture": "Ảnh đại diện",
-    "setNewProfilePicture": "Đặt ảnh đại diện mới"
+    "setNewProfilePicture": "Đặt ảnh đại diện mới",
+    "email": "Email",
+    "changePassword": "Đổi mật khẩu",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "confirm": "Xác nhận"
 }
