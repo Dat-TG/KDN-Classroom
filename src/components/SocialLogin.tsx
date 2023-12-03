@@ -42,7 +42,7 @@ export default function SocialLogin() {
         <FacebookLogin
           appId={import.meta.env.VITE_REACT_APP_FACEBOOK_APP_ID}
           onSuccess={(response) => {
-            console.log("Login Success!", response);
+            console.log("Login Success!", response.accessToken);
           }}
           onFail={(error) => {
             console.log("Login Failed!", error);

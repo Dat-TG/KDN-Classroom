@@ -21,7 +21,7 @@ export interface ILoginUserReq {
 }
 
 export interface ILoginGoogleReq {
-  googleAuthToken: string
+  googleAuthToken: string;
 }
 
 export interface IInformationUpdateReq {
@@ -171,4 +171,10 @@ export interface IUpdateUserRolePermissions {
 export interface IUpdateUserRole {
   userId: number;
   roleNames: USER_ROLES_NAME[];
+}
+
+export interface IResetPassword {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
 }
