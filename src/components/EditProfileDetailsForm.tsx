@@ -73,6 +73,7 @@ function EditProfileDetailsForm() {
                                         variant="outlined"
                                         error={!!errors.firstName}
                                         placeholder="binding user.firstName"
+                                        helperText={errors.firstName ? "Please enter your first name." : ""}
                                     //biding ..
                                     />
                                 )}
@@ -98,6 +99,7 @@ function EditProfileDetailsForm() {
                                         variant="outlined"
                                         error={!!errors.lastName}
                                         placeholder="binding user.lastName"
+                                        helperText={errors.lastName ? "Please enter your last name." : ""}
                                     />
                                 )}
                             />

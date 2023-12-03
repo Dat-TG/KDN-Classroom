@@ -102,7 +102,7 @@ function ChangePasswordForm() {
                         </Typography>
 
                         <Controller
-                            name="confirmPassword"
+                            name="newPassword"
                             control={control}
                             rules={{ required: true, minLength: 6 }}
                             defaultValue=""
@@ -112,7 +112,7 @@ function ChangePasswordForm() {
                                     hiddenLabel
                                     fullWidth
                                     variant="outlined"
-                                    error={!!errors.confirmPassword}
+                                    error={!!errors.newPassword}
                                     helperText={
                                         errors.currentPassword
                                             ? "Password is required and should be at least 6 characters."
