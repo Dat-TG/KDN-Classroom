@@ -21,8 +21,7 @@ export const login = async (data: ILoginUserReq) => {
 
 export const loginGoogle = async (data: ILoginGoogleReq) => {
   const res = await AxiosClient.post("/auth/google/login", data);
-  console.log(res);
-  return res;
+  return res.data;
 };
 
 export const register = async (data: IRegisterUserReq) => {
