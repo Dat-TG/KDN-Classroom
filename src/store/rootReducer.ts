@@ -1,6 +1,6 @@
 import { AnyAction, combineReducers, Reducer } from "redux";
-import globalSlice from "./global/index";
-import userSlice from "./user/index";
+import globalSlice from "./global";
+import userSlice from "./user";
 import logSlice from "./log";
 import { AppState } from ".";
 

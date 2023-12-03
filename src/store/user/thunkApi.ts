@@ -10,7 +10,6 @@ import { userApi } from "../../api/axios";
 import { IPaginationParams } from "../../types/pagination";
 import {
   IRegisterUserReq,
-  ILoginUserReq,
   IInformationUpdateReq,
   IPasswordUpdateReq,
   IUpdateUserRole,
@@ -21,23 +20,29 @@ import {
   IUserProfileRes,
   IUserRole,
   IUserRolePermissions,
+  ILoginUserReq,
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
 import { IUserStore } from "./type";
+
+export const loginUser = createAsyncThunk(
+  "user/login",
+  withParamsToastCatcher(async (params: ILoginUserReq) => {
+    const result = await userApi.login(params);
+    return result;
+  }, i18next.t("loginSuccessful"))
+);
+export const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
+  const result = await userApi.getUserProfile();
+  return result;
+});
 
 export const registerUser = createAsyncThunk(
   "user/register",
   withParamsToastCatcher(async (params: IRegisterUserReq) => {
     return await userApi.register(params);
   }, i18next.t("registerSuccessful"))
-);
-
-export const loginUser = createAsyncThunk(
-  "user/login",
-  withParamsToastCatcher(async (params: ILoginUserReq) => {
-    return await userApi.login(params);
-  }, i18next.t("loginSuccessful"))
 );
 
 export const logoutUser = createAsyncThunk("user/logout", async () => {
@@ -81,13 +86,7 @@ export const getUsers = createAsyncThunk(
   }
 );
 
-export const getUserProfile = createAsyncThunk(
-  "user/getUserProfile",
-  async () => {
-    const result = await userApi.getUserProfile();
-    return result;
-  }
-);
+
 
 export const getUserRoles = createAsyncThunk("user/getUserRoles", async () => {
   const result = await userApi.getUserRole();
@@ -115,13 +114,6 @@ export const extraReducers = (
 ) => {
   builders
     .addCase(
-      loginUser.fulfilled,
-      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
-        localStorage.setItem("accessToken", action.payload.accessToken);
-        localStorage.setItem("refreshToken", action.payload.refreshToken);
-      }
-    )
-    .addCase(
       registerUser.fulfilled,
       (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         localStorage.setItem("accessToken", action.payload.accessToken);
@@ -144,13 +136,6 @@ export const extraReducers = (
       getUsers.fulfilled,
       (state: IUserStore, action: PayloadAction<IUsersRes>) => {
         state.users = action.payload;
-      }
-    )
-    .addCase(
-      getUserProfile.fulfilled,
-      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
-        state.userProfile = action.payload;
-        state.hasLoadedProfile = true;
       }
     )
     .addCase(

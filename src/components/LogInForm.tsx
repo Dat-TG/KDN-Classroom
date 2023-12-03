@@ -10,14 +10,10 @@ import {
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
-import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { loginUser } from "../store/user/thunkApi";
-import { sGetUserInfo } from "../store/user/selector";
-// import { useUser } from "../hooks/useUser";
-// import { AuthContext } from "../context/AuthContext";
 
 type Inputs = {
   email: string;
@@ -30,10 +26,6 @@ function LogInForm() {
   useEffect(() => {
     document.title = "Log In";
   }, []);
-
-  const user = useSelector(sGetUserInfo);
-
-  // const { login } = useUser();
 
   const {
     control,
@@ -57,10 +49,6 @@ function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { t } = useTranslation("global");
-
-  if (user != null) {
-    return <Navigate to="/" replace />;
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

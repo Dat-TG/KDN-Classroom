@@ -1,12 +1,19 @@
 import { Grid, Typography, Paper, Stack, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import LogInForm from "../components/LogInForm";
 import facebookLogo from "../assets/images/logos/facebook.png";
 import googleLogo from "../assets/images/logos/google.png";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 
 function LogInPage() {
   const { t } = useTranslation("global");
+  const user = useSelector(sGetUserInfo);
+  
+  if (user != null) {
+    return <Navigate to="/" replace />;
+  }
   return (
     <Grid
       container

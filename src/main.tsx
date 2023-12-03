@@ -17,18 +17,18 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import i18next from "./translations/i18";
 import { I18nextProvider } from "react-i18next";
-import { SnackbarProvider } from "notistack";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <CssBaseline>
+      <ToastContainer />
       <Provider store={store}>
         <I18nextProvider i18n={i18next}>
-          <SnackbarProvider maxSnack={3}>
-            <ThemeProvider theme={theme}>
-              <RouterProvider router={router} />
-            </ThemeProvider>
-          </SnackbarProvider>
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
         </I18nextProvider>
       </Provider>
     </CssBaseline>
