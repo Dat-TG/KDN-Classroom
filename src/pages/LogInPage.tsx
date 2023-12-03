@@ -1,9 +1,9 @@
-import { Grid, Typography, Paper, Stack, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Grid, Typography, Paper, Stack } from "@mui/material";
+import { Link} from "react-router-dom";
 import LogInForm from "../components/LogInForm";
-import facebookLogo from "../assets/images/logos/facebook.png";
-import googleLogo from "../assets/images/logos/google.png";
+
 import { useTranslation } from "react-i18next";
+import SocialLogin from "../components/SocialLogin";
 
 function LogInPage() {
   const { t } = useTranslation("global");
@@ -12,7 +12,7 @@ function LogInPage() {
       container
       justifyContent="center"
       alignItems="center"
-      style={{ minHeight: "80vh" }}
+      style={{ minHeight: "80vh", marginBottom: "48px" }}
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper
@@ -60,34 +60,7 @@ function LogInPage() {
             ></span>
           </div>
 
-          <div>
-            <Button
-              variant="outlined"
-              sx={{ height: "50px", mr: 2, border: "transparent" }}
-            >
-              <img
-                src={facebookLogo}
-                style={{
-                  objectFit: "scale-down",
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></img>
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ height: "50px", border: "transparent" }}
-            >
-              <img
-                src={googleLogo}
-                style={{
-                  objectFit: "scale-down",
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></img>
-            </Button>
-          </div>
+          <SocialLogin />
 
           <Stack
             spacing={0.5}

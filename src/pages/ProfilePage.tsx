@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import {
     Avatar,
     Grid,
@@ -6,9 +6,10 @@ import {
     Divider,
 } from "@mui/material";
 import AvatarEditorComponent from "../components/AvatarEditor";
-import { Controller } from "react-hook-form";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 import ChangePasswordForm from "../components/ChangePasswordForm";
 
 
@@ -38,6 +39,8 @@ function ProfilePage() {
     };
 
     const {t}=useTranslation("global");
+
+    const user=useSelector(sGetUserInfo);
 
     return (
         <Grid

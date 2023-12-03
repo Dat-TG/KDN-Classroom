@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../api/axios";
 import { useEffect } from "react";
@@ -6,7 +7,7 @@ import CourseCard from "../components/homepage/CourseCard";
 
 export default function HomePage() {
   useEffect(() => {
-    document.title = "Home";
+    document.title = t("homePage");
   }, []);
 
   return (

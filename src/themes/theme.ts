@@ -3,6 +3,9 @@ import createTheme from "@mui/material/styles/createTheme";
 const theme = createTheme({
   typography: {
     fontSize: 14,
+    button: {
+      textTransform: "none",
+    },
   },
   palette: {
     primary: {
@@ -27,7 +30,7 @@ const theme = createTheme({
     },
     background: {
       default: "#fff",
-    },
+    }
   },
 });
 
@@ -52,5 +55,6 @@ theme.typography.subtitle1 = {
     fontSize: 14,
   },
 };
+
 
 export default theme;

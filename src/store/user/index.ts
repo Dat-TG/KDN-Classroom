@@ -1,28 +1,34 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { extraReducers } from './thunkApi';
-import { userReducer } from './reducer';
-import { IUserProfileRes, IUserRole, IUserRolePermissions, IUsersRes } from '../../types/user';
+import { userReducer } from "./reducer";
+import { IUserStore } from "./type";
+import {
+  IInformationUpdateReq,
+  ILoginGoogle,
+  ILoginUserReq,
+  IRegisterUserReq,
+  IUserProfileRes,
+} from "../../types/user";
 
-export interface IUserStore {
-  token: string;
-  refreshToken: string;
-  users: IUsersRes;
-  errorMessage: string;
-  userProfile: IUserProfileRes;
-  userRoles: IUserRole[];
-  userRolePermissions: IUserRolePermissions;
-  hasLoadedProfile: boolean;
-  roleName: string;
-}
+import {
+  ActionReducerMapBuilder,
+  PayloadAction,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { userApi } from "../../api/axios";
+import { withParamsToastCatcher } from "../toastCatcher";
+import i18next from "../../translations/i18";
+import { removeAllToken } from "../../utils/token";
+
 const fullPermissions = {
   create: false,
   update: false,
   read: false,
   delete: false,
 };
+
 const initialState: IUserStore = {
-  token: '',
-  refreshToken: '',
+  token: "",
+  refreshToken: "",
   users: {
     data: [],
     hasNextPage: false,
@@ -32,26 +38,27 @@ const initialState: IUserStore = {
     pageCount: 0,
     size: 10,
   },
-  errorMessage: '',
-  userProfile: {
-    id: NaN,
-    createdBy: '',
-    createdTime: '',
-    updatedBy: '',
-    updatedTime: '',
-    deletedBy: NaN,
-    deletedTime: '',
-    isDeleted: false,
-    userName: '',
-    emailAddress: '',
-    name: '',
-    surname: '',
-    phoneNumber: '',
-    avatar: '',
-    roles: [],
-    iat: NaN,
-    exp: 0,
-  },
+  errorMessage: "",
+  userProfile: null,
+  // {
+  //   id: NaN,
+  //   createdBy: '',
+  //   createdTime: '',
+  //   updatedBy: '',
+  //   updatedTime: '',
+  //   deletedBy: NaN,
+  //   deletedTime: '',
+  //   isDeleted: false,
+  //   userName: '',
+  //   emailAddress: '',
+  //   name: '',
+  //   surname: '',
+  //   phoneNumber: '',
+  //   avatar: '',
+  //   roles: [],
+  //   iat: NaN,
+  //   exp: 0,
+  // },
   userRoles: [],
   userRolePermissions: {
     authorization: { ...fullPermissions },
@@ -62,14 +69,86 @@ const initialState: IUserStore = {
     },
   },
   hasLoadedProfile: false,
-  roleName: '',
+  roleName: "",
 };
 
+const loginUser = createAsyncThunk(
+  "user/login",
+  withParamsToastCatcher(async (params: ILoginUserReq) => {
+    const result = await userApi.login(params);
+    return result;
+  }, i18next.t("global:loginSuccessfully"))
+);
+const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
+  const result = await userApi.getUserProfile();
+  return result;
+});
+
+const logoutUser = createAsyncThunk(
+  "user/logout",
+  withParamsToastCatcher(async () => {
+    const res = await userApi.logout();
+    removeAllToken();
+    window.location.reload();
+    return res;
+  }, i18next.t("global:logoutSuccessfully"))
+);
+
+const registerUser = createAsyncThunk(
+  "user/register",
+  withParamsToastCatcher(async (params: IRegisterUserReq) => {
+    return await userApi.register(params);
+  }, i18next.t("global:registerSuccessfully"))
+);
+
+const updateInformationUser = createAsyncThunk(
+  "user/editInformation",
+  withParamsToastCatcher(async (informationUpdate: IInformationUpdateReq) => {
+    const res = await userApi.updateInformation(informationUpdate);
+    return res;
+  }, i18next.t("global:updateInformationSuccessfully"))
+);
+
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: userReducer,
-  extraReducers: extraReducers,
+  extraReducers(builder: ActionReducerMapBuilder<IUserStore>) {
+    builder.addCase(
+      loginUser.fulfilled,
+      (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        console.log("user login, save token to local storage");
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        state.token = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+      }
+    );
+    builder.addCase(
+      getUserProfile.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
+        state.userProfile = action.payload;
+        state.hasLoadedProfile = true;
+      }
+    );
+    builder.addCase(logoutUser.fulfilled, () => {});
+    builder.addCase(
+      registerUser.fulfilled,
+      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        window.location.href = "/login";
+      }
+    );
+    builder.addCase(
+      updateInformationUser.fulfilled,
+      (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {
+        state.userProfile = action.payload;
+        state.hasLoadedProfile = true;
+      }
+    );
+  },
 });
-export const { setRoleName, setAvatar } = userSlice.actions;
-export default userSlice.reducer;
+const { actions, reducer } = userSlice;
+export const { setRoleName, setAvatar } = actions;
+export default reducer;
