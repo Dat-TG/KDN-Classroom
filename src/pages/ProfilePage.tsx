@@ -15,6 +15,8 @@ import AvatarEditorComponent from "../components/AvatarEditor";
 import { Controller } from "react-hook-form";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 
 
 // import { AuthContext } from "../context/AuthContext";
@@ -42,6 +44,8 @@ function ProfilePage() {
     };
 
     const {t}=useTranslation("global");
+
+    const user=useSelector(sGetUserInfo);
 
     return (
         <Grid

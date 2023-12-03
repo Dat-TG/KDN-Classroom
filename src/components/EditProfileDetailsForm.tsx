@@ -8,11 +8,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { emailPattern } from "../utils/helpers";
-import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -40,6 +40,8 @@ function EditProfileDetailsForm() {
 
   const { t } = useTranslation("global");
 
+  const user=useSelector(sGetUserInfo);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -60,7 +62,7 @@ function EditProfileDetailsForm() {
               required: true,
               maxLength: 50,
             }}
-            defaultValue=""
+            defaultValue={user?.name}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -85,7 +87,7 @@ function EditProfileDetailsForm() {
             name="lastName"
             control={control}
             rules={{ required: true, maxLength: 50 }}
-            defaultValue=""
+            defaultValue={user?.surname}
             render={({ field }) => (
               <TextField
                 {...field}
