@@ -51,7 +51,11 @@ const onResponseError = async (
   if (err.response?.status === 401) {
     const currentRefreshToken = localStorage.getItem("refreshToken");
     removeAllToken();
-    if (!currentRefreshToken && window.location.pathname !== "/login") {
+    if (
+      !currentRefreshToken &&
+      window.location.pathname !== "/login" &&
+      window.location.pathname !== "/register"
+    ) {
       window.location.href = "/login";
     }
     if (!currentRefreshToken) {

@@ -44,7 +44,7 @@ export interface ISelectData {
 export const DEFAULT_ALL = 0;
 
 export interface IToastError {
-  detail: {
+  detail:{
     statusCode: number;
     message: string;
     error: string;

@@ -44,7 +44,7 @@ export const registerUser = createAsyncThunk(
   "user/register",
   withParamsToastCatcher(async (params: IRegisterUserReq) => {
     return await userApi.register(params);
-  }, i18next.t("global:registerSuccessful"))
+  }, i18next.t("global:registerSuccessfully"))
 );
 
 export const logoutUser = createAsyncThunk(

@@ -1,6 +1,6 @@
 import { userReducer } from "./reducer";
 import { IUserStore } from "./type";
-import { ILoginGoogle, ILoginUserReq, IUserProfileRes } from "../../types/user";
+import { ILoginGoogle, ILoginUserReq, IRegisterUserReq, IUserProfileRes } from "../../types/user";
 
 import {
   ActionReducerMapBuilder,
@@ -88,6 +88,13 @@ const logoutUser = createAsyncThunk(
   }, i18next.t("global:logoutSuccessfully"))
 );
 
+const registerUser = createAsyncThunk(
+  "user/register",
+  withParamsToastCatcher(async (params: IRegisterUserReq) => {
+    return await userApi.register(params);
+  }, i18next.t("global:registerSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -113,6 +120,15 @@ const userSlice = createSlice({
     builder.addCase(logoutUser.fulfilled, () => {
       
     });
+    builder
+    .addCase(
+      registerUser.fulfilled,
+      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        window.location.href='/login';
+      }
+    );
   },
 });
 const { actions, reducer } = userSlice;

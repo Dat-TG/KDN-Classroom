@@ -1,5 +1,5 @@
 
-import { IToastError } from '../types/common';
+import {  IToastError } from '../types/common';
 import toast from '../utils/toast';
 
 export function withToastCatcher<Returned>(
@@ -31,7 +31,7 @@ export function withParamsToastCatcher<ThunkArg, Returned>(
       return res;
     } catch (err) {
       const error = err as IToastError;
-      toast.error(`${error.detail.message}`);
+      toast.error(`${error.detail.message || error.detail}`);
       throw error;
     }
   };
