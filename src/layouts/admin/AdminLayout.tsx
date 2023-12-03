@@ -16,7 +16,7 @@ function AdminLayout() {
 
   //const { user } = useContext(AuthContext);
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn] = useState<boolean>(true);
   /*
   useEffect(() => {
     if (user != null) {
