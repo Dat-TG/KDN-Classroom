@@ -13,33 +13,27 @@ import router from "./routers/router";
 import theme from "./themes/theme";
 import "./index.css";
 
-import global_en from "./translations/en/global.json";
-import global_vi from "./translations/vi/global.json";
-
-import i18next from "i18next";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import i18next from "./translations/i18";
 import { I18nextProvider } from "react-i18next";
-
-i18next.init({
-  interpolation: { escapeValue: false }, // React already does escaping
-  lng: localStorage.getItem("language") ?? "en", // language to use
-  resources: {
-    en: {
-      global: global_en,
-    },
-    vi: {
-      global: global_vi,
-    },
-  },
-});
+import { ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}>
   <React.StrictMode>
     <CssBaseline>
-      <I18nextProvider i18n={i18next}>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </I18nextProvider>
+      <ToastContainer />
+      <Provider store={store}>
+        <I18nextProvider i18n={i18next}>
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </I18nextProvider>
+      </Provider>
     </CssBaseline>
   </React.StrictMode>
+  </GoogleOAuthProvider>
 );

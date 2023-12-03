@@ -6,50 +6,63 @@ import LogInPage from "../pages/LogInPage";
 import RegisterPage from "../pages/RegisterPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ProfilePage from "../pages/ProfilePage";
+import PrivateRoute from "./PrivateRoute";
+import RedirectRoute from "./RedirectRoute";
 
 const router = createBrowserRouter([
   {
     element: <UserLayout />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+
+          {
+            path: "/profile",
+            element: <ProfilePage />,
+          },
+          {
+            path: "/calendar",
+            element: <div>Calendar</div>,
+          },
+          {
+            path: "/todo",
+            element: <div>To-do</div>,
+          },
+          {
+            path: "/course/:courseId",
+            element: <div>Course</div>,
+          },
+          {
+            path: "/archived",
+            element: <div>Archived class</div>,
+          },
+          {
+            path: "/settings",
+            element: <div>Settings</div>,
+          },
+        ],
       },
       {
-        path: "/login",
-        element: <LogInPage />,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: "/register",
-        element: <RegisterPage />,
-      },
-      {
-        path: "/profile",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/calendar",
-        element: <div>Calendar</div>,
-      },
-      {
-        path: "/todo",
-        element: <div>To-do</div>,
-      },
-      {
-        path: "/course/:courseId",
-        element: <div>Course</div>,
-      },
-      {
-        path: "/archived",
-        element: <div>Archived class</div>,
-      },
-      {
-        path: "/settings",
-        element: <div>Settings</div>,
+        element: <RedirectRoute />,
+        children: [
+          {
+            path: "/login",
+            element: <LogInPage />,
+          },
+          {
+            path: "/forgot-password",
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: "/register",
+            element: <RegisterPage />,
+          },
+        ],
       },
     ],
   },

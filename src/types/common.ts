@@ -44,7 +44,7 @@ export interface ISelectData {
 export const DEFAULT_ALL = 0;
 
 export interface IToastError {
-  detail: {
+  detail:{
     statusCode: number;
     message: string;
     error: string;
@@ -54,4 +54,10 @@ export interface IToastError {
 export enum TOAST_TYPE {
   SUCCESS = 1,
   FAIL = 2,
+}
+
+export interface IResponseError {
+  detail: string,
+  path: string,
+  timestamp: Date
 }

@@ -1,11 +1,13 @@
 // MainLayout.tsx
-import { useState } from "react";
+import {  useState } from "react";
 import Sidebar from "./SideBar";
 
 import Appbar from "./AppBar";
 import { Outlet } from "react-router-dom";
-//import { useUser } from "../../../hooks/useUser";
-//import { AuthContext } from "../../../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
+import { AppDispatch } from "../../store";
+import {  logoutUser } from "../../store/user/thunkApi";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -14,30 +16,19 @@ function UserLayout() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  //const { user } = useContext(AuthContext);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  /*
-  useEffect(() => {
-    if (user != null) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-    console.log(user);
-  }, [user]);
-
-  const { logout } = useUser();*/
+  const user = useSelector(sGetUserInfo);
 
   return (
     <>
       <Appbar
         toggleSidebar={toggleSidebar}
-        isLoggedIn={isLoggedIn}
-        onLogout={/*logout*/ () => {}}
+        isLoggedIn={user != null}
+        onLogout={() => dispatch(logoutUser({}))}
       />
       <div style={{ display: "flex" }}>
-        {isLoggedIn && <Sidebar open={isSidebarOpen} />}
+        {user != null && <Sidebar open={isSidebarOpen} />}
         <main
           style={{ flex: 1, transition: "margin-left 0.3s", marginTop: "64px" }}
         >

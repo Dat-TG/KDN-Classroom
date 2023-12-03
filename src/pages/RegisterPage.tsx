@@ -1,10 +1,9 @@
-import { Button, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Grid, Paper, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import RegisterForm from "../components/RegisterForm";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import facebookLogo from "../assets/images/logos/facebook.png";
-import googleLogo from "../assets/images/logos/google.png";
+import SocialLogin from "../components/SocialLogin";
 
 function RegisterPage() {
   useEffect(() => {
@@ -52,34 +51,7 @@ function RegisterPage() {
             ></span>
           </div>
 
-          <div>
-            <Button
-              variant="outlined"
-              sx={{ height: "50px", mr: 2, border: "transparent" }}
-            >
-              <img
-                src={facebookLogo}
-                style={{
-                  objectFit: "scale-down",
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></img>
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ height: "50px", border: "transparent" }}
-            >
-              <img
-                src={googleLogo}
-                style={{
-                  objectFit: "scale-down",
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></img>
-            </Button>
-          </div>
+          <SocialLogin />
           <Stack
             spacing={0.5}
             direction="row"

@@ -1,34 +1,21 @@
-import {
-    OptionsObject,
-    SnackbarKey,
-    WithSnackbarProps,
-    useSnackbar,
-  } from 'notistack';
-  import React from 'react';
-  
-  let snackbarRef: WithSnackbarProps;
-  export const SnackbarUtilsConfigurator: React.FC = () => {
-    snackbarRef = useSnackbar();
-    return null;
-  };
-  
-  export default {
-    success(msg: string, options: OptionsObject = {}): void {
-      this.toast(msg, { ...options, variant: 'success' });
-    },
-    warning(msg: string, options: OptionsObject = {}): void {
-      this.toast(msg, { ...options, variant: 'warning' });
-    },
-    info(msg: string, options: OptionsObject = {}): void {
-      this.toast(msg, { ...options, variant: 'info' });
-    },
-    error(msg: string, options: OptionsObject = {}): void {
-      this.toast(msg, { ...options, variant: 'error' });
-    },
-    close(key: SnackbarKey): void {
-      snackbarRef.closeSnackbar(key);
-    },
-    toast(msg: string, options: OptionsObject = {}): void {
-      snackbarRef.enqueueSnackbar(msg, options);
-    },
-  };
+import { Id, toast, ToastOptions } from "react-toastify";
+export default {
+  success(msg: string, options?: ToastOptions): void {
+    toast.success(msg, options);
+  },
+  warning(msg: string, options?: ToastOptions): void {
+    toast.warn(msg, options);
+  },
+  info(msg: string, options?: ToastOptions): void {
+    toast.info(msg, options);
+  },
+  error(msg: string, options?: ToastOptions): void {
+    toast.error(msg, options);
+  },
+  close(key: Id): void {
+    toast.dismiss(key);
+  },
+  closeAll(): void {
+    toast.dismiss();
+  },
+};

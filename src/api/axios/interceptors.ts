@@ -8,6 +8,8 @@ import { store } from "../../store";
 import { clearSpinner, hideSpinner, showSpinner } from "../../store/global";
 import { removeAllToken } from "../../utils/token";
 import { userApi } from ".";
+import toast from "../../utils/toast";
+import { IResponseError } from "../../types/common";
 
 interface IRequestAxios extends InternalAxiosRequestConfig {
   skipLoading?: boolean;
@@ -44,17 +46,23 @@ const onResponseError = async (
 ): Promise<AxiosError | undefined> => {
   const originalConfig = err.config as InternalAxiosRequestConfig;
   store.dispatch(clearSpinner());
-  if (
-    err.response?.status === 401 &&
-    !err.request.responseURL.includes("/api/auth/login")
-  ) {
+  console.log(err);
+  console.log(window.location);
+  if (err.response?.status === 401) {
     const currentRefreshToken = localStorage.getItem("refreshToken");
     removeAllToken();
+    if (
+      !currentRefreshToken &&
+      window.location.pathname !== "/login" &&
+      window.location.pathname !== "/register"
+    ) {
+      window.location.href = "/login";
+    }
     if (!currentRefreshToken) {
-      window.location.href = "/";
+      toast.error((err.response.data as IResponseError).detail);
       return;
     }
-    const token = await userApi.refreshToken(currentRefreshToken);
+    const token = await userApi.refreshToken(currentRefreshToken!);
     localStorage.setItem("accessToken", token.accessToken);
     localStorage.setItem("refreshToken", token.refreshToken);
     originalConfig.headers.Authorization = `Bearer ${token.accessToken}`;

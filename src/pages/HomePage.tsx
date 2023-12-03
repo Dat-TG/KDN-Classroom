@@ -1,15 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { userApi } from "../api/axios";
+import { useTranslation } from "react-i18next";
 
 export default function HomePage() {
-  const navigate = useNavigate();
-  return (
-    <button
-      onClick={() => {
-        navigate("/login");
-      }}
-    >
-      Login
-    </button>
-  );
+  const { t } = useTranslation("global");
+  document.title = t("homePage");
+  return <>Home</>;
 }

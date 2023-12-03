@@ -40,9 +40,15 @@
     "save": "Save",
     "profilePicture": "Profile picture",
     "setNewProfilePicture": "Set new profile picture",
+    "backToLogin": "BACK TO LOGIN",
+    "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
+    "loginSuccessfully": "Login successfully",
+    "homePage": "Home page",
+    "logoutSuccessfully": "You have logged out successfully",
+    "updateInformationSuccessfully": "Update information successfully",
     "email": "Email",
     "changePassword": "Change Password",
     "currentPassword": "Current Password",
     "newPassword": "New Password",
-    "confirm": "confirm"
+    "confirm": "Confirm"
 }

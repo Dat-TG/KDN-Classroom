@@ -1,5 +1,5 @@
 
-import { IToastError } from '../types/common';
+import {  IToastError } from '../types/common';
 import toast from '../utils/toast';
 
 export function withToastCatcher<Returned>(
@@ -26,11 +26,12 @@ export function withParamsToastCatcher<ThunkArg, Returned>(
   return async (args2: ThunkArg) => {
     try {
       const res = await payloadCreator(args2);
+      console.log('toast:',message );
       message && toast.success(message);
       return res;
     } catch (err) {
       const error = err as IToastError;
-      toast.error(`${error.detail.message}`);
+      toast.error(`${error.detail.message || error.detail}`);
       throw error;
     }
   };
