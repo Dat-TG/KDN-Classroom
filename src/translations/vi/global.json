@@ -42,5 +42,6 @@
     "setNewProfilePicture": "Đặt ảnh đại diện mới",
     "backToLogin": "QUAY LẠI ĐĂNG NHẬP",
     "registerSuccessfully": "Đăng ký thành công\nVui lòng kiểm tra email để kích hoạt tài khoản",
-    "loginSuccessfully": "Đăng nhập thành công"
+    "loginSuccessfully": "Đăng nhập thành công",
+    "homePage": "Trang chủ"
 }

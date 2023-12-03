@@ -42,5 +42,6 @@
     "setNewProfilePicture": "Set new profile picture",
     "backToLogin": "BACK TO LOGIN",
     "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
-    "loginSuccessfully": "Login successfully"
+    "loginSuccessfully": "Login successfully",
+    "homePage": "Home page"
 }

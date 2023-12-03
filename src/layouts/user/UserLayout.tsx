@@ -1,13 +1,13 @@
 // MainLayout.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./SideBar";
 
 import Appbar from "./AppBar";
 import { Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
-//import { useUser } from "../../../hooks/useUser";
-//import { AuthContext } from "../../../context/AuthContext";
+import { AppDispatch } from "../../store";
+import { getUserProfile } from "../../store/user/thunkApi";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -15,6 +15,12 @@ function UserLayout() {
   const toggleSidebar = (): void => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(getUserProfile());
+  }, [dispatch]);
 
   const user = useSelector(sGetUserInfo);
 

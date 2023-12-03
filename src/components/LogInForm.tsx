@@ -13,7 +13,7 @@ import { emailPattern } from "../utils/helpers";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { loginUser } from "../store/user/thunkApi";
+import { getUserProfile, loginUser } from "../store/user/thunkApi";
 
 type Inputs = {
   email: string;
@@ -43,6 +43,7 @@ function LogInForm() {
         password: data.password,
       })
     );
+    await dispatch(getUserProfile());
     setIsLoading(false);
   };
 
