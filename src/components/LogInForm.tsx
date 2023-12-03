@@ -75,7 +75,7 @@ function LogInForm() {
             error={!!errors.email}
             placeholder="email@example.com"
             helperText={
-              errors.email ? "Please enter a valid email address." : ""
+              errors.email ? t("emailValidationMessage") : ""
             }
           />
         )}
@@ -95,7 +95,7 @@ function LogInForm() {
             error={!!errors.password}
             helperText={
               errors.password
-                ? "Password is required and should be at least 6 characters."
+                ? t("passwordValidationMessage")
                 : ""
             }
             type={showPassword ? "text" : "password"}
