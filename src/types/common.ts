@@ -55,3 +55,9 @@ export enum TOAST_TYPE {
   SUCCESS = 1,
   FAIL = 2,
 }
+
+export interface IResponseError {
+  detail: string,
+  path: string,
+  timestamp: Date
+}

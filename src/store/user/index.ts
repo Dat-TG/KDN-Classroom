@@ -8,9 +8,10 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
-import i18next from "i18next";
 import { userApi } from "../../api/axios";
 import { withParamsToastCatcher } from "../toastCatcher";
+import i18next from "../../translations/i18";
+import { removeAllToken } from "../../utils/token";
 
 const fullPermissions = {
   create: false,
@@ -70,12 +71,22 @@ const loginUser = createAsyncThunk(
   withParamsToastCatcher(async (params: ILoginUserReq) => {
     const result = await userApi.login(params);
     return result;
-  }, i18next.t("loginSuccessful"))
+  }, i18next.t("global:loginSuccessfully"))
 );
 const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
   const result = await userApi.getUserProfile();
   return result;
 });
+
+const logoutUser = createAsyncThunk(
+  "user/logout",
+  withParamsToastCatcher(async () => {
+    const res = await userApi.logout();
+    removeAllToken();
+    window.location.reload();
+    return res;
+  }, i18next.t("global:logoutSuccessfully"))
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -84,10 +95,12 @@ const userSlice = createSlice({
   extraReducers(builder: ActionReducerMapBuilder<IUserStore>) {
     builder.addCase(
       loginUser.fulfilled,
-      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+      (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         console.log("user login, save token to local storage");
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
+        state.token = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
       }
     );
     builder.addCase(
@@ -97,6 +110,9 @@ const userSlice = createSlice({
         state.hasLoadedProfile = true;
       }
     );
+    builder.addCase(logoutUser.fulfilled, () => {
+      
+    });
   },
 });
 const { actions, reducer } = userSlice;

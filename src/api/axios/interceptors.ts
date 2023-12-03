@@ -8,6 +8,8 @@ import { store } from "../../store";
 import { clearSpinner, hideSpinner, showSpinner } from "../../store/global";
 import { removeAllToken } from "../../utils/token";
 import { userApi } from ".";
+import toast from "../../utils/toast";
+import { IResponseError } from "../../types/common";
 
 interface IRequestAxios extends InternalAxiosRequestConfig {
   skipLoading?: boolean;
@@ -53,6 +55,7 @@ const onResponseError = async (
       window.location.href = "/login";
     }
     if (!currentRefreshToken) {
+      toast.error((err.response.data as IResponseError).detail);
       return;
     }
     const token = await userApi.refreshToken(currentRefreshToken!);

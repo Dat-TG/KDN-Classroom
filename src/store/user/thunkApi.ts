@@ -4,7 +4,6 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 
-
 import { withParamsToastCatcher } from "../toastCatcher";
 import { userApi } from "../../api/axios";
 import { IPaginationParams } from "../../types/pagination";
@@ -31,24 +30,32 @@ export const loginUser = createAsyncThunk(
   withParamsToastCatcher(async (params: ILoginUserReq) => {
     const result = await userApi.login(params);
     return result;
-  }, i18next.t("loginSuccessful"))
+  }, i18next.t("global:loginSuccessfully"))
 );
-export const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
-  const result = await userApi.getUserProfile();
-  return result;
-});
+export const getUserProfile = createAsyncThunk(
+  "user/getUserProfile",
+  async () => {
+    const result = await userApi.getUserProfile();
+    return result;
+  }
+);
 
 export const registerUser = createAsyncThunk(
   "user/register",
   withParamsToastCatcher(async (params: IRegisterUserReq) => {
     return await userApi.register(params);
-  }, i18next.t("registerSuccessful"))
+  }, i18next.t("global:registerSuccessful"))
 );
 
-export const logoutUser = createAsyncThunk("user/logout", async () => {
-  const res = await userApi.logout();
-  return res;
-});
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  withParamsToastCatcher(async () => {
+    const res = await userApi.logout();
+    removeAllToken();
+    window.location.reload();
+    return res;
+  }, i18next.t("global:logoutSuccessfully"))
+);
 
 export const updateInformationUser = createAsyncThunk(
   "user/editInformation",
@@ -85,8 +92,6 @@ export const getUsers = createAsyncThunk(
     return res;
   }
 );
-
-
 
 export const getUserRoles = createAsyncThunk("user/getUserRoles", async () => {
   const result = await userApi.getUserRole();
