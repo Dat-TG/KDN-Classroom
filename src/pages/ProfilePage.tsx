@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Avatar, Grid, Typography, Divider } from "@mui/material";
+import {
+  Avatar,
+  Grid,
+  Typography,
+  Divider,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material";
 import AvatarEditorComponent from "../components/AvatarEditor";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
@@ -16,20 +23,6 @@ function ProfilePage() {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
-
-  //const { user } = useContext(AuthContext);
-
-  //const { editInformation, changePassword } = useUser();
-
-  //   const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState(false);
-  //   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] =
-  //     useState(false);
-
-  const buttonStyle = {
-    marginTop: "8px",
-    color: "#0074D9",
-    borderColor: "#0074D9",
-  };
 
   const { t } = useTranslation("global");
 
@@ -57,8 +50,8 @@ function ProfilePage() {
       <Grid item xs={12} sx={{ mt: 5 }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Avatar
-            // alt={`${user?.firstname} ${user?.lastname}`}
-            src={""}
+            alt={`${user?.name} ${user?.surname}`}
+            src={user?.avatar}
             sx={{
               width: {
                 md: 150,
@@ -84,6 +77,13 @@ function ProfilePage() {
       <Grid item xs={12} sx={{ mt: 5, display: "block" }}>
         <ChangePasswordForm />
       </Grid>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+        onClick={() => {}}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Grid>
   );
 }

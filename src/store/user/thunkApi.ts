@@ -85,6 +85,13 @@ export const updateUser = createAsyncThunk(
   }, "Update user roles successfully")
 );
 
+export const updateAvatar = createAsyncThunk(
+  "user/avatar",
+  withParamsToastCatcher(async (avatar: File) => {
+    await userApi.uploadAvatar(avatar);
+  }, i18next.t("global:updateAvatarSuccessfully"))
+);
+
 export const getUsers = createAsyncThunk(
   "user/getUsers",
   async (params: IPaginationParams) => {
@@ -113,6 +120,8 @@ export const updateUserRolePermissions = createAsyncThunk(
     return result;
   }
 );
+
+
 
 export const extraReducers = (
   builders: ActionReducerMapBuilder<IUserStore>

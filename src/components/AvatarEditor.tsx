@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import AvatarEditor from "react-avatar-editor";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import {
   Box,
   Button,
@@ -12,8 +11,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { RotateLeft, RotateRight } from "@mui/icons-material";
+import { Close, RotateLeft, RotateRight } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { getUserProfile, updateAvatar } from "../store/user/thunkApi";
 // import { useUser } from "../hooks/useUser";
 
 function AvatarEditorComponent({
@@ -23,8 +25,6 @@ function AvatarEditorComponent({
 }) {
   const [image, setImage] = useState("");
   const editorRef = useRef<AvatarEditor | null>(null);
-
-  //   const { changeAvatar } = useUser();
 
   const [scale, setScale] = useState(0);
   const [rotate, setRotate] = useState(0);
@@ -44,6 +44,8 @@ function AvatarEditorComponent({
     }
   };
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleSaveAvatar = () => {
     callback(true);
     //const canvas = editorRef.current?.getImage();
@@ -51,11 +53,14 @@ function AvatarEditorComponent({
     // If you want the image resized to the canvas size (also a HTMLCanvasElement)
     const canvasScaled = editorRef.current?.getImageScaledToCanvas();
 
-    // canvasScaled?.toBlob((blob) => {
-    //   const file = new File([blob!], "editedImage.png", { type: "image/png" });
-    //   changeAvatar({ imageFile: file, callback: () => callback(false) });
-    // }, "image/png");
-    // setIsOpen(false);
+    canvasScaled?.toBlob(async (blob) => {
+      const file = new File([blob!], "editedImage.png", { type: "image/png" });
+      console.log("upload ", file);
+      await dispatch(updateAvatar(file));
+      callback(false);
+      await dispatch(getUserProfile());
+    }, "image/png");
+    setIsOpen(false);
   };
 
   const inputStyle = {
@@ -108,11 +113,23 @@ function AvatarEditorComponent({
           setIsOpen(false);
         }}
       >
-        <DialogTitle></DialogTitle>
+        <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Typography variant="h6">{t("changeAvatar")}</Typography>
+            <IconButton
+              size="small"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              <Close sx={{ color: "white" }} />
+            </IconButton>
+          </Box>
+        </DialogTitle>
         <DialogContent>
           {image && (
             <AvatarEditor
-              //   ref={(ref) => (editorRef.current = ref)}
+              ref={(ref: AvatarEditor) => (editorRef.current = ref)}
               image={image}
               width={400}
               height={400}

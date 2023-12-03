@@ -118,6 +118,13 @@ const updatePasswordUser = createAsyncThunk(
   }, i18next.t("global:changePasswordSuccessfully"))
 );
 
+const updateAvatar = createAsyncThunk(
+  "user/avatar",
+  withParamsToastCatcher(async (avatar: File) => {
+    return await userApi.uploadAvatar(avatar);
+  }, i18next.t("global:updateAvatarSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -157,6 +164,9 @@ const userSlice = createSlice({
       }
     );
     builder.addCase(updatePasswordUser.fulfilled, () => {
+    });
+    builder.addCase(updateAvatar.fulfilled, () => {
+      
     });
   },
 });
