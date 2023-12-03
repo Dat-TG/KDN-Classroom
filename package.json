@@ -21,7 +21,7 @@
     "axios": "^1.6.2",
     "i18next": "^23.7.6",
     "react": "^17.0.0 || ^18.0.0",
-    "react-avatar-editor": "^14.0.0-beta.5",
+    "react-avatar-editor": "^13.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-hook-form": "^7.48.2",
     "react-i18next": "^13.5.0",
