@@ -1,8 +1,22 @@
 import { Box, Button } from "@mui/material";
 import facebookLogo from "../assets/images/logos/facebook.png";
 import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
+import { loginGoogle } from "../api/user/apiUser";
 
 export default function SocialLogin() {
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const res = await loginGoogle({
+        googleAuthToken: `${tokenResponse["token_type"]} ${tokenResponse["access_token"]}`,
+      });
+      console.log("data: ", res.data);
+    },
+    onError: (error) => {
+      console.error(`${error}`);
+    },
+  });
+
   return (
     <>
       <Box display={"flex"} justifyContent={"center"}>
@@ -19,6 +33,8 @@ export default function SocialLogin() {
             }}
           ></img>
         </Button>
+
+        <button onClick={() => handleGoogleLogin()}>Google</button>
 
         <GoogleLogin
           width={"400"}

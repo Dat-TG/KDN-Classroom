@@ -20,6 +20,10 @@ export interface ILoginUserReq {
   password: string;
 }
 
+export interface ILoginGoogleReq {
+  googleAuthToken: string
+}
+
 export interface IInformationUpdateReq {
   name: string;
   surname: string;
