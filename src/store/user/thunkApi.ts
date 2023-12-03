@@ -20,6 +20,7 @@ import {
   IUserRole,
   IUserRolePermissions,
   ILoginUserReq,
+  ILoginGoogleReq,
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
@@ -32,6 +33,16 @@ export const loginUser = createAsyncThunk(
     return result;
   }, i18next.t("global:loginSuccessfully"))
 );
+
+export const loginUserWithGoogle = createAsyncThunk(
+  "user/loginGoogle",
+  withParamsToastCatcher(async (params: ILoginGoogleReq) => {
+    const result = await userApi.loginGoogle(params);
+    return result;
+  }, i18next.t("global:loginSuccessfully"))
+);
+
+
 export const getUserProfile = createAsyncThunk(
   "user/getUserProfile",
   async () => {
@@ -169,6 +180,15 @@ export const extraReducers = (
       getUserRolePermissions.fulfilled,
       (state: IUserStore, action: PayloadAction<IUserRolePermissions>) => {
         state.userRolePermissions = action.payload;
+      }
+    ).addCase(
+      loginUserWithGoogle.fulfilled,
+      (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        console.log("user login, save token to local storage");
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        state.token = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
       }
     );
 };

@@ -1,16 +1,22 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import facebookLogo from "../assets/images/logos/facebook.png";
-import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleLogin } from "@react-oauth/google";
-import { loginGoogle } from "../api/user/apiUser";
+import googleLogo from "../assets/images/logos/google.png";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { getUserProfile, loginUserWithGoogle } from "../store/user/thunkApi";
 
 export default function SocialLogin() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      const res = await loginGoogle({
-        googleAuthToken: `${tokenResponse["token_type"]} ${tokenResponse["access_token"]}`,
-      });
-      console.log("data: ", res.data);
+      await dispatch(
+        loginUserWithGoogle({
+          googleAuthToken: `${tokenResponse["token_type"]} ${tokenResponse["access_token"]}`,
+        })
+      );
+      await dispatch(getUserProfile());
     },
     onError: (error) => {
       console.error(`${error}`);
@@ -20,35 +26,29 @@ export default function SocialLogin() {
   return (
     <>
       <Box display={"flex"} justifyContent={"center"}>
-        <Button
-          variant="outlined"
-          sx={{ height: "50px", mr: 2, border: "transparent" }}
-        >
-          <img
-            src={facebookLogo}
-            style={{
-              objectFit: "scale-down",
-              width: "100%",
-              height: "100%",
-            }}
-          ></img>
-        </Button>
-
-        <button onClick={() => handleGoogleLogin()}>Google</button>
-
-        <GoogleLogin
-          width={"400"}
-          logo_alignment="center"
-          onSuccess={(credential) => {
-            console.log(credential);
+        <img
+          src={facebookLogo}
+          style={{
+            objectFit: "scale-down",
+            width: "50px",
+            height: "50px",
+            borderRadius: "100%",
+            cursor: "pointer",
+            marginRight: "32px",
           }}
-          onError={() => {
-            console.log("error");
+        ></img>
+
+        <img
+          src={googleLogo}
+          style={{
+            objectFit: "scale-down",
+            width: "50px",
+            height: "50px",
+            borderRadius: "100%",
+            cursor: "pointer",
           }}
-          type="icon"
-          shape="circle"
-          theme="outline"
-        />
+          onClick={() => handleGoogleLogin()}
+        ></img>
       </Box>
     </>
   );
