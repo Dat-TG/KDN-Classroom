@@ -53,7 +53,7 @@ export const updateInformation = async (informationUpdate: IInformationUpdateReq
 };
 
 export const updatePassword = async (passwordUpdate: IPasswordUpdateReq) => {
-  const res = await AxiosClient.put("/edit/password", passwordUpdate);
+  const res = await AxiosClient.put(`${url}/edit/password`, passwordUpdate);
   return res.data;
 };
 

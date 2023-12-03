@@ -12,6 +12,9 @@ import {
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { logoutUser, updatePasswordUser } from "../store/user/thunkApi";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -35,8 +38,21 @@ function ChangePasswordForm() {
     formState: { errors },
   } = useForm<Inputs>();
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+    const res = await dispatch(
+      updatePasswordUser({
+        oldPassword: data.currentPassword,
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
+      })
+    );
+    if (res.meta.requestStatus === "fulfilled") {
+      await dispatch(logoutUser({}));
+    }
+    setIsLoading(false);
   };
 
   const { t } = useTranslation("global");

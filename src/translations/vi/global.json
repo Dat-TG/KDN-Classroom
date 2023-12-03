@@ -53,5 +53,6 @@
     "confirm": "Xác nhận",
     "requiredField": "Vui lòng điền thông tin vào trường này",
     "passwordValidate": "Mật khẩu phải có ít nhất 6 ký tự",
-    "passwordNotMatch": "Mật khẩu không khớp"
+    "passwordNotMatch": "Mật khẩu không khớp",
+    "changePasswordSuccessfully": "Đổi mật khẩu thành công"
 }
