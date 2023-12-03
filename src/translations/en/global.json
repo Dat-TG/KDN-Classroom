@@ -54,5 +54,6 @@
     "requiredField": "This field is required",
     "passwordValidate": "Password must be at least 6 characters long",
     "passwordNotMatch": "Password does not match",
-    "changePasswordSuccessfully": "Change password successfully"
+    "changePasswordSuccessfully": "Change password successfully",
+    "updateAvatarSuccessfully": "Update avatar successfully"
 }

@@ -16,6 +16,8 @@ import Avatar from "@mui/material/Avatar";
 import { useTranslation } from "react-i18next";
 import LanguageMenu from "./LanguageMenu";
 import ActionMenu from "./ActionMenu";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
 
 interface Props {
   toggleSidebar: () => void;
@@ -103,6 +105,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
     }
   }, [location.pathname, t]);
 
+  const user = useSelector(sGetUserInfo);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       {props.isLoggedIn && (
@@ -167,8 +171,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   color="inherit"
                 >
                   <Avatar
-                    // alt={`${user?.firstname} ${user?.lastname}`}
-                    //src={user?.avatar}
+                    alt={`${user?.name} ${user?.surname}`}
+                    src={user?.avatar}
                     style={{
                       border: "2px solid white",
                     }}
