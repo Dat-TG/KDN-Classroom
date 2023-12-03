@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import {
   IInformationUpdateReq,
+  ILoginGoogleReq,
   ILoginUserReq,
   IPasswordUpdateReq,
   IRegisterUserReq,
@@ -17,6 +18,12 @@ export const login = async (data: ILoginUserReq) => {
   const res = await AxiosClient.post("/auth/login", data);
   return res.data;
 };
+
+export const loginGoogle = async (data: ILoginGoogleReq) => {
+  const res = await AxiosClient.post("/auth/google/login", data);
+  console.log(res);
+  return res;
+}
 
 export const register = async (data: IRegisterUserReq) => {
   console.log('call api register');
