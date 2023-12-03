@@ -59,7 +59,7 @@ export const logoutUser = createAsyncThunk(
 
 export const updateInformationUser = createAsyncThunk(
   "user/editInformation",
-   withParamsToastCatcher(async(informationUpdate: IInformationUpdateReq) => {
+  withParamsToastCatcher(async (informationUpdate: IInformationUpdateReq) => {
     const res = await userApi.updateInformation(informationUpdate);
     return res;
   }, i18next.t("global:updateInformationSuccessfully"))
@@ -67,10 +67,10 @@ export const updateInformationUser = createAsyncThunk(
 
 export const updatePasswordUser = createAsyncThunk(
   "user/editPassword",
-  async (passwordUpdate: IPasswordUpdateReq) => {
+  withParamsToastCatcher(async (passwordUpdate: IPasswordUpdateReq) => {
     const res = await userApi.updatePassword(passwordUpdate);
     return res;
-  }
+  }, i18next.t("global:changePasswordSuccessfully"))
 );
 
 export const getAllUsers = createAsyncThunk("user", async () => {
@@ -83,6 +83,13 @@ export const updateUser = createAsyncThunk(
   withParamsToastCatcher(async (userRoles: IUpdateUserRole) => {
     await userApi.updateUserRole(userRoles);
   }, "Update user roles successfully")
+);
+
+export const updateAvatar = createAsyncThunk(
+  "user/avatar",
+  withParamsToastCatcher(async (avatar: File) => {
+    await userApi.uploadAvatar(avatar);
+  }, i18next.t("global:updateAvatarSuccessfully"))
 );
 
 export const getUsers = createAsyncThunk(
@@ -113,6 +120,8 @@ export const updateUserRolePermissions = createAsyncThunk(
     return result;
   }
 );
+
+
 
 export const extraReducers = (
   builders: ActionReducerMapBuilder<IUserStore>
