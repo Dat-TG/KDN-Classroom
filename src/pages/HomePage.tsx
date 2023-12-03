@@ -1,13 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { userApi } from "../api/axios";
 import { useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import CourseCard from "../components/homepage/CourseCard";
 
 export default function HomePage() {
   useEffect(() => {
     document.title = t("homePage");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { t } = useTranslation("global");
