@@ -87,7 +87,7 @@ function RegisterForm() {
             error={!!errors.email}
             placeholder="email@example.com"
             helperText={
-              errors.email ? "Please enter a valid email address." : ""
+              errors.email ? t("emailValidationMessage") : ""
             }
           />
         )}
@@ -110,7 +110,7 @@ function RegisterForm() {
             variant="outlined"
             error={!!errors.firstname}
             placeholder=""
-            helperText={errors.firstname ? "Please enter your first name." : ""}
+            helperText={errors.firstname ? t("firstNameValidationMessage") : ""}
           />
         )}
       />
@@ -132,7 +132,7 @@ function RegisterForm() {
             variant="outlined"
             error={!!errors.lastname}
             placeholder=""
-            helperText={errors.lastname ? "Please enter your last name." : ""}
+            helperText={errors.lastname ? t("lastNameValidationMessage") : ""}
           />
         )}
       />
@@ -153,7 +153,7 @@ function RegisterForm() {
             error={!!errors.password}
             helperText={
               errors.password
-                ? "Password is required and should be at least 6 characters."
+                ? t("passwordValidationMessage")
                 : ""
             }
             type={showPassword ? "text" : "password"}
@@ -191,7 +191,7 @@ function RegisterForm() {
             fullWidth
             variant="outlined"
             error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword ? "Passwords do not match." : ""}
+            helperText={errors.confirmPassword ? t("confirmPasswordValidationMessage") : ""}
             type={showConfirmPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (

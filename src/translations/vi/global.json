@@ -31,7 +31,7 @@
     "login": "Đăng nhập",
     "resetYourPassword": "Đặt lại mật khẩu của bạn",
     "resetPasswordGuide": "Nhập địa chỉ email mà bạn đã đăng ký và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu cho tài khoản của bạn.",
-    "sendLink": "GỬI LIÊN KẾT",
+    "sendLink": "Gửi liên kết",
     "account": "Tài khoản",
     "manageYourProfile": "Quản lý hồ sơ của bạn",
     "upTo": "lên đến",
@@ -55,5 +55,11 @@
     "passwordValidate": "Mật khẩu phải có ít nhất 6 ký tự",
     "passwordNotMatch": "Mật khẩu không khớp",
     "changePasswordSuccessfully": "Đổi mật khẩu thành công",
-    "updateAvatarSuccessfully": "Cập nhật ảnh đại diện thành công"
+    "updateAvatarSuccessfully": "Cập nhật ảnh đại diện thành công",
+    "emailValidationMessage" : "Vui lòng nhập email hợp lệ",
+    "firstNameValidationMessage" : "Vui lòng nhập tên.",
+    "lastNameValidationMessage" : "Vui lòng nhập họ.",
+    "passwordValidationMessage" : "Mật khẩu phải có ít nhất 6 ký tự.",
+    "confirmPasswordValidationMessage" : "Mật khẩu không khớp."
+     
 }

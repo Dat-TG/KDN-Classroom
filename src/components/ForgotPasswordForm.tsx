@@ -67,7 +67,7 @@ function ForgotPasswordForm() {
             error={!!errors.email}
             placeholder="email@example.com"
             helperText={
-              errors.email ? "Please enter a valid email address." : ""
+              errors.email ? t("emailValidationMessage") : ""
             }
             InputProps={{
               sx: { backgroundColor: "white" },
@@ -80,7 +80,7 @@ function ForgotPasswordForm() {
         type="submit"
         variant="contained"
         color="primary"
-        style={{ marginTop: "32px", borderRadius: "10px", padding: "15px", textTransform: 'none' }}
+        style={{ marginTop: "32px", borderRadius: "10px", padding: "10px", textTransform: 'none' }}
         size="large"
         disabled={isLoading}
       >

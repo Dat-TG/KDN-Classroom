@@ -8,6 +8,7 @@ import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ProfilePage from "../pages/ProfilePage";
 import PrivateRoute from "./PrivateRoute";
 import RedirectRoute from "./RedirectRoute";
+import LandingPage from "../pages/LandingPage";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
           {
             path: "/register",
             element: <RegisterPage />,
+          },
+          {
+            path: "/landing",
+            element: <LandingPage />,
           },
         ],
       },
