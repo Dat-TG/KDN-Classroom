@@ -4,6 +4,9 @@ import { emailPattern } from "../utils/helpers";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { forgotPassword } from "../store/user/thunkApi";
 
 type Inputs = {
   email: string;
@@ -20,12 +23,15 @@ function ForgotPasswordForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
-    console.log(data);
+    await dispatch(forgotPassword(data.email));
+    setIsLoading(false);
   };
 
   const { t } = useTranslation("global");
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -35,7 +41,7 @@ function ForgotPasswordForm() {
         fontWeight={"bold"}
         sx={{ color: "#0a2838" }}
       >
-        {t("resetYourPassword")}
+        {t("forgotPassword")}
       </Typography>
       <Typography variant="body1" align="left" sx={{ color: "gray", mt: 3 }}>
         {t("resetPasswordGuide")}
@@ -67,9 +73,7 @@ function ForgotPasswordForm() {
             variant="filled"
             error={!!errors.email}
             placeholder="email@example.com"
-            helperText={
-              errors.email ? t("emailValidationMessage") : ""
-            }
+            helperText={errors.email ? t("emailValidationMessage") : ""}
             InputProps={{
               sx: { backgroundColor: "white" },
             }}
@@ -81,7 +85,12 @@ function ForgotPasswordForm() {
         type="submit"
         variant="contained"
         color="primary"
-        style={{ marginTop: "32px", borderRadius: "10px", padding: "10px", textTransform: 'none' }}
+        style={{
+          marginTop: "32px",
+          borderRadius: "10px",
+          padding: "10px",
+          textTransform: "none",
+        }}
         size="large"
         disabled={isLoading}
       >

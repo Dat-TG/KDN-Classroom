@@ -1,22 +1,22 @@
 import { Grid } from "@mui/material";
-import ForgotPasswordForm from "../components/ForgotPasswordForm";
+import ResetPasswordForm from "../components/ResetPasswordForm";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-function ForgotPasswordPage() {
+function ResetPasswordPage() {
   const { t } = useTranslation("global");
   useEffect(() => {
-    document.title = t("forgotPassword");
+    document.title = t("resetPassword");
   }, [t]);
   return (
     <div>
       <Grid container justifyContent="center" alignItems="center">
         <Grid item xs={5} sx={{ pt: "100px" }}>
-          <ForgotPasswordForm />
+          <ResetPasswordForm />
         </Grid>
       </Grid>
     </div>
   );
 }
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;

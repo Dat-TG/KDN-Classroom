@@ -134,6 +134,20 @@ const loginUserWithGoogle = createAsyncThunk(
   }, i18next.t("global:loginSuccessfully"))
 );
 
+const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  withParamsToastCatcher(async (emailAddress: string) => {
+    await userApi.forgotPassword(emailAddress);
+  }, i18next.t("global:pleaseCheckYourEmail"))
+);
+
+const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  withParamsToastCatcher(async (data: IResetPassword) => {
+    await userApi.resetPassword(data);
+  }, i18next.t("global:resetPasswordSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -182,11 +196,10 @@ const userSlice = createSlice({
         state.hasLoadedProfile = true;
       }
     );
-    builder.addCase(updatePasswordUser.fulfilled, () => {
-    });
-    builder.addCase(updateAvatar.fulfilled, () => {
-      
-    });
+    builder.addCase(updatePasswordUser.fulfilled, () => {});
+    builder.addCase(updateAvatar.fulfilled, () => {});
+    builder.addCase(forgotPassword.fulfilled, () => {});
+    builder.addCase(resetPassword.fulfilled, () => {});
   },
 });
 const { actions, reducer } = userSlice;

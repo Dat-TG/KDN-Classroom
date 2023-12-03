@@ -5,6 +5,7 @@ import {
   ILoginUserReq,
   IPasswordUpdateReq,
   IRegisterUserReq,
+  IResetPassword,
   IUpdateUserRole,
   IUpdateUserRolePermissions,
   IUserRolePermissions,
@@ -107,4 +108,16 @@ export const uploadAvatar = (avatar: File) => {
   return AxiosClient.post(`${url}/avatar`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+};
+
+export const forgotPassword = async (emailAddress: string) => {
+  const res = await AxiosClient.post("/auth/forget-password-email", {
+    email: emailAddress,
+  });
+  return res.data;
+};
+
+export const resetPassword = async (data: IResetPassword) => {
+  const res = await AxiosClient.post("/auth/forget-password", data);
+  return res.data;
 };

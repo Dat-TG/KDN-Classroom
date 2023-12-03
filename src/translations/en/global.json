@@ -31,7 +31,7 @@
     "login": "Login",
     "resetYourPassword": "Reset your password",
     "resetPasswordGuide": "Enter the email you signed up with. We'll send you a link to log in and reset your password.",
-    "sendLink": "Send Link",
+    "sendLink": "Send link",
     "account": "Account",
     "manageYourProfile": "Manage your profile",
     "upTo": "up to",
@@ -40,7 +40,7 @@
     "save": "Save",
     "profilePicture": "Profile picture",
     "setNewProfilePicture": "Set new profile picture",
-    "backToLogin": "BACK TO LOGIN",
+    "backToLogin": "Back to log in",
     "registerSuccessfully": "Register successfully\nPlease check your email to activate your account",
     "loginSuccessfully": "Login successfully",
     "homePage": "Home page",
@@ -58,5 +58,8 @@
     "updateAvatarSuccessfully": "Update avatar successfully",
     "emailValidationMessage" : "Please enter a valid email address.",
     "firstNameValidationMessage" : "Please enter your first name.",
-    "lastNameValidationMessage" : "Please enter your last name."
+    "lastNameValidationMessage" : "Please enter your last name.",
+    "resetPassword": "Reset password",
+    "pleaseCheckYourEmail": "Please check your email to continue to reset your password",
+    "resetPasswordSuccessfully": "Reset password successfully"
 }

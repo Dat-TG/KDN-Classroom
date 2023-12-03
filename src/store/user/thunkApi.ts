@@ -21,6 +21,7 @@ import {
   IUserRolePermissions,
   ILoginUserReq,
   ILoginGoogleReq,
+  IResetPassword,
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
@@ -41,7 +42,6 @@ export const loginUserWithGoogle = createAsyncThunk(
     return result;
   }, i18next.t("global:loginSuccessfully"))
 );
-
 
 export const getUserProfile = createAsyncThunk(
   "user/getUserProfile",
@@ -132,7 +132,19 @@ export const updateUserRolePermissions = createAsyncThunk(
   }
 );
 
+export const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  withParamsToastCatcher(async (emailAddress: string) => {
+    await userApi.forgotPassword(emailAddress);
+  }, i18next.t("global:pleaseCheckYourEmail"))
+);
 
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  withParamsToastCatcher(async (data: IResetPassword) => {
+    await userApi.resetPassword(data);
+  }, i18next.t("global:resetPasswordSuccessfully"))
+);
 
 export const extraReducers = (
   builders: ActionReducerMapBuilder<IUserStore>
@@ -181,7 +193,8 @@ export const extraReducers = (
       (state: IUserStore, action: PayloadAction<IUserRolePermissions>) => {
         state.userRolePermissions = action.payload;
       }
-    ).addCase(
+    )
+    .addCase(
       loginUserWithGoogle.fulfilled,
       (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         console.log("user login, save token to local storage");
@@ -190,5 +203,6 @@ export const extraReducers = (
         state.token = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
       }
-    );
+    )
+    .addCase(forgotPassword.fulfilled, () => {}).addCase(resetPassword.fulfilled, () => {});
 };

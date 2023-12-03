@@ -8,8 +8,6 @@ import { store } from "../../store";
 import { clearSpinner, hideSpinner, showSpinner } from "../../store/global";
 import { removeAllToken } from "../../utils/token";
 import { userApi } from ".";
-import toast from "../../utils/toast";
-import { IResponseError } from "../../types/common";
 
 interface IRequestAxios extends InternalAxiosRequestConfig {
   skipLoading?: boolean;
@@ -47,19 +45,13 @@ const onResponseError = async (
   const originalConfig = err.config as InternalAxiosRequestConfig;
   store.dispatch(clearSpinner());
   console.log(err);
-  console.log(window.location);
   if (err.response?.status === 401) {
     const currentRefreshToken = localStorage.getItem("refreshToken");
     removeAllToken();
-    if (
-      !currentRefreshToken &&
-      window.location.pathname !== "/login" &&
-      window.location.pathname !== "/register"
-    ) {
-      window.location.href = "/login";
-    }
     if (!currentRefreshToken) {
-      toast.error((err.response.data as IResponseError).detail);
+      if (window.location.pathname == "/login") {
+        return Promise.reject(err?.response?.data);
+      }
       return;
     }
     const token = await userApi.refreshToken(currentRefreshToken!);

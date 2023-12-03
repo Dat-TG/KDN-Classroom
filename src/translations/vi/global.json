@@ -40,7 +40,7 @@
     "save": "Lưu",
     "profilePicture": "Ảnh đại diện",
     "setNewProfilePicture": "Đặt ảnh đại diện mới",
-    "backToLogin": "QUAY LẠI ĐĂNG NHẬP",
+    "backToLogin": "Quay lại đăng nhập",
     "registerSuccessfully": "Đăng ký thành công\nVui lòng kiểm tra email để kích hoạt tài khoản",
     "loginSuccessfully": "Đăng nhập thành công",
     "homePage": "Trang chủ",
@@ -56,10 +56,12 @@
     "passwordNotMatch": "Mật khẩu không khớp",
     "changePasswordSuccessfully": "Đổi mật khẩu thành công",
     "updateAvatarSuccessfully": "Cập nhật ảnh đại diện thành công",
-    "emailValidationMessage" : "Vui lòng nhập email hợp lệ",
-    "firstNameValidationMessage" : "Vui lòng nhập tên.",
-    "lastNameValidationMessage" : "Vui lòng nhập họ.",
-    "passwordValidationMessage" : "Mật khẩu phải có ít nhất 6 ký tự.",
-    "confirmPasswordValidationMessage" : "Mật khẩu không khớp."
-     
+    "emailValidationMessage": "Vui lòng nhập email hợp lệ",
+    "firstNameValidationMessage": "Vui lòng nhập tên.",
+    "lastNameValidationMessage": "Vui lòng nhập họ.",
+    "passwordValidationMessage": "Mật khẩu phải có ít nhất 6 ký tự.",
+    "confirmPasswordValidationMessage": "Mật khẩu không khớp.",
+    "resetPassword": "Đặt lại mật khẩu",
+    "pleaseCheckYourEmail": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
+    "resetPasswordSuccessfully": "Đặt lại mật khẩu thành công"
 }
