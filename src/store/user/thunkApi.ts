@@ -59,7 +59,7 @@ export const logoutUser = createAsyncThunk(
 
 export const updateInformationUser = createAsyncThunk(
   "user/editInformation",
-   withParamsToastCatcher(async(informationUpdate: IInformationUpdateReq) => {
+  withParamsToastCatcher(async (informationUpdate: IInformationUpdateReq) => {
     const res = await userApi.updateInformation(informationUpdate);
     return res;
   }, i18next.t("global:updateInformationSuccessfully"))
@@ -67,10 +67,10 @@ export const updateInformationUser = createAsyncThunk(
 
 export const updatePasswordUser = createAsyncThunk(
   "user/editPassword",
-  async (passwordUpdate: IPasswordUpdateReq) => {
+  withParamsToastCatcher(async (passwordUpdate: IPasswordUpdateReq) => {
     const res = await userApi.updatePassword(passwordUpdate);
     return res;
-  }
+  }, i18next.t("global:changePasswordSuccessfully"))
 );
 
 export const getAllUsers = createAsyncThunk("user", async () => {

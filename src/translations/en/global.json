@@ -50,5 +50,9 @@
     "changePassword": "Change Password",
     "currentPassword": "Current Password",
     "newPassword": "New Password",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "requiredField": "This field is required",
+    "passwordValidate": "Password must be at least 6 characters long",
+    "passwordNotMatch": "Password does not match",
+    "changePasswordSuccessfully": "Change password successfully"
 }

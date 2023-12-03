@@ -4,6 +4,7 @@ import {
   IInformationUpdateReq,
   ILoginGoogle,
   ILoginUserReq,
+  IPasswordUpdateReq,
   IRegisterUserReq,
   IUserProfileRes,
 } from "../../types/user";
@@ -109,6 +110,14 @@ const updateInformationUser = createAsyncThunk(
   }, i18next.t("global:updateInformationSuccessfully"))
 );
 
+const updatePasswordUser = createAsyncThunk(
+  "user/editPassword",
+  withParamsToastCatcher(async (passwordUpdate: IPasswordUpdateReq) => {
+    const res = await userApi.updatePassword(passwordUpdate);
+    return res;
+  }, i18next.t("global:changePasswordSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -147,6 +156,8 @@ const userSlice = createSlice({
         state.hasLoadedProfile = true;
       }
     );
+    builder.addCase(updatePasswordUser.fulfilled, () => {
+    });
   },
 });
 const { actions, reducer } = userSlice;
