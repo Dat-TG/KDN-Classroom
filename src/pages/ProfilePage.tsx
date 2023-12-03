@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import {
     Avatar,
     Grid,
@@ -6,16 +6,12 @@ import {
     Divider,
 } from "@mui/material";
 import AvatarEditorComponent from "../components/AvatarEditor";
-import { Controller } from "react-hook-form";
 import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
-<<<<<<< HEAD
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
-=======
 import ChangePasswordForm from "../components/ChangePasswordForm";
 
->>>>>>> ba3d5d17b382da496d2b2fc8b08662ca1f04e70e
 
 
 // import { AuthContext } from "../context/AuthContext";

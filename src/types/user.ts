@@ -139,6 +139,7 @@ export interface IUserInformationSelector {
   name: string;
   surname: string;
   avatar: string;
+  emailAddress: string;
 }
 
 export interface IUserRole {

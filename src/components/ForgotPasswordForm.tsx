@@ -80,11 +80,7 @@ function ForgotPasswordForm() {
         type="submit"
         variant="contained"
         color="primary"
-<<<<<<< HEAD
-        style={{ marginTop: "32px", borderRadius: "10px", padding: "10px" }}
-=======
         style={{ marginTop: "32px", borderRadius: "10px", padding: "15px", textTransform: 'none' }}
->>>>>>> ba3d5d17b382da496d2b2fc8b08662ca1f04e70e
         size="large"
         disabled={isLoading}
       >

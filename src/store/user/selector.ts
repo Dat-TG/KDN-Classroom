@@ -45,6 +45,7 @@ export const sGetUserInfo = createSelector(
           name: state.name,
           avatar: state.avatar,
           surname: state.surname,
+          emailAddress: state.emailAddress,
         } as IUserInformationSelector)
       : null
 );
