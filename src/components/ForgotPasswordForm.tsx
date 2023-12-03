@@ -35,7 +35,7 @@ function ForgotPasswordForm() {
         fontWeight={"bold"}
         sx={{ color: "#0a2838" }}
       >
-        {t("resetYourPassword")}
+        {t("forgotPassword")}
       </Typography>
       <Typography variant="body1" align="left" sx={{ color: "gray", mt: 3 }}>
         {t("resetPasswordGuide")}

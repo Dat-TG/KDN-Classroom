@@ -56,10 +56,10 @@
     "passwordNotMatch": "Mật khẩu không khớp",
     "changePasswordSuccessfully": "Đổi mật khẩu thành công",
     "updateAvatarSuccessfully": "Cập nhật ảnh đại diện thành công",
-    "emailValidationMessage" : "Vui lòng nhập email hợp lệ",
-    "firstNameValidationMessage" : "Vui lòng nhập tên.",
-    "lastNameValidationMessage" : "Vui lòng nhập họ.",
-    "passwordValidationMessage" : "Mật khẩu phải có ít nhất 6 ký tự.",
-    "confirmPasswordValidationMessage" : "Mật khẩu không khớp."
-     
+    "emailValidationMessage": "Vui lòng nhập email hợp lệ",
+    "firstNameValidationMessage": "Vui lòng nhập tên.",
+    "lastNameValidationMessage": "Vui lòng nhập họ.",
+    "passwordValidationMessage": "Mật khẩu phải có ít nhất 6 ký tự.",
+    "confirmPasswordValidationMessage": "Mật khẩu không khớp.",
+    "resetPassword": "Đặt lại mật khẩu"
 }

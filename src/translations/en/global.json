@@ -58,5 +58,6 @@
     "updateAvatarSuccessfully": "Update avatar successfully",
     "emailValidationMessage" : "Please enter a valid email address.",
     "firstNameValidationMessage" : "Please enter your first name.",
-    "lastNameValidationMessage" : "Please enter your last name."
+    "lastNameValidationMessage" : "Please enter your last name.",
+    "resetPassword": "Reset password"
 }

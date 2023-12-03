@@ -9,6 +9,7 @@ import ProfilePage from "../pages/ProfilePage";
 import PrivateRoute from "./PrivateRoute";
 import RedirectRoute from "./RedirectRoute";
 import LandingPage from "../pages/LandingPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: "/forgot-password",
             element: <ForgotPasswordPage />,
+          },
+          {
+            path: "/reset-password",
+            element: <ResetPasswordPage />,
           },
           {
             path: "/register",
