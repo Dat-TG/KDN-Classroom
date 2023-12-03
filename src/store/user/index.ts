@@ -7,6 +7,7 @@ import {
   ILoginUserReq,
   IPasswordUpdateReq,
   IRegisterUserReq,
+  IResetPassword,
   IUserProfileRes,
 } from "../../types/user";
 
