@@ -18,9 +18,11 @@ import { store } from "./store";
 import i18next from "./translations/i18";
 import { I18nextProvider } from "react-i18next";
 import { ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}>
   <React.StrictMode>
     <CssBaseline>
       <ToastContainer />
@@ -33,4 +35,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </Provider>
     </CssBaseline>
   </React.StrictMode>
+  </GoogleOAuthProvider>
 );
