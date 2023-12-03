@@ -112,7 +112,7 @@ export const uploadAvatar = (avatar: File) => {
 
 export const forgotPassword = async (emailAddress: string) => {
   const res = await AxiosClient.post("/auth/forget-password-email", {
-    emailAddress,
+    email: emailAddress,
   });
   return res.data;
 };

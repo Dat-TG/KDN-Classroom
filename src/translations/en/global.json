@@ -59,5 +59,6 @@
     "emailValidationMessage" : "Please enter a valid email address.",
     "firstNameValidationMessage" : "Please enter your first name.",
     "lastNameValidationMessage" : "Please enter your last name.",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "pleaseCheckYourEmail": "Please check your email to continue to reset your password"
 }

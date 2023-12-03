@@ -61,5 +61,6 @@
     "lastNameValidationMessage": "Vui lòng nhập họ.",
     "passwordValidationMessage": "Mật khẩu phải có ít nhất 6 ký tự.",
     "confirmPasswordValidationMessage": "Mật khẩu không khớp.",
-    "resetPassword": "Đặt lại mật khẩu"
+    "resetPassword": "Đặt lại mật khẩu",
+    "pleaseCheckYourEmail": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu"
 }
