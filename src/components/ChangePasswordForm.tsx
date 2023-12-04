@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { logoutUser, updatePasswordUser } from "../store/user/thunkApi";
+import { useNavigate } from "react-router-dom";
 // import { useUser } from "../hooks/useUser";
 // import { AuthContext } from "../context/AuthContext";
 
@@ -40,6 +41,8 @@ function ChangePasswordForm() {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
     const res = await dispatch(
@@ -51,6 +54,10 @@ function ChangePasswordForm() {
     );
     if (res.meta.requestStatus === "fulfilled") {
       await dispatch(logoutUser());
+
+      setTimeout(() => {
+        navigate(0);
+      }, 1000);
     }
     setIsLoading(false);
   };
