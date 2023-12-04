@@ -64,5 +64,9 @@
     "resetPasswordSuccessfully": "Reset password successfully",
     "accessDenied": "Access Denied",
     "back": "Back",
-    "youDoNotHavePermissionToAccessThisPage": "You do not have permission to access this page"
+    "youDoNotHavePermissionToAccessThisPage": "You do not have permission to access this page",
+    "slogan": "Where teaching and learning come together",
+    "sloganDetail": "KDN Classroom helps educators create engaging learning experiences they can personalize, manage, and measure. It empowers educators to enhance their impact and prepare students for the future.",
+    "getStarted": "Get started",
+    "sloganDetail2": "KDN Classroom is designed with feedback from the educational community, influencing the development of new features that let educators focus on teaching and students focus on learning."
 }

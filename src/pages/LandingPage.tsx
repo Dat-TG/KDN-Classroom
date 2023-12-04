@@ -1,7 +1,9 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useEffect } from "react";
-import landingBackground from "../assets/images/background/landing-image.jpg";
+import landingBackground from "../assets/images/background/landing-image.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import theme from "../themes/theme";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -9,25 +11,34 @@ function LandingPage() {
   useEffect(() => {
     document.title = "Classroom";
   }, []);
+
+  const { t } = useTranslation("global");
   return (
     <>
       <Box
         sx={{
           pr: 10,
           pl: 10,
-          pt: 5,
         }}
       >
-        <Grid container spacing={2}>
+        <Grid
+          container
+          spacing={2}
+          alignItems={"center"}
+          justifyContent={"center"}
+          minHeight={"100vh"}
+        >
           <Grid item xs={6}>
             <Typography
               component="h1"
               sx={{
-                fontSize: 75,
+                fontSize: 70,
                 fontWeight: 700,
+                lineHeight: 1.25,
+                mb: 2,
               }}
             >
-              Where teaching and learning come together
+              {t("slogan")}
             </Typography>
 
             <Typography
@@ -36,9 +47,7 @@ function LandingPage() {
                 fontSize: 20,
               }}
             >
-              KDN Classroom helps educators create engaging learning experiences
-              they can personalize, manage, and measure. It empowers educators
-              to enhance their impact and prepare students for the future.
+              {t("sloganDetail")}
             </Typography>
 
             <Button
@@ -49,7 +58,7 @@ function LandingPage() {
               }}
               variant="outlined"
             >
-              Get Started
+              {t("getStarted")}
             </Button>
           </Grid>
           <Grid item xs={6}>
@@ -62,7 +71,7 @@ function LandingPage() {
           </Grid>
         </Grid>
       </Box>
-      <Grid container sx={{ background: "#e4f2eb" }}>
+      <Grid container sx={{ background: theme.palette.secondary.light }}>
         <Grid
           item
           xs={12}
@@ -74,7 +83,7 @@ function LandingPage() {
             alignItems: "center",
           }}
         >
-          <Grid item xs={8} >
+          <Grid item xs={8} justifyContent={"center"} alignItems={"center"}>
             <Typography
               component="p"
               sx={{
@@ -84,9 +93,7 @@ function LandingPage() {
                 textJustify: "inter-word",
               }}
             >
-              KDN Classroom is designed with feedback from the educational
-              community, influencing the development of new features that let
-              educators focus on teaching and students focus on learning.
+              {t("sloganDetail2")}
             </Typography>
           </Grid>
         </Grid>
