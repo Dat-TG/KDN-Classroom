@@ -17,6 +17,8 @@ import { useTranslation } from "react-i18next";
 import LanguageMenu from "../user/LanguageMenu";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
+import { Edit } from "@mui/icons-material";
+import { Divider } from "@mui/material";
 
 interface Props {
   toggleSidebar: () => void;
@@ -48,6 +50,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  const user = useSelector(sGetUserInfo);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -57,6 +60,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
         vertical: "top",
         horizontal: "right",
       }}
+      sx={{ marginTop: "40px" }}
       id={menuId}
       keepMounted
       transformOrigin={{
@@ -65,8 +69,81 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
-      style={{ marginTop: "35px" }}
     >
+      <Box
+        sx={{
+          mr: 5,
+          ml: 5,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <label htmlFor="avatar-input">
+          <IconButton
+            edge="end"
+            aria-label="account of current user"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={() => navigate("/profile")}
+            color="inherit"
+            sx={{
+              mb: 2,
+              position: "relative",
+              "&:hover": {
+                backgroundColor: "transparent",
+
+                "& .edit-icon": {
+                  color: "darkblue",
+                  backgroundColor: "#E7E9EB",
+                },
+              },
+            }}
+          >
+            <Avatar
+              className="avatar"
+              alt={`${user?.name} ${user?.surname}`}
+              src={user?.avatar}
+              sx={{
+                border: "2px solid white",
+
+                width: "100px",
+                height: "100px",
+              }}
+            />
+            <IconButton
+              className="edit-icon"
+              size="small"
+              sx={{
+                position: "absolute",
+                bottom: 3,
+                right: 2,
+                backgroundColor: "white",
+                transition: "background-color 0.3s",
+              }}
+            >
+              <Edit />
+            </IconButton>
+          </IconButton>
+        </label>
+        <Typography variant="h5" sx={{ color: "black" }}>
+          {`${user?.name} ${user?.surname}`}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "gray", mt: 1, mb: 2 }}>
+          {user?.emailAddress}
+        </Typography>
+      </Box>
+
+      <Divider sx={{ margin: 2 }} />
+
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate("/");
+        }}
+      >
+        {t("home")}
+      </MenuItem>
       <MenuItem
         onClick={() => {
           setAnchorEl(null);
@@ -78,8 +155,6 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       <MenuItem onClick={props.onLogout}>{t("logOut")}</MenuItem>
     </Menu>
   );
-
-  const user = useSelector(sGetUserInfo);
 
   const location = useLocation();
   const [breadcrumb, setBreadcrumb] = React.useState("");
