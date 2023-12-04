@@ -88,14 +88,11 @@ const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
   return result;
 });
 
-const logoutUser = createAsyncThunk(
-  "user/logout",
- async () => {
-    const res = await userApi.logout();
-    removeAllToken();
-    return res;
-  }
-);
+const logoutUser = createAsyncThunk("user/logout", async () => {
+  const res = await userApi.logout();
+  removeAllToken();
+  return res;
+});
 
 const registerUser = createAsyncThunk(
   "user/register",
@@ -200,13 +197,7 @@ const userSlice = createSlice({
       }
     );
     builder.addCase(logoutUser.fulfilled, () => {});
-    builder.addCase(
-      registerUser.fulfilled,
-      (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
-        localStorage.setItem("accessToken", action.payload.accessToken);
-        localStorage.setItem("refreshToken", action.payload.refreshToken);
-      }
-    );
+    builder.addCase(registerUser.fulfilled, () => {});
     builder.addCase(
       updateInformationUser.fulfilled,
       (state: IUserStore, action: PayloadAction<IUserProfileRes>) => {

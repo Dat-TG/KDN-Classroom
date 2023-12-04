@@ -7,13 +7,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {  useState } from "react";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { emailPattern } from "../utils/helpers";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { getUserProfile, registerUser } from "../store/user/thunkApi";
+import { registerUser } from "../store/user/thunkApi";
+import { useNavigate } from "react-router";
 // import { AuthContext } from "../context/AuthContext";
 // import { useUser } from "../hooks/useUser";
 
@@ -40,20 +41,24 @@ function RegisterForm() {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // Handle register logic here
     setIsLoading(true);
 
-    await dispatch(registerUser( {
-      emailAddress: data.email,
-      password: data.password,
-      firstName: data.firstname,
-      surname: data.lastname,
-    }));
-
-    await dispatch(getUserProfile());
+    await dispatch(
+      registerUser({
+        emailAddress: data.email,
+        password: data.password,
+        firstName: data.firstname,
+        surname: data.lastname,
+      })
+    );
 
     setIsLoading(false);
+
+    navigate("/login");
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -88,9 +93,7 @@ function RegisterForm() {
             variant="outlined"
             error={!!errors.email}
             placeholder="email@example.com"
-            helperText={
-              errors.email ? t("emailValidationMessage") : ""
-            }
+            helperText={errors.email ? t("emailValidationMessage") : ""}
           />
         )}
       />
@@ -153,11 +156,7 @@ function RegisterForm() {
             fullWidth
             variant="outlined"
             error={!!errors.password}
-            helperText={
-              errors.password
-                ? t("passwordValidationMessage")
-                : ""
-            }
+            helperText={errors.password ? t("passwordValidationMessage") : ""}
             type={showPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -193,7 +192,11 @@ function RegisterForm() {
             fullWidth
             variant="outlined"
             error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword ? t("confirmPasswordValidationMessage") : ""}
+            helperText={
+              errors.confirmPassword
+                ? t("confirmPasswordValidationMessage")
+                : ""
+            }
             type={showConfirmPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (
