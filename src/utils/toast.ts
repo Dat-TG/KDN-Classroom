@@ -1,21 +1,54 @@
-import { Id, toast, ToastOptions } from "react-toastify";
+import {
+  closeSnackbar,
+  enqueueSnackbar,
+  OptionsObject,
+  SnackbarKey,
+} from "notistack";
 export default {
-  success(msg: string, options?: ToastOptions): void {
-    toast.success(msg, options);
+  success(msg: string, options?: OptionsObject): void {
+    enqueueSnackbar(msg, {
+      variant: "success",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
+      ...options,
+    });
   },
-  warning(msg: string, options?: ToastOptions): void {
-    toast.warn(msg, options);
+  warning(msg: string, options?: OptionsObject): void {
+    enqueueSnackbar(msg, {
+      variant: "warning",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
+      ...options,
+    });
   },
-  info(msg: string, options?: ToastOptions): void {
-    toast.info(msg, options);
+  info(msg: string, options?: OptionsObject): void {
+    enqueueSnackbar(msg, {
+      variant: "info",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
+      ...options,
+    });
   },
-  error(msg: string, options?: ToastOptions): void {
-    toast.error(msg, options);
+  error(msg: string, options?: OptionsObject): void {
+    enqueueSnackbar(msg, {
+      variant: "error",
+      anchorOrigin: {
+        vertical: "top",
+        horizontal: "right",
+      },
+      ...options,
+    });
   },
-  close(key: Id): void {
-    toast.dismiss(key);
+  close(key: SnackbarKey): void {
+    closeSnackbar(key);
   },
   closeAll(): void {
-    toast.dismiss();
+    closeSnackbar();
   },
 };

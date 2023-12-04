@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Grow } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import { RouterProvider } from "react-router-dom";
 
@@ -17,23 +17,31 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import i18next from "./translations/i18";
 import { I18nextProvider } from "react-i18next";
-import { ToastContainer } from "react-toastify";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import "react-toastify/dist/ReactToastify.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { SnackbarProvider } from "notistack";
+import SnackbarCloseButton from "./components/SnackbarCloseButton";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}>
-  <React.StrictMode>
-    <CssBaseline>
-      <ToastContainer />
-      <Provider store={store}>
-        <I18nextProvider i18n={i18next}>
-          <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </I18nextProvider>
-      </Provider>
-    </CssBaseline>
-  </React.StrictMode>
+  <GoogleOAuthProvider
+    clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}
+  >
+    <React.StrictMode>
+      <CssBaseline>
+        <SnackbarProvider
+          TransitionComponent={Grow}
+          autoHideDuration={5000}
+          action={(snackbarKey) => (
+            <SnackbarCloseButton snackbarKey={snackbarKey} />
+          )}
+        />
+        <Provider store={store}>
+          <I18nextProvider i18n={i18next}>
+            <ThemeProvider theme={theme}>
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </I18nextProvider>
+        </Provider>
+      </CssBaseline>
+    </React.StrictMode>
   </GoogleOAuthProvider>
 );
