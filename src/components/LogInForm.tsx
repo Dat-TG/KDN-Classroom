@@ -74,9 +74,7 @@ function LogInForm() {
             variant="outlined"
             error={!!errors.email}
             placeholder="email@example.com"
-            helperText={
-              errors.email ? t("emailValidationMessage") : ""
-            }
+            helperText={errors.email ? t("emailValidationMessage") : ""}
           />
         )}
       />
@@ -95,7 +93,9 @@ function LogInForm() {
             error={!!errors.password}
             helperText={
               errors.password
-                ? t("passwordValidationMessage")
+                ? errors.password.type == "required"
+                  ? t("requiredField")
+                  : t("passwordValidate")
                 : ""
             }
             type={showPassword ? "text" : "password"}

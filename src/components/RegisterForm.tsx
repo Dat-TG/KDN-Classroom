@@ -156,7 +156,13 @@ function RegisterForm() {
             fullWidth
             variant="outlined"
             error={!!errors.password}
-            helperText={errors.password ? t("passwordValidationMessage") : ""}
+            helperText={
+              errors.password
+                ? errors.password.type == "required"
+                  ? t("requiredField")
+                  : t("passwordValidate")
+                : ""
+            }
             type={showPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -194,7 +200,11 @@ function RegisterForm() {
             error={!!errors.confirmPassword}
             helperText={
               errors.confirmPassword
-                ? t("confirmPasswordValidationMessage")
+                ? errors.confirmPassword.type == "required"
+                  ? t("requiredField")
+                  : errors.confirmPassword.type == "minLength"
+                  ? t("passwordValidate")
+                  : t("passwordNotMatch")
                 : ""
             }
             type={showConfirmPassword ? "text" : "password"}
