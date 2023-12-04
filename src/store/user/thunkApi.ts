@@ -67,15 +67,11 @@ export const registerUser = createAsyncThunk(
   }, i18next.t("global:registerSuccessfully"))
 );
 
-export const logoutUser = createAsyncThunk(
-  "user/logout",
-  withParamsToastCatcher(async () => {
-    const res = await userApi.logout();
-    removeAllToken();
-    window.location.reload();
-    return res;
-  }, i18next.t("global:logoutSuccessfully"))
-);
+export const logoutUser = createAsyncThunk("user/logout", async () => {
+  const res = await userApi.logout();
+  removeAllToken();
+  return res;
+});
 
 export const updateInformationUser = createAsyncThunk(
   "user/editInformation",
@@ -213,5 +209,6 @@ export const extraReducers = (
         state.refreshToken = action.payload.refreshToken;
       }
     )
-    .addCase(forgotPassword.fulfilled, () => {}).addCase(resetPassword.fulfilled, () => {});
+    .addCase(forgotPassword.fulfilled, () => {})
+    .addCase(resetPassword.fulfilled, () => {});
 };

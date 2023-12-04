@@ -13,7 +13,7 @@ import { emailPattern } from "../utils/helpers";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { registerUser } from "../store/user/thunkApi";
+import { getUserProfile, registerUser } from "../store/user/thunkApi";
 // import { AuthContext } from "../context/AuthContext";
 // import { useUser } from "../hooks/useUser";
 
@@ -50,6 +50,8 @@ function RegisterForm() {
       firstName: data.firstname,
       surname: data.lastname,
     }));
+
+    await dispatch(getUserProfile());
 
     setIsLoading(false);
   };
