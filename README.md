@@ -28,7 +28,7 @@ Back-end: https://web-advanced-server-v2.onrender.com
 
 ## Demo Video
 
-Youtube: 
+Youtube: https://youtu.be/GIjBgv-85Ls
 
 ## Installation
 
@@ -72,6 +72,7 @@ Then goto http://localhost:5173/
 - Refresh token
 - Sign out
 - Managing sign-in and sign-out UI states for users
+- Restrict feature access based on the user’s role
 
 ### User Profile Management
 Users can edit:
