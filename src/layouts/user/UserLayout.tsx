@@ -10,6 +10,7 @@ import { AppDispatch } from "../../store";
 import { logoutUser } from "../../store/user/thunkApi";
 import toast from "../../utils/toast";
 import { useTranslation } from "react-i18next";
+import ConsecutiveSnackbars from "./Snackbar";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -51,6 +52,8 @@ function UserLayout() {
           <Outlet />
         </main>
       </div>
+
+      <ConsecutiveSnackbars />
     </>
   );
 }
