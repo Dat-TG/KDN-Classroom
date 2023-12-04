@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute";
 import RedirectRoute from "./RedirectRoute";
 import LandingPage from "../pages/LandingPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import AdminRoute from "./AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -77,24 +78,29 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/admin",
-    element: <AdminLayout />,
+    element: <AdminRoute />,
     children: [
       {
-        path: "dashboard",
-        element: <div>Dashboard</div>,
-      },
-      {
-        path: "classes",
-        element: <div>Classes management</div>,
-      },
-      {
-        path: "users",
-        element: <div>Users management</div>,
-      },
-      {
-        path: "settings",
-        element: <div>Settings</div>,
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          {
+            path: "dashboard",
+            element: <div>Dashboard</div>,
+          },
+          {
+            path: "classes",
+            element: <div>Classes management</div>,
+          },
+          {
+            path: "users",
+            element: <div>Users management</div>,
+          },
+          {
+            path: "settings",
+            element: <div>Settings</div>,
+          },
+        ],
       },
     ],
   },

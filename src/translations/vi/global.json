@@ -63,5 +63,8 @@
     "confirmPasswordValidationMessage": "Mật khẩu không khớp.",
     "resetPassword": "Đặt lại mật khẩu",
     "pleaseCheckYourEmail": "Vui lòng kiểm tra email của bạn để đặt lại mật khẩu",
-    "resetPasswordSuccessfully": "Đặt lại mật khẩu thành công"
+    "resetPasswordSuccessfully": "Đặt lại mật khẩu thành công",
+    "accessDenied": "Truy cập bị từ chối",
+    "back": "Quay lại",
+    "youDoNotHavePermissionToAccessThisPage": "Bạn không có quyền truy cập trang này"
 }

@@ -71,6 +71,14 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       <MenuItem
         onClick={() => {
           setAnchorEl(null);
+          navigate("/admin/dashboard");
+        }}
+      >
+        {t("classroomAdmin")}
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
           navigate("/profile");
         }}
       >

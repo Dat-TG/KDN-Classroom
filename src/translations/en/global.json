@@ -56,10 +56,13 @@
     "passwordNotMatch": "Password does not match",
     "changePasswordSuccessfully": "Change password successfully",
     "updateAvatarSuccessfully": "Update avatar successfully",
-    "emailValidationMessage" : "Please enter a valid email address.",
-    "firstNameValidationMessage" : "Please enter your first name.",
-    "lastNameValidationMessage" : "Please enter your last name.",
+    "emailValidationMessage": "Please enter a valid email address.",
+    "firstNameValidationMessage": "Please enter your first name.",
+    "lastNameValidationMessage": "Please enter your last name.",
     "resetPassword": "Reset password",
     "pleaseCheckYourEmail": "Please check your email to continue to reset your password",
-    "resetPasswordSuccessfully": "Reset password successfully"
+    "resetPasswordSuccessfully": "Reset password successfully",
+    "accessDenied": "Access Denied",
+    "back": "Back",
+    "youDoNotHavePermissionToAccessThisPage": "You do not have permission to access this page"
 }
