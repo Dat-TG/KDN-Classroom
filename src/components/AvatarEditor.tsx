@@ -81,7 +81,6 @@ function AvatarEditorComponent({
         <label htmlFor="avatar-input">
           <Typography variant="h6">{t("profilePicture")}</Typography>
           <Typography sx={{ color: "gray" }} variant="body2">
-            {" "}
             PNG, JPG {t("upTo")} 5MB
           </Typography>
           <Button
