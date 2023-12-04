@@ -24,6 +24,11 @@ export interface ILoginGoogleReq {
   googleAuthToken: string;
 }
 
+export interface ILoginFacebookReq {
+  userId: string;
+  accessToken: string;
+}
+
 export interface IInformationUpdateReq {
   name: string;
   surname: string;

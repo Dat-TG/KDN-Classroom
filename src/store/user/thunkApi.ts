@@ -22,6 +22,7 @@ import {
   ILoginUserReq,
   ILoginGoogleReq,
   IResetPassword,
+  ILoginFacebookReq,
 } from "../../types/user";
 import { removeAllToken } from "../../utils/token";
 import i18next from "../../translations/i18";
@@ -39,6 +40,14 @@ export const loginUserWithGoogle = createAsyncThunk(
   "user/loginGoogle",
   withParamsToastCatcher(async (params: ILoginGoogleReq) => {
     const result = await userApi.loginGoogle(params);
+    return result;
+  }, i18next.t("global:loginSuccessfully"))
+);
+
+export const loginUserWithFacebook = createAsyncThunk(
+  "user/loginFacebook",
+  withParamsToastCatcher(async (params: ILoginFacebookReq) => {
+    const result = await userApi.loginFacebook(params);
     return result;
   }, i18next.t("global:loginSuccessfully"))
 );

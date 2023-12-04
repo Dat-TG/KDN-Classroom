@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import {
   IInformationUpdateReq,
+  ILoginFacebookReq,
   ILoginGoogleReq,
   ILoginUserReq,
   IPasswordUpdateReq,
@@ -22,6 +23,11 @@ export const login = async (data: ILoginUserReq) => {
 
 export const loginGoogle = async (data: ILoginGoogleReq) => {
   const res = await AxiosClient.post("/auth/google/login", data);
+  return res.data;
+};
+
+export const loginFacebook = async (data: ILoginFacebookReq) => {
+  const res = await AxiosClient.post("/auth/facebook/login", data);
   return res.data;
 };
 

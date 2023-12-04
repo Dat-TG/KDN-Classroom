@@ -2,6 +2,7 @@ import { userReducer } from "./reducer";
 import { IUserStore } from "./type";
 import {
   IInformationUpdateReq,
+  ILoginFacebookReq,
   ILoginGoogle,
   ILoginGoogleReq,
   ILoginUserReq,
@@ -149,6 +150,14 @@ const resetPassword = createAsyncThunk(
   }, i18next.t("global:resetPasswordSuccessfully"))
 );
 
+const loginUserWithFacebook = createAsyncThunk(
+  "user/loginFacebook",
+  withParamsToastCatcher(async (params: ILoginFacebookReq) => {
+    const result = await userApi.loginFacebook(params);
+    return result;
+  }, i18next.t("global:loginSuccessfully"))
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -166,6 +175,16 @@ const userSlice = createSlice({
     );
     builder.addCase(
       loginUserWithGoogle.fulfilled,
+      (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
+        console.log("user login, save token to local storage");
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("refreshToken", action.payload.refreshToken);
+        state.token = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+      }
+    );
+    builder.addCase(
+      loginUserWithFacebook.fulfilled,
       (state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         console.log("user login, save token to local storage");
         localStorage.setItem("accessToken", action.payload.accessToken);
