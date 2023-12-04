@@ -90,12 +90,11 @@ const getUserProfile = createAsyncThunk("user/getUserProfile", async () => {
 
 const logoutUser = createAsyncThunk(
   "user/logout",
-  withParamsToastCatcher(async () => {
+ async () => {
     const res = await userApi.logout();
     removeAllToken();
-    window.location.reload();
     return res;
-  }, i18next.t("global:logoutSuccessfully"))
+  }
 );
 
 const registerUser = createAsyncThunk(
@@ -206,7 +205,6 @@ const userSlice = createSlice({
       (_state: IUserStore, action: PayloadAction<ILoginGoogle>) => {
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
-        window.location.href = "/login";
       }
     );
     builder.addCase(

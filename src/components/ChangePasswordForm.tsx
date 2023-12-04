@@ -50,7 +50,7 @@ function ChangePasswordForm() {
       })
     );
     if (res.meta.requestStatus === "fulfilled") {
-      await dispatch(logoutUser({}));
+      await dispatch(logoutUser());
     }
     setIsLoading(false);
   };

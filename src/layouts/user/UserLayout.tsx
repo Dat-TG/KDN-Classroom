@@ -1,13 +1,15 @@
 // MainLayout.tsx
-import {  useState } from "react";
+import { useState } from "react";
 import Sidebar from "./SideBar";
 
 import Appbar from "./AppBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import { AppDispatch } from "../../store";
-import {  logoutUser } from "../../store/user/thunkApi";
+import { logoutUser } from "../../store/user/thunkApi";
+import toast from "../../utils/toast";
+import { useTranslation } from "react-i18next";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -20,12 +22,26 @@ function UserLayout() {
 
   const user = useSelector(sGetUserInfo);
 
+  const navigate = useNavigate();
+
+  const { t } = useTranslation("global");
+
+  const onLogout = async () => {
+    const res = await dispatch(logoutUser());
+    if (res.meta.requestStatus == "fulfilled") {
+      toast.success(t("logoutSuccessfully"));
+      setTimeout(() => {
+        navigate(0);
+      }, 1000);
+    }
+  };
+
   return (
     <>
       <Appbar
         toggleSidebar={toggleSidebar}
         isLoggedIn={user != null}
-        onLogout={() => dispatch(logoutUser({}))}
+        onLogout={onLogout}
       />
       <div style={{ display: "flex" }}>
         {user != null && <Sidebar open={isSidebarOpen} />}
