@@ -18,6 +18,7 @@ import LanguageMenu from "./LanguageMenu";
 import ActionMenu from "./ActionMenu";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
+import { USER_ROLES_NAME, UserRolesEnum } from "../../types/user";
 
 interface Props {
   toggleSidebar: () => void;
@@ -50,6 +51,17 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
     setAnchorEl(null);
   };
 
+  const user = useSelector(sGetUserInfo);
+  const [isAdmin, setIsAdmin] = React.useState(false);
+  React.useEffect(() => {
+    for (const i of user?.roles ?? []) {
+      if (i.id == UserRolesEnum.ADMIN && i.name == USER_ROLES_NAME.ADMIN) {
+        setIsAdmin(true);
+        break;
+      }
+    }
+  }, [user]);
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -68,14 +80,16 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       onClose={handleMenuClose}
       style={{ marginTop: "35px" }}
     >
-      <MenuItem
-        onClick={() => {
-          setAnchorEl(null);
-          navigate("/admin/dashboard");
-        }}
-      >
-        {t("classroomAdmin")}
-      </MenuItem>
+      {isAdmin && (
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            navigate("/admin/dashboard");
+          }}
+        >
+          {t("classroomAdmin")}
+        </MenuItem>
+      )}
       <MenuItem
         onClick={() => {
           setAnchorEl(null);
@@ -87,8 +101,6 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       <MenuItem onClick={props.onLogout}>{t("logOut")}</MenuItem>
     </Menu>
   );
-
-  //const { user } = React.useContext(AuthContext);
 
   const location = useLocation();
   const [breadcrumb, setBreadcrumb] = React.useState("");
@@ -112,8 +124,6 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
         break;
     }
   }, [location.pathname, t]);
-
-  const user = useSelector(sGetUserInfo);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
