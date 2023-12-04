@@ -4,8 +4,14 @@ import { useGoogleLogin } from "@react-oauth/google";
 import googleLogo from "../assets/images/logos/google.png";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { getUserProfile, loginUserWithGoogle } from "../store/user/thunkApi";
-import FacebookLogin from "@greatsumini/react-facebook-login";
+import {
+  getUserProfile,
+  loginUserWithFacebook,
+  loginUserWithGoogle,
+} from "../store/user/thunkApi";
+import FacebookLogin, {
+  SuccessResponse,
+} from "@greatsumini/react-facebook-login";
 
 export default function SocialLogin() {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +30,16 @@ export default function SocialLogin() {
     },
   });
 
+  const onFacebookLoginSuccess = async (response: SuccessResponse) => {
+    await dispatch(
+      loginUserWithFacebook({
+        accessToken: response.accessToken,
+        userId: response.userID,
+      })
+    );
+    await dispatch(getUserProfile());
+  };
+
   return (
     <>
       <Box display={"flex"} justifyContent={"center"}>
@@ -41,9 +57,7 @@ export default function SocialLogin() {
 
         <FacebookLogin
           appId={import.meta.env.VITE_REACT_APP_FACEBOOK_APP_ID}
-          onSuccess={(response) => {
-            console.log("Login Success!", response.accessToken);
-          }}
+          onSuccess={onFacebookLoginSuccess}
           onFail={(error) => {
             console.log("Login Failed!", error);
           }}
