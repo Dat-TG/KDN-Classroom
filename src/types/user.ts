@@ -98,8 +98,8 @@ export enum UserTabsEnum {
 }
 
 export enum UserRolesEnum {
-  CLIENT = 0,
-  ADMIN = 1,
+  CLIENT = 1,
+  ADMIN = 2,
 }
 
 export enum UserSelectActive {
@@ -149,6 +149,7 @@ export interface IUserInformationSelector {
   surname: string;
   avatar: string;
   emailAddress: string;
+  roles: UserRoles[];
 }
 
 export interface IUserRole {

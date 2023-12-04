@@ -15,6 +15,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useTranslation } from "react-i18next";
 import LanguageMenu from "../user/LanguageMenu";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
 
 interface Props {
   toggleSidebar: () => void;
@@ -77,7 +79,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
     </Menu>
   );
 
-  //const { user } = React.useContext(AuthContext);
+  const user = useSelector(sGetUserInfo);
 
   const location = useLocation();
   const [breadcrumb, setBreadcrumb] = React.useState("");
@@ -162,8 +164,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   color="inherit"
                 >
                   <Avatar
-                    // alt={`${user?.firstname} ${user?.lastname}`}
-                    //src={user?.avatar}
+                    alt={`${user?.name} ${user?.surname}`}
+                    src={user?.avatar}
                     style={{
                       border: "2px solid white",
                     }}
