@@ -17,8 +17,13 @@ import ActionMenu from "./ActionMenu";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import { USER_ROLES_NAME, UserRolesEnum } from "../../types/user";
-import { Edit } from "@mui/icons-material";
-import { Divider, Menu } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Divider,
+  Menu,
+} from "@mui/material";
+import AvatarEditorButton from "../../components/AvatarEditorButton";
 
 interface Props {
   toggleSidebar: () => void;
@@ -62,6 +67,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
     }
   }, [user]);
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -89,24 +96,22 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <label htmlFor="avatar-input">
+        <div style={{ position: "relative" }}>
           <IconButton
             edge="end"
             aria-label="account of current user"
             aria-controls={menuId}
             aria-haspopup="true"
-            onClick={() => navigate("/profile")}
+            onClick={() => {
+              setAnchorEl(null);
+              navigate("/profile");
+            }}
             color="inherit"
             sx={{
               mb: 2,
-              position: "relative",
               "&:hover": {
                 backgroundColor: "transparent",
-
-                "& .edit-icon": {
-                  color: "darkblue",
-                  backgroundColor: "#E7E9EB",
-                },
+                position: "relative",
               },
             }}
           >
@@ -116,26 +121,15 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
               src={user?.avatar}
               sx={{
                 border: "2px solid white",
-
                 width: "100px",
                 height: "100px",
               }}
             />
-            <IconButton
-              className="edit-icon"
-              size="small"
-              sx={{
-                position: "absolute",
-                bottom: 3,
-                right: 2,
-                backgroundColor: "white",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <Edit />
-            </IconButton>
           </IconButton>
-        </label>
+
+         <div style={{position: "absolute", right: -5, bottom:10}}> <AvatarEditorButton callback={setIsLoading} /></div>
+        </div>
+
         <Typography variant="h5" sx={{ color: "black" }}>
           {`${user?.name} ${user?.surname}`}
         </Typography>
@@ -325,6 +319,13 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
           </AppBar>
         </>
       )}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+        onClick={() => {}}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 };
