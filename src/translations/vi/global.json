@@ -75,5 +75,9 @@
     "classwork": "Bài tập trên lớp",
     "people": "Mọi người",
     "grades": "Điểm số",
-    "customize": "Tùy chỉnh"
+    "customize": "Tùy chỉnh",
+    "classCode": "Mã lớp",
+    "subject": "Chủ đề",
+    "room": "Phòng",
+    "display": "Hiển thị"
 }

@@ -73,5 +73,9 @@
     "classwork": "Classwork",
     "people": "People",
     "grades": "Grades",
-    "customize": "Customize"
+    "customize": "Customize",
+    "classCode": "Class code",
+    "subject": "Subject",
+    "room": "Room",
+    "display": "Display"
 }
