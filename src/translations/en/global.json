@@ -100,5 +100,9 @@
     "other": "Other",
     "close": "Close",
     "copyInviteLink": "Copy invite link",
-    "copiedToClipboard": "Copied to clipboard"
+    "copiedToClipboard": "Copied to clipboard",
+    "copyClassInviteLink": "Copy class invite link",
+    "copyClassCode": "Copy class code",
+    "resetClassCode": "Reset class code",
+    "turnOff": "Turn off"
 }

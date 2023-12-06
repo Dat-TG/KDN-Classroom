@@ -102,5 +102,9 @@
     "other": "Khác",
     "close": "Đóng",
     "copyInviteLink": "Sao chép đường liên kết mời",
-    "copiedToClipboard": "Đã sao chép vào bộ nhớ tạm"
+    "copiedToClipboard": "Đã sao chép vào bộ nhớ tạm",
+    "copyClassInviteLink": "Sao chép đường liên kết mời tham gia lớp học",
+    "copyClassCode": "Sao chép mã lớp",
+    "resetClassCode": "Đặt lại mã lớp",
+    "turnOff": "Tắt"
 }

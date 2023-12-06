@@ -1,4 +1,13 @@
-import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
   baseUrlBackground,
   bgGeneral,
@@ -6,7 +15,17 @@ import {
   extension,
 } from "../utils/class_themes";
 import { useState } from "react";
-import { Edit, Fullscreen, Info, InfoOutlined } from "@mui/icons-material";
+import {
+  CancelPresentation,
+  ContentCopy,
+  Edit,
+  Fullscreen,
+  Info,
+  InfoOutlined,
+  LinkOutlined,
+  MoreVert,
+  RotateLeft,
+} from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
@@ -164,6 +183,58 @@ export default function StreamPage() {
           </Box>
         )}
       </Box>
+      <Grid container spacing={2} marginY={"24px"} marginX={"64px"}>
+        <Grid container xs={2} spacing={2}>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                padding: "16px",
+                boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.3)",
+                borderRadius: "4px",
+              }}
+              display={"flex"}
+              flexDirection={"column"}
+              gap={"8px"}
+              position={"relative"}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0px",
+                  right: "0px",
+                }}
+              >
+                <MenuClassCode />
+              </div>
+              <Typography fontWeight={"600"} fontSize={"16px"}>
+                {t("classCode")}
+              </Typography>
+              <Box display={"flex"} alignItems={"center"}>
+                <Typography
+                  fontWeight={"500"}
+                  fontSize={"24px"}
+                  color={colorTheme}
+                >
+                  {classEntity.id}
+                </Typography>
+                <Tooltip title={t("display")}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenClassCodeDialog(true);
+                    }}
+                  >
+                    <Fullscreen
+                      sx={{
+                        color: colorTheme,
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Grid>
       <ChangeClassThemeDialog
         open={openCustomizeDialog}
         onClose={() => {
@@ -188,6 +259,51 @@ export default function StreamPage() {
           setOpenClassCodeDialog(false);
         }}
       />
+    </>
+  );
+}
+
+function MenuClassCode() {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const { t } = useTranslation("global");
+  return (
+    <>
+      <IconButton onClick={handleClick}>
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleClose}>
+          <LinkOutlined />
+          <Typography marginLeft={"8px"}>{t("copyClassInviteLink")}</Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ContentCopy />
+          <Typography marginLeft={"8px"}>{t("copyClassCode")}</Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <RotateLeft />
+          <Typography marginLeft={"8px"}>{t("resetClassCode")}</Typography>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <CancelPresentation />
+          <Typography marginLeft={"8px"}>{t("turnOff")}</Typography>
+        </MenuItem>
+      </Menu>
     </>
   );
 }
