@@ -10,6 +10,7 @@ import { Edit, Fullscreen, Info, InfoOutlined } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
+import ClassCodeDialog from "../components/ClassCodeDialog";
 
 export default function StreamPage() {
   const { classId } = useParams();
@@ -27,14 +28,14 @@ export default function StreamPage() {
       email: "teacher@email.com",
     },
   };
-  const [bgImg, setBgImg] = useState<string>(
-    `${classEntity.backgroundImage}`
-  );
+  const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
   const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
   const { t } = useTranslation("global");
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
   const [openCustomizeDialog, setOpenCustomizeDialog] =
+    useState<boolean>(false);
+  const [openClassCodeDialog, setOpenClassCodeDialog] =
     useState<boolean>(false);
   return (
     <>
@@ -139,7 +140,11 @@ export default function StreamPage() {
                 {classEntity.id}
               </Typography>
               <Tooltip title={t("display")}>
-                <IconButton>
+                <IconButton
+                  onClick={() => {
+                    setOpenClassCodeDialog(true);
+                  }}
+                >
                   <Fullscreen />
                 </IconButton>
               </Tooltip>
@@ -170,6 +175,17 @@ export default function StreamPage() {
         }}
         handleColorThemeChange={(color) => {
           setColorTheme(color);
+        }}
+      />
+      <ClassCodeDialog
+        classId={classEntity.id!}
+        name={classEntity.name!}
+        section={classEntity.section!}
+        colorTheme={colorTheme}
+        inviteLink="https://invitelink"
+        open={openClassCodeDialog}
+        onClose={() => {
+          setOpenClassCodeDialog(false);
         }}
       />
     </>

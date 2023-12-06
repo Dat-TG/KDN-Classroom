@@ -45,6 +45,16 @@ export default {
       ...options,
     });
   },
+  simple(msg: string, options?: OptionsObject): void {
+    enqueueSnackbar(msg, {
+      variant: "default",
+      anchorOrigin: {
+        vertical: "bottom",
+        horizontal: "left",
+      },
+      ...options,
+    });
+  },
   close(key: SnackbarKey): void {
     closeSnackbar(key);
   },

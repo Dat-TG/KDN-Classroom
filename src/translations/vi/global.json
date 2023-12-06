@@ -99,5 +99,8 @@
     "mathScience": "Toán và Khoa học",
     "arts": "Nghệ thuật",
     "sports": "Thể thao",
-    "other": "Khác"
+    "other": "Khác",
+    "close": "Đóng",
+    "copyInviteLink": "Sao chép đường liên kết mời",
+    "copiedToClipboard": "Đã sao chép vào bộ nhớ tạm"
 }

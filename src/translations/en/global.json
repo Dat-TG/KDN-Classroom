@@ -97,5 +97,8 @@
     "mathScience": "Math & Science",
     "arts": "Arts",
     "sports": "Sports",
-    "other": "Other"
+    "other": "Other",
+    "close": "Close",
+    "copyInviteLink": "Copy invite link",
+    "copiedToClipboard": "Copied to clipboard"
 }
