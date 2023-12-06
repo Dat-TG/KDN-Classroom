@@ -77,5 +77,18 @@
     "classCode": "Class code",
     "subject": "Subject",
     "room": "Room",
-    "display": "Display"
+    "display": "Display",
+    "customizeAppearance": "Customize appearance",
+    "selectStreamHeaderImage":"Select stream header image",
+    "selectPhoto":"Select photo",
+    "selectThemeColor":"Select theme color",
+    "cancel":"Cancel",
+    "blue":"Blue",
+    "green":"Green",
+    "pink":"Pink",
+    "orange":"Orange",
+    "cyan":"Cyan",
+    "purple":"Purple",
+    "lightBlue":"Light blue",
+    "grey":"Grey"
 }

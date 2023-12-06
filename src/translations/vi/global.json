@@ -79,5 +79,18 @@
     "classCode": "Mã lớp",
     "subject": "Chủ đề",
     "room": "Phòng",
-    "display": "Hiển thị"
+    "display": "Hiển thị",
+    "customizeAppearance": "Tùy chỉnh giao diện",
+    "selectStreamHeaderImage": "Chọn ảnh tiêu đề cho bảng tin",
+    "selectPhoto": "Chọn ảnh",
+    "selectThemeColor": "Chọn màu giao diện",
+    "cancel": "Hủy",
+    "blue":"Xanh dương",
+    "green":"Xanh lục",
+    "pink":"Hồng",
+    "orange":"Cam",
+    "cyan":"Xanh lam",
+    "purple":"Tím",
+    "lightBlue":"Xanh dương nhạt",
+    "grey":"Xám"
 }

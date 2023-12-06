@@ -1,3 +1,5 @@
+import i18next from "../translations/i18";
+
 export const baseUrlBackground = "https://gstatic.com/classroom/themes";
 export const thumb = "_thumb";
 export const extension = ".jpg";
@@ -89,13 +91,38 @@ export const bgOthers = [
   "img_handcraft",
 ];
 
-export const colorThemes = [
-  "rgb(25, 103, 210)",
-  "rgb(30, 142, 62)",
-  "rgb(229, 37, 146)",
-  "rgb(232, 113, 10)",
-  "rgb(18, 158, 175)",
-  "rgb(147, 52, 230)",
-  "rgb(66, 133, 244)",
-  "rgb(66, 133, 244)",
-];
+
+  export const colorThemes = [
+    {
+      code: "rgb(25, 103, 210)",
+      name: i18next.t("global:blue"),
+    },
+    {
+      code: "rgb(30, 142, 62)",
+      name:  i18next.t("global:green"),
+    },
+    {
+      code: "rgb(229, 37, 146)",
+      name: i18next.t("global:pink"),
+    },
+    {
+      code: "rgb(232, 113, 10)",
+      name: i18next.t("global:orange"),
+    },
+    {
+      code: "rgb(18, 158, 175)",
+      name: i18next.t("global:cyan"),
+    },
+    {
+      code: "rgb(147, 52, 230)",
+      name: i18next.t("global:purple"),
+    },
+    {
+      code: "rgb(66, 133, 244)",
+      name: i18next.t("global:lightBlue"),
+    },
+    {
+      code: "rgb(95, 99, 104)",
+      name: i18next.t("global:grey"),
+    },
+  ];

@@ -9,14 +9,9 @@ import { useState } from "react";
 import { Edit, Fullscreen, Info, InfoOutlined } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
 
 export default function StreamPage() {
-  const [bgImg, setBgImg] = useState<string>(
-    `url("${baseUrlBackground}/${bgGeneral[0]}${extension}")`
-  );
-  const [colorTheme, setColorTheme] = useState<string>(colorThemes[0]);
-  const { t } = useTranslation("global");
-  const [showInfo, setShowInfo] = useState<boolean>(false);
   const { classId } = useParams();
   const classEntity = {
     id: classId,
@@ -24,12 +19,23 @@ export default function StreamPage() {
     section: "Phát triển ứng dụng web nâng cao",
     subject: "Phát triển ứng dụng web nâng cao",
     room: "E402",
+    backgroundImage: `${baseUrlBackground}/${bgGeneral[1]}${extension}`,
+    colorTheme: colorThemes[0].code,
     creater: {
       id: 1,
       name: "Teacher 1",
       email: "teacher@email.com",
     },
   };
+  const [bgImg, setBgImg] = useState<string>(
+    `url("${classEntity.backgroundImage}")`
+  );
+  const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+  const { t } = useTranslation("global");
+  const [showInfo, setShowInfo] = useState<boolean>(false);
+
+  const [openCustomizeDialog, setOpenCustomizeDialog] =
+    useState<boolean>(false);
   return (
     <>
       <Box
@@ -43,6 +49,7 @@ export default function StreamPage() {
         <Box
           sx={{
             backgroundImage: bgImg,
+            backgroundSize: "cover",
             padding: "24px",
             position: "relative",
             borderTopLeftRadius: "16px",
@@ -60,6 +67,9 @@ export default function StreamPage() {
                 color: colorTheme,
                 padding: "5px 10px",
                 borderRadius: "5px",
+              }}
+              onClick={() => {
+                setOpenCustomizeDialog(true);
               }}
             >
               <Edit fontSize="medium" sx={{ marginRight: "8px" }} />
@@ -125,7 +135,9 @@ export default function StreamPage() {
               <Typography fontSize={"16px"} fontWeight={"500"}>
                 {t("classCode")}
               </Typography>
-              <Typography fontWeight={"300"} marginLeft={"8px"}>{classEntity.id}</Typography>
+              <Typography fontWeight={"300"} marginLeft={"8px"}>
+                {classEntity.id}
+              </Typography>
               <Tooltip title={t("display")}>
                 <IconButton>
                   <Fullscreen />
@@ -147,6 +159,19 @@ export default function StreamPage() {
           </Box>
         )}
       </Box>
+      <ChangeClassThemeDialog
+        open={openCustomizeDialog}
+        onClose={() => {
+          setOpenCustomizeDialog(false);
+        }}
+        classId={classEntity.id!}
+        handleBackgroundImageChange={(image) => {
+          setBgImg(image);
+        }}
+        handleColorThemeChange={(color) => {
+          setColorTheme(color);
+        }}
+      />
     </>
   );
 }
