@@ -28,7 +28,7 @@ export default function StreamPage() {
     },
   };
   const [bgImg, setBgImg] = useState<string>(
-    `url("${classEntity.backgroundImage}")`
+    `${classEntity.backgroundImage}`
   );
   const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
   const { t } = useTranslation("global");
@@ -48,7 +48,7 @@ export default function StreamPage() {
       >
         <Box
           sx={{
-            backgroundImage: bgImg,
+            backgroundImage: `url(${bgImg})`,
             backgroundSize: "cover",
             padding: "24px",
             position: "relative",

@@ -6,6 +6,8 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Tab,
+  Tabs,
   Tooltip,
   Typography,
   alpha,
@@ -13,12 +15,18 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   baseUrlBackground,
+  bgArts,
+  bgEnglishHistory,
   bgGeneral,
+  bgMathScience,
+  bgOthers,
+  bgSports,
   colorThemes,
   extension,
 } from "../utils/class_themes";
 import { useState } from "react";
 import { Check, PhotoOutlined } from "@mui/icons-material";
+import ListBackgroundImage from "./ListBackgroundImage";
 
 interface Props {
   open: boolean;
@@ -43,10 +51,12 @@ export default function ChangeClassThemeDialog(props: Props) {
       email: "teacher@email.com",
     },
   };
-  const [bgImg, setBgImg] = useState<string>(
-    `url("${classEntity.backgroundImage}")`
-  );
+  const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
   const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+  const [openBackgroundImageDialog, setOpenBackgroundImageDialog] =
+    useState<boolean>(false);
+  const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tempBgImg, setTempBgImg] = useState<string>("");
   return (
     <Dialog
       open={props.open}
@@ -64,7 +74,7 @@ export default function ChangeClassThemeDialog(props: Props) {
           borderRadius={"8px"}
           sx={{
             marginBottom: "16px",
-            backgroundImage: bgImg,
+            backgroundImage: `url("${bgImg}")`,
             backgroundSize: "cover",
           }}
         ></Box>
@@ -82,6 +92,9 @@ export default function ChangeClassThemeDialog(props: Props) {
               ":hover": {
                 background: alpha(colorTheme, 0.2),
               },
+            }}
+            onClick={() => {
+              setOpenBackgroundImageDialog(true);
             }}
           >
             <PhotoOutlined />
@@ -132,7 +145,6 @@ export default function ChangeClassThemeDialog(props: Props) {
         <Button
           onClick={() => {
             props.onClose();
-            setColorTheme(classEntity.colorTheme);
           }}
         >
           {t("cancel")}
@@ -143,7 +155,10 @@ export default function ChangeClassThemeDialog(props: Props) {
             props.handleColorThemeChange(colorTheme);
             props.onClose();
           }}
-          disabled={colorTheme == classEntity.colorTheme}
+          disabled={
+            colorTheme == classEntity.colorTheme &&
+            bgImg == classEntity.backgroundImage
+          }
           sx={{
             color: colorTheme,
           }}
@@ -151,6 +166,100 @@ export default function ChangeClassThemeDialog(props: Props) {
           {t("save")}
         </Button>
       </DialogActions>
+      <Dialog
+        open={openBackgroundImageDialog}
+        onClose={() => {
+          setOpenBackgroundImageDialog(false);
+          setBgImg(classEntity.backgroundImage);
+        }}
+        maxWidth={"md"}
+        sx={{
+          minHeight: "80vh",
+          maxHeight: "80vh",
+        }}
+      >
+        <DialogTitle>
+          {t("selectClassTheme")}
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => {
+              setTabIndex(newValue);
+              setTempBgImg("");
+            }}
+            textColor="secondary"
+            indicatorColor="secondary"
+            aria-label="secondary tabs example"
+          >
+            <Tab value={0} label={t("general")} />
+            <Tab value={1} label={t("englishHistory")} />
+            <Tab value={2} label={t("mathScience")} />
+            <Tab value={3} label={t("arts")} />
+            <Tab value={4} label={t("sports")} />
+            <Tab value={5} label={t("other")} />
+          </Tabs>
+        </DialogTitle>
+        <DialogContent>
+          <div
+            style={{
+              height: "16px",
+            }}
+          ></div>
+          <ListBackgroundImage
+            currentImage={tempBgImg !== "" ? tempBgImg : bgImg}
+            callback={(image: string) => {
+              setTempBgImg(image);
+            }}
+            list={
+              tabIndex === 0
+                ? bgGeneral.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+                : tabIndex === 1
+                ? bgEnglishHistory.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+                : tabIndex === 2
+                ? bgMathScience.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+                : tabIndex === 3
+                ? bgArts.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+                : tabIndex === 4
+                ? bgSports.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+                : bgOthers.map(
+                    (image) => `${baseUrlBackground}/${image}${extension}`
+                  )
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpenBackgroundImageDialog(false);
+              setBgImg(classEntity.backgroundImage);
+            }}
+          >
+            {t("cancel")}
+          </Button>
+          <Button
+            onClick={() => {
+              setOpenBackgroundImageDialog(false);
+              if (tempBgImg !== "") {
+                setBgImg(tempBgImg);
+              }
+            }}
+            sx={{
+              color: colorTheme,
+            }}
+          >
+            {t("selectClassTheme")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 }
