@@ -106,5 +106,6 @@
     "copyClassInviteLink": "Sao chép đường liên kết mời tham gia lớp học",
     "copyClassCode": "Sao chép mã lớp",
     "resetClassCode": "Đặt lại mã lớp",
-    "turnOff": "Tắt"
+    "turnOff": "Tắt",
+    "announceSomthingToYourClass": "Thông báo nội dung nào đó cho lớp học của bạn"
 }

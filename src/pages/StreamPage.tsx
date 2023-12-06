@@ -1,7 +1,7 @@
 import {
+  Avatar,
   Box,
   Button,
-  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -30,6 +30,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
 import ClassCodeDialog from "../components/ClassCodeDialog";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 
 export default function StreamPage() {
   const { classId } = useParams();
@@ -56,8 +58,9 @@ export default function StreamPage() {
     useState<boolean>(false);
   const [openClassCodeDialog, setOpenClassCodeDialog] =
     useState<boolean>(false);
+  const user = useSelector(sGetUserInfo);
   return (
-    <>
+    <Box display={"flex"} flexDirection={"column"}>
       <Box
         sx={{
           boxShadow: showInfo ? "0px 0px 6px 0px rgba(0, 0, 0, 0.3)" : "none",
@@ -183,58 +186,100 @@ export default function StreamPage() {
           </Box>
         )}
       </Box>
-      <Grid container spacing={2} marginY={"24px"} marginX={"64px"}>
-        <Grid container xs={2} spacing={2}>
-          <Grid item xs={12}>
-            <Box
-              sx={{
-                padding: "16px",
-                boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.3)",
-                borderRadius: "4px",
-              }}
-              display={"flex"}
-              flexDirection={"column"}
-              gap={"8px"}
-              position={"relative"}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0px",
-                  right: "0px",
+      <Box
+        marginY={"24px"}
+        marginX={"64px"}
+        display={"flex"}
+        flexDirection={"row"}
+        gap={"24px"}
+      >
+        <Box
+          sx={{
+            padding: "16px",
+            boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.3)",
+            borderRadius: "5px",
+          }}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={"8px"}
+          position={"relative"}
+          maxWidth={"200px"}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "0px",
+              right: "0px",
+            }}
+          >
+            <MenuClassCode />
+          </div>
+          <Typography fontWeight={"600"} fontSize={"16px"}>
+            {t("classCode")}
+          </Typography>
+          <Box display={"flex"} alignItems={"center"}>
+            <Typography fontWeight={"500"} fontSize={"24px"} color={colorTheme}>
+              {classEntity.id}
+            </Typography>
+            <Tooltip title={t("display")}>
+              <IconButton
+                onClick={() => {
+                  setOpenClassCodeDialog(true);
                 }}
               >
-                <MenuClassCode />
-              </div>
-              <Typography fontWeight={"600"} fontSize={"16px"}>
-                {t("classCode")}
-              </Typography>
-              <Box display={"flex"} alignItems={"center"}>
-                <Typography
-                  fontWeight={"500"}
-                  fontSize={"24px"}
-                  color={colorTheme}
-                >
-                  {classEntity.id}
-                </Typography>
-                <Tooltip title={t("display")}>
-                  <IconButton
-                    onClick={() => {
-                      setOpenClassCodeDialog(true);
-                    }}
-                  >
-                    <Fullscreen
-                      sx={{
-                        color: colorTheme,
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
+                <Fullscreen
+                  sx={{
+                    color: colorTheme,
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          gap={"24px"}
+          flexGrow={1}
+        >
+          <Box
+            sx={{
+              padding: "16px",
+              boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.3)",
+              borderRadius: "5px",
+              width: "100%",
+              cursor: "pointer",
+              "&:hover": {
+                "& .announceText": {
+                  color: colorTheme,
+                },
+              },
+            }}
+            display={"flex"}
+            alignItems={"center"}
+          >
+            <Avatar
+              src={user?.avatar}
+              alt={user?.name}
+              sx={{
+                width: "48px",
+                height: "48px",
+              }}
+            ></Avatar>
+            <Typography
+              className="announceText"
+              sx={{
+                fontSize: "14px",
+                fontWeight: "400",
+                color: "grey",
+                marginLeft: "16px",
+              }}
+            >
+              {t("announceSomthingToYourClass")}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
       <ChangeClassThemeDialog
         open={openCustomizeDialog}
         onClose={() => {
@@ -259,7 +304,7 @@ export default function StreamPage() {
           setOpenClassCodeDialog(false);
         }}
       />
-    </>
+    </Box>
   );
 }
 

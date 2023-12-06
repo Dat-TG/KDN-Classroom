@@ -104,5 +104,6 @@
     "copyClassInviteLink": "Copy class invite link",
     "copyClassCode": "Copy class code",
     "resetClassCode": "Reset class code",
-    "turnOff": "Turn off"
+    "turnOff": "Turn off",
+    "announceSomthingToYourClass": "Announce something to your class"
 }
