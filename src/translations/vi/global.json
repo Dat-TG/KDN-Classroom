@@ -107,5 +107,10 @@
     "copyClassCode": "Sao chép mã lớp",
     "resetClassCode": "Đặt lại mã lớp",
     "turnOff": "Tắt",
-    "announceSomthingToYourClass": "Thông báo nội dung nào đó cho lớp học của bạn"
+    "announceSomthingToYourClass": "Thông báo nội dung nào đó cho lớp học của bạn",
+    "teachers": "Giáo viên",
+    "students": "Sinh viên",
+    "inviteTeachers": "Mời giáo viên",
+    "inviteStudents": "Mời học viên",
+    "student": "sinh viên"
 }

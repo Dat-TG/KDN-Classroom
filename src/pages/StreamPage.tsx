@@ -8,12 +8,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  baseUrlBackground,
-  bgGeneral,
-  colorThemes,
-  extension,
-} from "../utils/class_themes";
 import { useState } from "react";
 import {
   CancelPresentation,
@@ -27,30 +21,22 @@ import {
   RotateLeft,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
 import ClassCodeDialog from "../components/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
+import { ClassEntity } from "./ClassDetailsPage";
 
-export default function StreamPage() {
-  const { classId } = useParams();
-  const classEntity = {
-    id: classId,
-    name: "2309-PTUDWNC-20_3",
-    section: "Phát triển ứng dụng web nâng cao",
-    subject: "Phát triển ứng dụng web nâng cao",
-    room: "E402",
-    backgroundImage: `${baseUrlBackground}/${bgGeneral[1]}${extension}`,
-    colorTheme: colorThemes[0].code,
-    creater: {
-      id: 1,
-      name: "Teacher 1",
-      email: "teacher@email.com",
-    },
-  };
-  const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
-  const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+interface Props {
+  classEntity: ClassEntity;
+  bgImg: string;
+  setBgImg: React.Dispatch<React.SetStateAction<string>>;
+  colorTheme: string;
+  setColorTheme: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function StreamPage({classEntity, bgImg, colorTheme, setBgImg, setColorTheme}:Props) {
+  
   const { t } = useTranslation("global");
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
