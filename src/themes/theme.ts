@@ -6,6 +6,12 @@ const theme = createTheme({
     button: {
       textTransform: "none",
     },
+    h5: {
+      fontWeight: 600,
+    },
+    h6: {
+      fontWeight: 400,
+    }
   },
   palette: {
     primary: {

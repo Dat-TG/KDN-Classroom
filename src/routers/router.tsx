@@ -11,6 +11,7 @@ import RedirectRoute from "./RedirectRoute";
 import LandingPage from "../pages/LandingPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
+import ClassDetailsPage from "../pages/ClassDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
           {
             path: "/settings",
             element: <div>Settings</div>,
+          },
+          {
+            path: "/class/:classId",
+            element: <ClassDetailsPage />,
           },
         ],
       },

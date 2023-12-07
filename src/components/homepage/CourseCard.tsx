@@ -12,6 +12,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import React from "react";
 import { Assignment } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,6 +26,8 @@ const CourseCard = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const navigate = useNavigate();
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -58,8 +61,8 @@ const CourseCard = () => {
         "&:hover": {
           transform: "scale(1.005)",
           transition: "0.1s",
-          boxShadow: '0px 2px 15px rgba(0, 0, 0, 0.3)',
-          cursor: 'pointer'
+          boxShadow: "0px 2px 15px rgba(0, 0, 0, 0.3)",
+          cursor: "pointer",
         },
       }}
     >
@@ -96,7 +99,14 @@ const CourseCard = () => {
             </IconButton>
           }
           title={
-            <Typography sx={{ pt: 1, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }} variant="h6">
+            <Typography
+              sx={{
+                pt: 1,
+                textDecoration: "none",
+                "&:hover": { textDecoration: "underline" },
+              }}
+              variant="h6"
+            >
               PTUDWNC-20_3
             </Typography>
           }
@@ -111,6 +121,9 @@ const CourseCard = () => {
             height: 120,
             alignItems: "center",
           }}
+          onClick={() => {
+            navigate("/class/abcde");
+          }}
         />
 
         <CardContent
@@ -121,15 +134,15 @@ const CourseCard = () => {
           disableSpacing
           sx={{ zIndex: 1, display: "flex", justifyContent: "end" }}
         >
-          <Tooltip title="Assignments" >
-          <IconButton sx={{ mr: 1 }}>
-            <Assignment />
-          </IconButton>
+          <Tooltip title="Assignments">
+            <IconButton sx={{ mr: 1 }}>
+              <Assignment />
+            </IconButton>
           </Tooltip>
-          <Tooltip title="Like" >
-          <IconButton aria-label="share" sx={{ mr: 1 }}>
-            <FavoriteIcon />
-          </IconButton>
+          <Tooltip title="Like">
+            <IconButton aria-label="share" sx={{ mr: 1 }}>
+              <FavoriteIcon />
+            </IconButton>
           </Tooltip>
         </CardActions>
       </Box>

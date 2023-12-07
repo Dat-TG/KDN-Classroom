@@ -74,7 +74,7 @@ export default function ConsecutiveSnackbars() {
               size="small"
               onClick={() => {
                 window.open(
-                  "https://web-advanced-server-v2.onrender.com/api/swagger#/",
+                  "https://web-advanced-server-v2.onrender.com/api/swagger",
                   "_blank"
                 );
               }}
