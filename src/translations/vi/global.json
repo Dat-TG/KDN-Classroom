@@ -112,5 +112,10 @@
     "students": "Sinh viên",
     "inviteTeachers": "Mời giáo viên",
     "inviteStudents": "Mời học viên",
-    "student": "sinh viên"
+    "student": "sinh viên",
+    "studentss": "sinh viên",
+    "inviteTeacherNote": "Giáo viên mà bạn thêm có thể làm mọi thứ bạn làm, trừ xóa lớp học.",
+    "multipleEmailsGuide": "Nhập địa chỉ email sau đó nhấn Enter",
+    "classSettings": "Cài đặt lớp học",
+    "invite": "Mời"
 }

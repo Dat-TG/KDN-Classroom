@@ -23,7 +23,7 @@ import {
   bgSports,
   colorThemes,
   extension,
-} from "../utils/class_themes";
+} from "../../utils/class_themes";
 import { useState } from "react";
 import { Check, PhotoOutlined } from "@mui/icons-material";
 import ListBackgroundImage from "./ListBackgroundImage";

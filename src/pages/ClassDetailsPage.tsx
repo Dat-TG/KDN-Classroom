@@ -1,4 +1,4 @@
-import { Divider, IconButton, Tab, Tabs } from "@mui/material";
+import { Divider, IconButton, Tab, Tabs, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import StreamPage from "./StreamPage";
@@ -95,18 +95,20 @@ export default function ClassDetailsPage() {
             color: value === 3 ? colorTheme : "grey",
           }}
         />
-        <IconButton
-          sx={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            bottom: 0,
-            margin: "auto",
-          }}
-          size="large"
-        >
-          <Settings />
-        </IconButton>
+        <Tooltip title={t("classSettings")}>
+          <IconButton
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              bottom: 0,
+              margin: "auto",
+            }}
+            size="large"
+          >
+            <Settings />
+          </IconButton>
+        </Tooltip>
       </Tabs>
       <Divider />
       <div hidden={value != 0}>

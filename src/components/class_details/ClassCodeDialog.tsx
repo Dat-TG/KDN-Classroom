@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import toast from "../utils/toast";
+import toast from "../../utils/toast";
 
 interface Props {
   open: boolean;

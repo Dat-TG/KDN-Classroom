@@ -1,6 +1,8 @@
 import { PersonAddAlt1Outlined } from "@mui/icons-material";
 import { Avatar, Box, Divider, IconButton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
+import { useState } from "react";
 
 interface Props {
   colorTheme: string;
@@ -8,101 +10,122 @@ interface Props {
 
 export default function PeoplePage(props: Props) {
   const { t } = useTranslation("global");
+  const [openInviteTeacherDialog, setOpenInviteTeacherDialog] =
+    useState<boolean>(false);
   return (
-    <Box
-      display={"flex"}
-      flexDirection={"column"}
-      paddingY={"24px"}
-      paddingX={{
-        xs: "32px",
-        sm: "48px",
-        md: "64px",
-        lg: "96px",
-        xl: "128px",
-      }}
-      justifyContent={"center"}
-    >
-      {/* Teachers */}
+    <>
       <Box
         display={"flex"}
-        justifyContent={"space-between"}
-        width={"100%"}
-        alignItems={"flex-end"}
+        flexDirection={"column"}
+        paddingY={"24px"}
+        paddingX={{
+          xs: "32px",
+          sm: "48px",
+          md: "64px",
+          lg: "96px",
+          xl: "128px",
+        }}
+        justifyContent={"center"}
       >
-        <Typography
-          sx={{
-            color: props.colorTheme,
-            fontSize: "36px",
-          }}
+        {/* Teachers */}
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          width={"100%"}
+          alignItems={"flex-end"}
         >
-          {t("teachers")}
-        </Typography>
-        <IconButton size="large">
-          <PersonAddAlt1Outlined
+          <Typography
             sx={{
               color: props.colorTheme,
-              fontSize: "28px",
+              fontSize: "36px",
             }}
-          />
-        </IconButton>
-      </Box>
-      <Divider
-        sx={{
-          borderWidth: "1px",
-          background: props.colorTheme,
-          marginY: "16px",
-        }}
-      />
-      <SinglePerson />
-      {/* Students */}
-      <div style={{ height: "48px" }}></div>
-      <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        width={"100%"}
-        alignItems={"flex-end"}
-      >
-        <Typography
+          >
+            {t("teachers")}
+          </Typography>
+          <IconButton
+            size="large"
+            onClick={() => {
+              setOpenInviteTeacherDialog(true);
+            }}
+          >
+            <PersonAddAlt1Outlined
+              sx={{
+                color: props.colorTheme,
+                fontSize: "28px",
+              }}
+            />
+          </IconButton>
+        </Box>
+        <Divider
           sx={{
-            color: props.colorTheme,
-            fontSize: "36px",
+            borderWidth: "1px",
+            background: props.colorTheme,
+            marginY: "16px",
           }}
+        />
+        <SinglePerson />
+        {/* Students */}
+        <div style={{ height: "48px" }}></div>
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          width={"100%"}
+          alignItems={"flex-end"}
         >
-          {t("students")}
-        </Typography>
-        <IconButton size="large">
-          <PersonAddAlt1Outlined
+          <Typography
             sx={{
               color: props.colorTheme,
-              fontSize: "28px",
+              fontSize: "36px",
             }}
-          />
-        </IconButton>
-      </Box>
-      <Divider
-        sx={{
-          borderWidth: "1px",
-          background: props.colorTheme,
-          marginY: "16px",
-        }}
-      />
-      <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => {
-          return (
-            <div>
-              <SinglePerson key={`st ${item}`} />
-              <Divider
+          >
+            {t("students")}
+          </Typography>
+          <Box display={"flex"} gap={"16px"} alignItems={"center"}>
+            <Typography
+              sx={{
+                color: props.colorTheme,
+                fontSize: "16px",
+              }}
+            >{`11 ${t("studentss")}`}</Typography>
+            <IconButton size="large">
+              <PersonAddAlt1Outlined
                 sx={{
-                  marginTop: "16px",
+                  color: props.colorTheme,
+                  fontSize: "28px",
                 }}
               />
-            </div>
-          );
-        })}
+            </IconButton>
+          </Box>
+        </Box>
+        <Divider
+          sx={{
+            borderWidth: "1px",
+            background: props.colorTheme,
+            marginY: "16px",
+          }}
+        />
+        <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => {
+            return (
+              <div>
+                <SinglePerson key={`st ${item}`} />
+                <Divider
+                  sx={{
+                    marginTop: "16px",
+                  }}
+                />
+              </div>
+            );
+          })}
 
-        <SinglePerson key={`st last`} />
+          <SinglePerson key={`st last`} />
+        </Box>
       </Box>
-    </Box>
+      <InviteTeacherDialog
+        open={openInviteTeacherDialog}
+        onClose={() => setOpenInviteTeacherDialog(false)}
+      />
+    </>
   );
 }
 

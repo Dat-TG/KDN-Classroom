@@ -110,5 +110,10 @@
     "students": "Students",
     "inviteTeachers": "Invite teachers",
     "inviteStudents": "Invite students",
-    "student": "student"
+    "student": "student",
+    "studentss": "students",
+    "inviteTeacherNote": "Teachers you add can do everything you can, except delete the class.",
+    "multipleEmailsGuide": "Type an email then press Enter",
+    "classSettings": "Class settings",
+    "invite": "Invite"
 }

@@ -21,8 +21,8 @@ import {
   RotateLeft,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import ChangeClassThemeDialog from "../components/ChangeClassThemeDialog";
-import ClassCodeDialog from "../components/ClassCodeDialog";
+import ChangeClassThemeDialog from "../components/class_details/ChangeClassThemeDialog";
+import ClassCodeDialog from "../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
 import { ClassEntity } from "./ClassDetailsPage";
