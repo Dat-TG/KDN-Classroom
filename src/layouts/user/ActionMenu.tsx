@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import React, { useRef, useState } from "react";
+import { Box, IconButton, Menu, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import CreateClassModal from "../../components/CreateClassModal";
 
 const ActionMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -14,7 +15,18 @@ const ActionMenu: React.FC = () => {
     setAnchorEl(null);
   };
 
+
+  
+
   const [t] = useTranslation("global");
+
+  const createModalRef = useRef<any | null>(null);
+
+  const handleOpenModel = () => {
+    createModalRef.current?.open();
+  }
+
+
 
   return (
     <div>
@@ -38,13 +50,14 @@ const ActionMenu: React.FC = () => {
         </MenuItem>
 
         <MenuItem
-          onClick={() => {
-            handleClose();
-          }}
+          onClick={handleOpenModel}
         >
           {t("createClass")}
         </MenuItem>
       </Menu>
+
+      <CreateClassModal ref={createModalRef}/>
+
     </div>
   );
 };

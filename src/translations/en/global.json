@@ -116,5 +116,8 @@
     "multipleEmailsGuide": "Type an email then press Enter",
     "classSettings": "Class settings",
     "invite": "Invite",
-    "inviteLink": "Invite link"
+    "inviteLink": "Invite link",
+    "className" : "Class name",
+    "section" : "Section",
+    "create" : "Create"
 }
