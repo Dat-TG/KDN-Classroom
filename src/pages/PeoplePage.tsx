@@ -3,6 +3,7 @@ import { Avatar, Box, Divider, IconButton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
 import { useState } from "react";
+import InviteStudentDialog from "../components/class_details/InviteStudentDialog";
 
 interface Props {
   colorTheme: string;
@@ -11,6 +12,8 @@ interface Props {
 export default function PeoplePage(props: Props) {
   const { t } = useTranslation("global");
   const [openInviteTeacherDialog, setOpenInviteTeacherDialog] =
+    useState<boolean>(false);
+  const [openInviteStudentDialog, setOpenInviteStudentDialog] =
     useState<boolean>(false);
   return (
     <>
@@ -87,7 +90,12 @@ export default function PeoplePage(props: Props) {
                 fontSize: "16px",
               }}
             >{`11 ${t("studentss")}`}</Typography>
-            <IconButton size="large">
+            <IconButton
+              size="large"
+              onClick={() => {
+                setOpenInviteStudentDialog(true);
+              }}
+            >
               <PersonAddAlt1Outlined
                 sx={{
                   color: props.colorTheme,
@@ -124,6 +132,10 @@ export default function PeoplePage(props: Props) {
       <InviteTeacherDialog
         open={openInviteTeacherDialog}
         onClose={() => setOpenInviteTeacherDialog(false)}
+      />
+      <InviteStudentDialog
+        open={openInviteStudentDialog}
+        onClose={() => setOpenInviteStudentDialog(false)}
       />
     </>
   );

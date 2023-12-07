@@ -117,5 +117,6 @@
     "inviteTeacherNote": "Giáo viên mà bạn thêm có thể làm mọi thứ bạn làm, trừ xóa lớp học.",
     "multipleEmailsGuide": "Nhập địa chỉ email sau đó nhấn Enter",
     "classSettings": "Cài đặt lớp học",
-    "invite": "Mời"
+    "invite": "Mời",
+    "inviteLink": "Đường liên kết mời"
 }

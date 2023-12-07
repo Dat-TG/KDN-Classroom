@@ -115,5 +115,6 @@
     "inviteTeacherNote": "Teachers you add can do everything you can, except delete the class.",
     "multipleEmailsGuide": "Type an email then press Enter",
     "classSettings": "Class settings",
-    "invite": "Invite"
+    "invite": "Invite",
+    "inviteLink": "Invite link"
 }
