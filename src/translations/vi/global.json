@@ -118,5 +118,8 @@
     "multipleEmailsGuide": "Nhập địa chỉ email sau đó nhấn Enter",
     "classSettings": "Cài đặt lớp học",
     "invite": "Mời",
-    "inviteLink": "Đường liên kết mời"
+    "inviteLink": "Đường liên kết mời",
+    "className" : "Tên lớp học",
+    "section" : "Phần",
+    "create" : "Tạo"
 }
