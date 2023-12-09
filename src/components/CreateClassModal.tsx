@@ -3,19 +3,16 @@ import {
   Button,
   CircularProgress,
   Modal,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { ClassEntity } from "../pages/ClassDetailsPage";
 import { useRef, useState } from "react";
 import ClassInfoForm from "./class_details/ClassInfoForm";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  submitRef?: any;
+  submitRef?: React.RefObject<HTMLButtonElement> | React.MutableRefObject<HTMLButtonElement>;
 }
 
 const CreateClassModal: React.FC<Props> = (props) => {
@@ -23,11 +20,6 @@ const CreateClassModal: React.FC<Props> = (props) => {
   const [isLoading /*setIsLoading*/] = useState(false);
 
   const infoFormSubmitRef = useRef<HTMLButtonElement>(null);
-
-  const create = () => {
-
-    infoFormSubmitRef?.current?.click();
-  }
 
   const [t] = useTranslation("global");
 
@@ -51,9 +43,9 @@ const CreateClassModal: React.FC<Props> = (props) => {
           p: 4,
         }}
       >
-         <Typography id="modal-modal-title" variant="h6" component="h2">
-                {t("createClass")}
-            </Typography>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          {t("createClass")}
+        </Typography>
         <ClassInfoForm submitRef={infoFormSubmitRef} />
 
         <Box sx={{ display: "flex", mt: 2 }}>
