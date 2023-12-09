@@ -11,6 +11,7 @@ import {
   extension,
 } from "../utils/class_themes";
 import { useParams } from "react-router-dom";
+import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
 
 export interface ClassEntity {
   id: string;
@@ -51,6 +52,8 @@ export default function ClassDetailsPage() {
   };
   const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
   const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+
+  const [openClassSettingsDialog, setOpenClassSettingsDialog] = useState<boolean>(false);
 
   return (
     <>
@@ -105,6 +108,9 @@ export default function ClassDetailsPage() {
               margin: "auto",
             }}
             size="large"
+            onClick={() => {
+              setOpenClassSettingsDialog(true);
+            }}
           >
             <Settings />
           </IconButton>
@@ -123,6 +129,19 @@ export default function ClassDetailsPage() {
       <div hidden={value != 2}>
         <PeoplePage colorTheme={colorTheme} />
       </div>
+
+
+      <ClassSettingsDialog
+        classId={classEntity.id!}
+        name={classEntity.name!}
+        section={classEntity.section!}
+        colorTheme={colorTheme}
+        inviteLink="https://invitelink"
+        open={openClassSettingsDialog}
+        onClose={() => {
+          setOpenClassSettingsDialog(false);
+        }}
+      />
     </>
   );
 }

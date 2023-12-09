@@ -35,8 +35,8 @@ interface Props {
   setColorTheme: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function StreamPage({classEntity, bgImg, colorTheme, setBgImg, setColorTheme}:Props) {
-  
+export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, setColorTheme }: Props) {
+
   const { t } = useTranslation("global");
   const [showInfo, setShowInfo] = useState<boolean>(false);
 

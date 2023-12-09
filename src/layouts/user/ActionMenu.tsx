@@ -3,6 +3,7 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import CreateClassModal from "../../components/CreateClassModal";
+import { ClassEntity } from "../../pages/ClassDetailsPage";
 
 const ActionMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -17,11 +18,16 @@ const ActionMenu: React.FC = () => {
 
   const [t] = useTranslation("global");
 
-  const createModalRef = useRef<{ open: () => void }>(null);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
 
-  const handleOpenModel = () => {
-    createModalRef.current?.open();
-  };
+  const handleOpenCreateDialog = () => {
+    setIsCreateDialogOpen(true);
+    handleClose();
+  }
+
+  const handleCloseCreateDialog = () => {
+    setIsCreateDialogOpen(false);
+  }
 
   return (
     <div>
@@ -44,10 +50,15 @@ const ActionMenu: React.FC = () => {
           {t("joinClass")}
         </MenuItem>
 
-        <MenuItem onClick={handleOpenModel}>{t("createClass")}</MenuItem>
+        <MenuItem
+          onClick={handleOpenCreateDialog}
+        >
+          {t("createClass")}
+        </MenuItem>
       </Menu>
+      
+      <CreateClassModal isOpen={isCreateDialogOpen} onClose={handleCloseCreateDialog} />
 
-      <CreateClassModal ref={createModalRef} />
     </div>
   );
 };
