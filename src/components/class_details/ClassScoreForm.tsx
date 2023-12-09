@@ -2,7 +2,6 @@
 import {
     Box,
     Button,
-    CircularProgress,
     Divider,
     FormControl,
     MenuItem,
@@ -19,7 +18,7 @@ import { ClassEntity } from "../../pages/ClassDetailsPage";
 
 interface Props {
     classEntity: ClassEntity;
-    submitRef?: any;
+    submitRef?: React.RefObject<HTMLButtonElement> | React.MutableRefObject<HTMLButtonElement>;
 }
 
 const ClassScoreForm: React.FC<Props> = (props) => {
