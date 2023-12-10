@@ -172,7 +172,7 @@ export default function PeoplePage(props: Props) {
                 color: props.colorTheme,
                 fontSize: "16px",
               }}
-            >{`11 ${t("studentss")}`}</Typography>
+            >{`${studentIds.length} ${t("studentss")}`}</Typography>
             <IconButton
               size="large"
               onClick={() => {
