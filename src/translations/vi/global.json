@@ -134,5 +134,6 @@
     "createClassSuccessfully": "Tạo lớp học thành công",
     "yourClass": "Lớp học của bạn",
     "yourJoinedClassAsStudent": "Lớp học bạn đã tham gia làm học viên",
-    "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên"
+    "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên",
+    "generatingInviteLink": "Đang tạo đường liên kết mời..."
 }

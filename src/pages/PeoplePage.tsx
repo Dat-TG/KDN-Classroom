@@ -11,13 +11,15 @@ import { useTranslation } from "react-i18next";
 import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
 import { useEffect, useState } from "react";
 import InviteStudentDialog from "../components/class_details/InviteStudentDialog";
-import { IGetCoursesRes, RoleCourseNumber } from "../types/course";
+import { IGetCoursesRes } from "../types/course";
 import { IUserProfileRes } from "../types/user";
 import { getUserById } from "../api/user/apiUser";
 
 interface Props {
   colorTheme: string;
   classEntity: IGetCoursesRes;
+  teacherIds: number[];
+  studentIds: number[];
 }
 
 export default function PeoplePage(props: Props) {
@@ -26,12 +28,6 @@ export default function PeoplePage(props: Props) {
     useState<boolean>(false);
   const [openInviteStudentDialog, setOpenInviteStudentDialog] =
     useState<boolean>(false);
-  const teacherIds = props.classEntity.course.userCourses
-    .filter((value) => value.userRoleCourse == RoleCourseNumber.Coteacher)
-    .map((item) => item.userId);
-  const studentIds = props.classEntity.course.userCourses
-    .filter((value) => value.userRoleCourse == RoleCourseNumber.Student)
-    .map((item) => item.userId);
   const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
   const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
@@ -44,8 +40,8 @@ export default function PeoplePage(props: Props) {
       .catch((err) => {
         console.log(err);
       });
-    for (let i = 0; i < teacherIds.length; i++) {
-      getUserById(teacherIds[i])
+    for (let i = 0; i < props.teacherIds.length; i++) {
+      getUserById(props.teacherIds[i])
         .then((res) => {
           setTeachers((prev) => {
             if (prev == null) return [res];
@@ -56,8 +52,8 @@ export default function PeoplePage(props: Props) {
           console.log(err);
         });
     }
-    for (let i = 0; i < studentIds.length; i++) {
-      getUserById(studentIds[i])
+    for (let i = 0; i < props.studentIds.length; i++) {
+      getUserById(props.studentIds[i])
         .then((res) => {
           setStudents((prev) => {
             if (prev == null) return [res];
@@ -68,7 +64,7 @@ export default function PeoplePage(props: Props) {
           console.log(err);
         });
     }
-  }, [props.classEntity.userId, studentIds, teacherIds]);
+  }, [props.classEntity.userId, props.studentIds, props.teacherIds]);
 
   return (
     <>
@@ -131,14 +127,14 @@ export default function PeoplePage(props: Props) {
         )}
         {teachers != null && (
           <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-            {teacherIds.map((item, index) => {
+            {props.teacherIds.map((item, index) => {
               return (
                 <div>
                   <SinglePerson
                     key={`st ${item}`}
                     user={index < teachers!.length ? teachers![index] : null}
                   />
-                  {index < teacherIds.length - 1 && (
+                  {index < props.teacherIds.length - 1 && (
                     <Divider
                       sx={{
                         marginTop: "16px",
@@ -172,7 +168,7 @@ export default function PeoplePage(props: Props) {
                 color: props.colorTheme,
                 fontSize: "16px",
               }}
-            >{`${studentIds.length} ${t("studentss")}`}</Typography>
+            >{`${props.studentIds.length} ${t("studentss")}`}</Typography>
             <IconButton
               size="large"
               onClick={() => {
@@ -197,14 +193,14 @@ export default function PeoplePage(props: Props) {
         />
         {students != null && (
           <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-            {studentIds.map((item, index) => {
+            {props.studentIds.map((item, index) => {
               return (
                 <div>
                   <SinglePerson
                     key={`st ${item}`}
                     user={index < students!.length ? students![index] : null}
                   />
-                  {index < studentIds.length - 1 && (
+                  {index < props.studentIds.length - 1 && (
                     <Divider
                       sx={{
                         marginTop: "16px",

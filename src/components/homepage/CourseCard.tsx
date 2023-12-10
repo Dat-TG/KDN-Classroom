@@ -31,7 +31,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, [props.classEntity.userId]);
 
   const isMenuOpen = Boolean(anchorEl);
 

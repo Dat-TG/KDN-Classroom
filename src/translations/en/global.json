@@ -132,5 +132,6 @@
     "createClassSuccessfully": "Create class successfully",
     "yourClass": "Your class",
     "yourJoinedClassAsStudent": "Your joined class as student",
-    "yourJoinedClassAsTeacher": "Your joined class as teacher"
+    "yourJoinedClassAsTeacher": "Your joined class as teacher",
+    "generatingInviteLink": "Generating invite link..."
 }

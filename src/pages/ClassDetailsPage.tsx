@@ -18,7 +18,7 @@ import {
   extension,
 } from "../utils/class_themes";
 import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
-import { IGetCoursesRes } from "../types/course";
+import { IGetCoursesRes, RoleCourseNumber } from "../types/course";
 import { getCourseByCode } from "../api/course/apiCourse";
 import { useParams } from "react-router-dom";
 import toast from "../utils/toast";
@@ -45,11 +45,22 @@ export default function ClassDetailsPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [teacherIds, setTeacherIds] = useState<number[]>([]);
+  const [studentIds, setStudentIds] = useState<number[]>([]);
+
   useEffect(() => {
     getCourseByCode(classCode ?? "")
       .then((res) => {
         setClassEntity(res);
         setIsLoading(false);
+        const tIds = classEntity.course.userCourses
+          .filter((value) => value.userRoleCourse == RoleCourseNumber.Coteacher)
+          .map((item) => item.userId);
+        const sIds = classEntity.course.userCourses
+          .filter((value) => value.userRoleCourse == RoleCourseNumber.Student)
+          .map((item) => item.userId);
+        setTeacherIds(tIds);
+        setStudentIds(sIds);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
@@ -140,7 +151,12 @@ export default function ClassDetailsPage() {
             />
           </div>
           <div hidden={value != 2}>
-            <PeoplePage colorTheme={colorTheme} classEntity={classEntity} />
+            <PeoplePage
+              colorTheme={colorTheme}
+              classEntity={classEntity}
+              teacherIds={teacherIds}
+              studentIds={studentIds}
+            />
           </div>
           <ClassSettingsDialog
             classId={classEntity.course.code}

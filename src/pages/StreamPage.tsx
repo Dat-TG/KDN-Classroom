@@ -293,7 +293,6 @@ export default function StreamPage({
         name={classEntity.course.nameCourse!}
         section={classEntity.course.part!}
         colorTheme={colorTheme}
-        inviteLink="https://invitelink"
         open={openClassCodeDialog}
         onClose={() => {
           setOpenClassCodeDialog(false);
