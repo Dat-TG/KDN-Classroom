@@ -25,18 +25,23 @@ import ChangeClassThemeDialog from "../components/class_details/ChangeClassTheme
 import ClassCodeDialog from "../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
-import { ClassEntity } from "./ClassDetailsPage";
+import { IGetCoursesRes } from "../types/course";
 
 interface Props {
-  classEntity: ClassEntity;
+  classEntity: IGetCoursesRes;
   bgImg: string;
   setBgImg: React.Dispatch<React.SetStateAction<string>>;
   colorTheme: string;
   setColorTheme: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, setColorTheme }: Props) {
-
+export default function StreamPage({
+  classEntity,
+  bgImg,
+  colorTheme,
+  setBgImg,
+  setColorTheme,
+}: Props) {
   const { t } = useTranslation("global");
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
@@ -93,10 +98,10 @@ export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, s
           </Box>
           <Box height={"100px"}></Box>
           <Typography variant="h5" color={"white"}>
-            {classEntity.name}
+            {classEntity.course.nameCourse}
           </Typography>
           <Typography variant="h6" color={"white"}>
-            {classEntity.section}
+            {classEntity.course.part}
           </Typography>
 
           <IconButton
@@ -161,13 +166,17 @@ export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, s
               <Typography fontSize={"16px"} fontWeight={"500"}>
                 {t("subject")}
               </Typography>
-              <Typography fontWeight={"300"}>{classEntity.subject}</Typography>
+              <Typography fontWeight={"300"}>
+                {classEntity.course.topic}
+              </Typography>
             </Box>
             <Box display={"flex"} gap={"8px"}>
               <Typography fontSize={"16px"} fontWeight={"500"}>
                 {t("room")}
               </Typography>
-              <Typography fontWeight={"300"}>{classEntity.room}</Typography>
+              <Typography fontWeight={"300"}>
+                {classEntity.course.room}
+              </Typography>
             </Box>
           </Box>
         )}
@@ -271,7 +280,7 @@ export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, s
         onClose={() => {
           setOpenCustomizeDialog(false);
         }}
-        classId={classEntity.id!}
+        classId={classEntity.course.code}
         handleBackgroundImageChange={(image) => {
           setBgImg(image);
         }}
@@ -280,9 +289,9 @@ export default function StreamPage({ classEntity, bgImg, colorTheme, setBgImg, s
         }}
       />
       <ClassCodeDialog
-        classId={classEntity.id!}
-        name={classEntity.name!}
-        section={classEntity.section!}
+        classId={classEntity.course.code}
+        name={classEntity.course.nameCourse!}
+        section={classEntity.course.part!}
         colorTheme={colorTheme}
         inviteLink="https://invitelink"
         open={openClassCodeDialog}

@@ -13,10 +13,10 @@ import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import React from "react";
 import { Assignment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { ClassEntity } from "../../pages/ClassDetailsPage";
+import { IGetCoursesRes } from "../../types/course";
+import { baseUrlBackground, bgArts, extension } from "../../utils/class_themes";
 
-const CourseCard = (props: { classEntity: ClassEntity }) => {
-
+const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -71,7 +71,7 @@ const CourseCard = (props: { classEntity: ClassEntity }) => {
       <Box>
         <CardMedia
           component="img"
-          image={props.classEntity.backgroundImage}
+          image={`${baseUrlBackground}/${bgArts[0]}.${extension}`}
           alt="Paella dish"
           sx={{
             width: "100%",
@@ -109,15 +109,15 @@ const CourseCard = (props: { classEntity: ClassEntity }) => {
               }}
               variant="h6"
               onClick={() => {
-                navigate(`/class/${props.classEntity.id}`);
+                navigate(`/class/${props.classEntity.course.code}`);
               }}
             >
-              {props.classEntity.name}
+              {props.classEntity.course.nameCourse}
             </Typography>
           }
           subheader={
             <Typography sx={{ fontSize: 13 }} component="p">
-              {props.classEntity.subject}
+              {props.classEntity.course.topic}
             </Typography>
           }
           sx={{

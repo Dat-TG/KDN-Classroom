@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { Grid } from "@mui/material";
 import CourseCard from "../components/homepage/CourseCard";
-import { ClassEntity } from "./ClassDetailsPage";
-import { colorThemes } from "../utils/class_themes";
+import { IGetCoursesRes } from "../types/course";
 
 export default function HomePage() {
   useEffect(() => {
@@ -13,23 +12,7 @@ export default function HomePage() {
 
   const { t } = useTranslation("global");
 
-  const classList: ClassEntity[] = [
-    {
-      id: "abcde",
-      name: "2309-PTUDWNC-20_3",
-      section: "Phát triển ứng dụng web nâng cao",
-      subject: "Phát triển ứng dụng web nâng cao",
-      room: "E402",
-      backgroundImage:
-        "https://www.gstatic.com/classroom/themes/img_volleyball.jpg",
-      colorTheme: colorThemes[0].code,
-      creater: {
-        id: 1,
-        name: "Teacher 1",
-        email: "teacher@email.com",
-      },
-    },
-  ];
+  const classList: IGetCoursesRes[] = [];
 
   return (
     <>

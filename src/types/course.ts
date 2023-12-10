@@ -1,8 +1,20 @@
+export enum RoleCourseString {
+  Teacher = "Teacher",
+  Coteacher = "Coteacher",
+  Student = "Student",
+}
+
+export enum RoleCourseNumber {
+  Teacher = 1,
+  Coteacher = 2,
+  Student = 3,
+}
+
 export interface IUserCourse {
   id: number;
   userId: number;
   courseId: number;
-  userRoleCourse: number;
+  userRoleCourse: RoleCourseNumber;
 }
 
 export interface ICourse {
@@ -20,7 +32,7 @@ export interface IGetCoursesRes {
   id: number;
   userId: number;
   courseId: number;
-  userRoleCourse: number;
+  userRoleCourse: RoleCourseNumber;
   course: ICourse;
 }
 
@@ -35,5 +47,5 @@ export interface ICreateCoursesReq {
 
 export interface ICreateInviteLinkReq {
   courseCode: string;
-  roleCourse: string;
+  roleCourse: RoleCourseString;
 }

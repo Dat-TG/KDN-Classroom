@@ -10,23 +10,8 @@ import {
   colorThemes,
   extension,
 } from "../utils/class_themes";
-import { useParams } from "react-router-dom";
 import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
-
-export interface ClassEntity {
-  id: string;
-  name: string;
-  section: string;
-  subject: string;
-  room: string;
-  backgroundImage: string;
-  colorTheme: string;
-  creater: {
-    id: number;
-    name: string;
-    email: string;
-  };
-}
+import { IGetCoursesRes } from "../types/course";
 
 export default function ClassDetailsPage() {
   const [value, setValue] = React.useState(0);
@@ -35,25 +20,15 @@ export default function ClassDetailsPage() {
     setValue(newValue);
   };
   const { t } = useTranslation("global");
-  const { classId } = useParams();
-  const classEntity: ClassEntity = {
-    id: classId!,
-    name: "2309-PTUDWNC-20_3",
-    section: "Phát triển ứng dụng web nâng cao",
-    subject: "Phát triển ứng dụng web nâng cao",
-    room: "E402",
-    backgroundImage: `${baseUrlBackground}/${bgGeneral[1]}${extension}`,
-    colorTheme: colorThemes[0].code,
-    creater: {
-      id: 1,
-      name: "Teacher 1",
-      email: "teacher@email.com",
-    },
-  };
-  const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
-  const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+  //const { classId } = useParams();
+  const classEntity = {} as IGetCoursesRes;
+  const [bgImg, setBgImg] = useState<string>(
+    `${baseUrlBackground}/${bgGeneral}.${extension}`
+  );
+  const [colorTheme, setColorTheme] = useState<string>(colorThemes[0].code);
 
-  const [openClassSettingsDialog, setOpenClassSettingsDialog] = useState<boolean>(false);
+  const [openClassSettingsDialog, setOpenClassSettingsDialog] =
+    useState<boolean>(false);
 
   return (
     <>
@@ -130,11 +105,10 @@ export default function ClassDetailsPage() {
         <PeoplePage colorTheme={colorTheme} />
       </div>
 
-
       <ClassSettingsDialog
-        classId={classEntity.id!}
-        name={classEntity.name!}
-        section={classEntity.section!}
+        classId={classEntity.course.code}
+        name={classEntity.course.nameCourse}
+        section={classEntity.course.part}
         colorTheme={colorTheme}
         inviteLink="https://invitelink"
         open={openClassSettingsDialog}
