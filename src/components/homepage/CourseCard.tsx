@@ -13,8 +13,10 @@ import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import React from "react";
 import { Assignment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { ClassEntity } from "../../pages/ClassDetailsPage";
 
-const CourseCard = () => {
+const CourseCard = (props: { classEntity: ClassEntity }) => {
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -69,7 +71,7 @@ const CourseCard = () => {
       <Box>
         <CardMedia
           component="img"
-          image="https://cdn.pixabay.com/photo/2015/07/22/21/44/book-856151_1280.jpg"
+          image={props.classEntity.backgroundImage}
           alt="Paella dish"
           sx={{
             width: "100%",
@@ -106,13 +108,16 @@ const CourseCard = () => {
                 "&:hover": { textDecoration: "underline" },
               }}
               variant="h6"
+              onClick={() => {
+                navigate(`/class/${props.classEntity.id}`);
+              }}
             >
-              PTUDWNC-20_3
+              {props.classEntity.name}
             </Typography>
           }
           subheader={
             <Typography sx={{ fontSize: 13 }} component="p">
-              Phát triển ứng dụng web nâng cao
+              {props.classEntity.subject}
             </Typography>
           }
           sx={{
@@ -120,9 +125,6 @@ const CourseCard = () => {
             zIndex: 1,
             height: 120,
             alignItems: "center",
-          }}
-          onClick={() => {
-            navigate("/class/abcde");
           }}
         />
 
