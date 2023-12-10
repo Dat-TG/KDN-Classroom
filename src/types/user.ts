@@ -1,3 +1,5 @@
+import { IUserCourse } from "./course";
+
 export interface IUser {
   firstname: string;
   lastname: string;
@@ -141,6 +143,7 @@ export interface IUserProfileRes {
   roles: UserRoles[];
   iat: number;
   exp: number;
+  userCourses: IUserCourse[];
 }
 
 export interface IUserInformationSelector {

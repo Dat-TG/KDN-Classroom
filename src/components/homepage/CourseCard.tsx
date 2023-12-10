@@ -10,14 +10,28 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Assignment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { IGetCoursesRes } from "../../types/course";
 import { baseUrlBackground, bgArts, extension } from "../../utils/class_themes";
+import { IUserProfileRes } from "../../types/user";
+import { getUserById } from "../../api/user/apiUser";
+import { useTranslation } from "react-i18next";
 
 const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [teacher, setTeacher] = useState<IUserProfileRes | null>(null);
+
+  useEffect(() => {
+    getUserById(props.classEntity.userId)
+      .then((res) => {
+        setTeacher(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -30,6 +44,8 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
   };
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation("global");
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -53,6 +69,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
       <MenuItem>Leave</MenuItem>
     </Menu>
   );
+
   return (
     <Card
       sx={{
@@ -86,19 +103,25 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
         <CardHeader
           avatar={
             <Box sx={{ pt: 1 }}>
-              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                K
+              <Avatar
+                sx={{ bgcolor: red[500] }}
+                aria-label="recipe"
+                src={teacher?.avatar}
+              >
+                {teacher?.name}
               </Avatar>
             </Box>
           }
           action={
-            <IconButton
-              aria-label="settings"
-              sx={{ color: "white" }}
-              onClick={handleProfileMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
+            <Tooltip title={t("settings")}>
+              <IconButton
+                aria-label="settings"
+                sx={{ color: "white" }}
+                onClick={handleProfileMenuOpen}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Tooltip>
           }
           title={
             <Typography

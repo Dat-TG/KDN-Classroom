@@ -79,6 +79,11 @@ export const getUsers = async (params: IUserRequestParams) => {
   return res.data;
 };
 
+export const getUserById = async (id: number) => {
+  const res = await AxiosClient.get(`${url}/details/${id}`);
+  return res.data;
+};
+
 export const getUserProfile = async () => {
   const res = await AxiosClient.get(`${url}/profile`);
   return res.data;

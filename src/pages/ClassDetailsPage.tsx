@@ -140,7 +140,7 @@ export default function ClassDetailsPage() {
             />
           </div>
           <div hidden={value != 2}>
-            <PeoplePage colorTheme={colorTheme} />
+            <PeoplePage colorTheme={colorTheme} classEntity={classEntity} />
           </div>
           <ClassSettingsDialog
             classId={classEntity.course.code}
