@@ -150,7 +150,7 @@ export default function StreamPage({
                 {t("classCode")}
               </Typography>
               <Typography fontWeight={"300"} marginLeft={"8px"}>
-                {classEntity.id}
+                {classEntity.course.code}
               </Typography>
               <Tooltip title={t("display")}>
                 <IconButton
@@ -214,7 +214,7 @@ export default function StreamPage({
           </Typography>
           <Box display={"flex"} alignItems={"center"}>
             <Typography fontWeight={"500"} fontSize={"24px"} color={colorTheme}>
-              {classEntity.id}
+              {classEntity.course.code}
             </Typography>
             <Tooltip title={t("display")}>
               <IconButton

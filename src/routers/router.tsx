@@ -50,7 +50,7 @@ const router = createBrowserRouter([
             element: <div>Settings</div>,
           },
           {
-            path: "/class/:classId",
+            path: "/class/:classCode",
             element: <ClassDetailsPage />,
           },
         ],

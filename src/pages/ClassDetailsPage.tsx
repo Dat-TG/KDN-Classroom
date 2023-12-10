@@ -1,5 +1,12 @@
-import { Divider, IconButton, Tab, Tabs, Tooltip } from "@mui/material";
-import React, { useState } from "react";
+import {
+  CircularProgress,
+  Divider,
+  IconButton,
+  Tab,
+  Tabs,
+  Tooltip,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import StreamPage from "./StreamPage";
 import { Settings } from "@mui/icons-material";
@@ -12,6 +19,10 @@ import {
 } from "../utils/class_themes";
 import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
 import { IGetCoursesRes } from "../types/course";
+import { getCourseByCode } from "../api/course/apiCourse";
+import { useParams } from "react-router-dom";
+import toast from "../utils/toast";
+import { IToastError } from "../types/common";
 
 export default function ClassDetailsPage() {
   const [value, setValue] = React.useState(0);
@@ -20,15 +31,30 @@ export default function ClassDetailsPage() {
     setValue(newValue);
   };
   const { t } = useTranslation("global");
-  //const { classId } = useParams();
-  const classEntity = {} as IGetCoursesRes;
+  const { classCode } = useParams();
+  const [classEntity, setClassEntity] = useState<IGetCoursesRes>(
+    {} as IGetCoursesRes
+  );
   const [bgImg, setBgImg] = useState<string>(
-    `${baseUrlBackground}/${bgGeneral}.${extension}`
+    `${baseUrlBackground}/${bgGeneral[0]}${extension}`
   );
   const [colorTheme, setColorTheme] = useState<string>(colorThemes[0].code);
 
   const [openClassSettingsDialog, setOpenClassSettingsDialog] =
     useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    getCourseByCode(classCode ?? "")
+      .then((res) => {
+        setClassEntity(res);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        toast.error((err as IToastError).detail.message);
+      });
+  }, [classCode]);
 
   return (
     <>
@@ -92,30 +118,43 @@ export default function ClassDetailsPage() {
         </Tooltip>
       </Tabs>
       <Divider />
-      <div hidden={value != 0}>
-        <StreamPage
-          bgImg={bgImg}
-          classEntity={classEntity}
-          colorTheme={colorTheme}
-          setBgImg={setBgImg}
-          setColorTheme={setColorTheme}
+      {isLoading ? (
+        <CircularProgress
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            marginTop: "-20px",
+            marginLeft: "-20px",
+          }}
         />
-      </div>
-      <div hidden={value != 2}>
-        <PeoplePage colorTheme={colorTheme} />
-      </div>
-
-      <ClassSettingsDialog
-        classId={classEntity.course.code}
-        name={classEntity.course.nameCourse}
-        section={classEntity.course.part}
-        colorTheme={colorTheme}
-        inviteLink="https://invitelink"
-        open={openClassSettingsDialog}
-        onClose={() => {
-          setOpenClassSettingsDialog(false);
-        }}
-      />
+      ) : (
+        <>
+          <div hidden={value != 0}>
+            <StreamPage
+              bgImg={bgImg}
+              classEntity={classEntity}
+              colorTheme={colorTheme}
+              setBgImg={setBgImg}
+              setColorTheme={setColorTheme}
+            />
+          </div>
+          <div hidden={value != 2}>
+            <PeoplePage colorTheme={colorTheme} />
+          </div>
+          <ClassSettingsDialog
+            classId={classEntity.course.code}
+            name={classEntity.course.nameCourse}
+            section={classEntity.course.part}
+            colorTheme={colorTheme}
+            inviteLink="https://invitelink"
+            open={openClassSettingsDialog}
+            onClose={() => {
+              setOpenClassSettingsDialog(false);
+            }}
+          />
+        </>
+      )}
     </>
   );
 }
