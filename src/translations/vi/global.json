@@ -131,5 +131,8 @@
     "showOverallGrade": "Hiển thị tổng điểm cho học sinh",
     "gradeCategories": "Loại điểm",
     "addGradeCateogry": "Thêm loại điểm",
-    "createClassSuccessfully": "Tạo lớp học thành công"
+    "createClassSuccessfully": "Tạo lớp học thành công",
+    "yourClass": "Lớp học của bạn",
+    "yourJoinedClassAsStudent": "Lớp học bạn đã tham gia làm học viên",
+    "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên"
 }

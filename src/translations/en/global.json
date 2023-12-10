@@ -129,5 +129,8 @@
     "showOverallGrade": "Show overall grade to students",
     "gradeCategories": "Grade categories",
     "addGradeCateogry": "Add grade category",
-    "createClassSuccessfully": "Create class successfully"
+    "createClassSuccessfully": "Create class successfully",
+    "yourClass": "Your class",
+    "yourJoinedClassAsStudent": "Your joined class as student",
+    "yourJoinedClassAsTeacher": "Your joined class as teacher"
 }

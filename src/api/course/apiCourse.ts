@@ -1,4 +1,8 @@
-import { ICreateCoursesReq, ICreateInviteLinkReq } from "../../types/course";
+import {
+  ICreateCoursesReq,
+  ICreateInviteLinkReq,
+  RoleCourseString,
+} from "../../types/course";
 import AxiosClient from "../axios";
 
 export const createCourse = async (course: ICreateCoursesReq) => {
@@ -11,7 +15,7 @@ export const getCourseByCode = async (courseCode: string) => {
   return res.data;
 };
 
-export const getCoursesByRole = async (role: string) => {
+export const getCoursesByRole = async (role: RoleCourseString) => {
   const res = await AxiosClient.get(`/course/all-course?roleCourse=${role}`);
   return res.data;
 };

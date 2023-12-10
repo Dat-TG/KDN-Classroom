@@ -71,7 +71,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
       <Box>
         <CardMedia
           component="img"
-          image={`${baseUrlBackground}/${bgArts[0]}.${extension}`}
+          image={`${baseUrlBackground}/${bgArts[0]}${extension}`}
           alt="Paella dish"
           sx={{
             width: "100%",
