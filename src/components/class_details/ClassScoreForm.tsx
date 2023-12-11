@@ -88,7 +88,7 @@ const ClassScoreForm: React.FC<Props> = (props) => {
                 {...field}
                 value={gradeCalculation}
                 onChange={handleGradeCalculationChange}
-                sx={{ minWidth: 150, width: 150, overflow: "hidden" }}
+                sx={{ minWidth: 150, width: 150 }}
                 MenuProps={{
                   PaperProps: {
                     style: {
@@ -97,8 +97,8 @@ const ClassScoreForm: React.FC<Props> = (props) => {
                   },
                 }}
               >
-                <MenuItem value={1}>{t("noOverallGrade")}</MenuItem>
-                <MenuItem value={2} sx={{ overflow: "hidden" }}>
+                <MenuItem value={1} sx={{ textOverflow: "ellipsis" }}>{t("noOverallGrade")}</MenuItem>
+                <MenuItem value={2} >
                   {t("totalPoints")}
                 </MenuItem>
               </Select>
