@@ -102,7 +102,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
         />
       </Box>
 
-      <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+      <Box sx={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
         <CardHeader
           avatar={
             <Box sx={{ pt: 1 }}>
