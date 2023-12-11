@@ -220,6 +220,7 @@ export default function PeoplePage(props: Props) {
       <InviteStudentDialog
         open={openInviteStudentDialog}
         onClose={() => setOpenInviteStudentDialog(false)}
+        courseCode={props.classEntity.course.code}
       />
     </>
   );
