@@ -165,7 +165,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         toast.error((err as IToastError).detail.message);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     switch (location.pathname) {
