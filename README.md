@@ -27,8 +27,11 @@ Front-end: https://kdn-classroom.netlify.app/
 Back-end: https://web-advanced-server-v2.onrender.com
 
 ## Demo Video
+
 GA02: Youtube: https://youtu.be/PzYCHgaJ0f0
+
 GA01: Youtube: https://youtu.be/GIjBgv-85Ls
+
 Midterm: Youtube: https://youtu.be/Db7cxGFMyI8
 
 ## Installation
