@@ -20,6 +20,7 @@ interface Props {
   classEntity: IGetCoursesRes;
   teacherIds: number[];
   studentIds: number[];
+  ownerId: number;
 }
 
 export default function PeoplePage(props: Props) {
@@ -33,7 +34,7 @@ export default function PeoplePage(props: Props) {
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
 
   useEffect(() => {
-    getUserById(props.classEntity.userId)
+    getUserById(props.ownerId)
       .then((res) => {
         setOwner(res);
       })
@@ -64,7 +65,7 @@ export default function PeoplePage(props: Props) {
           console.log(err);
         });
     }
-  }, [props.classEntity.userId, props.studentIds, props.teacherIds]);
+  }, [props.ownerId, props.studentIds, props.teacherIds]);
 
   return (
     <>

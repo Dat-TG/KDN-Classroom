@@ -13,7 +13,7 @@ import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Assignment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { IGetCoursesRes } from "../../types/course";
+import { IGetCoursesRes, RoleCourseNumber } from "../../types/course";
 import { baseUrlBackground, bgArts, extension } from "../../utils/class_themes";
 import { IUserProfileRes } from "../../types/user";
 import { getUserById } from "../../api/user/apiUser";
@@ -24,14 +24,17 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
   const [teacher, setTeacher] = useState<IUserProfileRes | null>(null);
 
   useEffect(() => {
-    getUserById(props.classEntity.userId)
+    const teacherId = props.classEntity.course.userCourses.find(
+      (item) => item.userRoleCourse == RoleCourseNumber.Teacher
+    )?.userId;
+    getUserById(teacherId!)
       .then((res) => {
         setTeacher(res);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [props.classEntity.userId]);
+  }, [props.classEntity.course.userCourses]);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -103,10 +106,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
         <CardHeader
           avatar={
             <Box sx={{ pt: 1 }}>
-              <Avatar
-                sx={{ bgcolor: red[500] }}
-                src={teacher?.avatar}
-              >
+              <Avatar sx={{ bgcolor: red[500] }} src={teacher?.avatar}>
                 {teacher?.name}
               </Avatar>
             </Box>

@@ -61,6 +61,7 @@ export default function ClassDetailsPage() {
 
   const [teacherIds, setTeacherIds] = useState<number[]>([]);
   const [studentIds, setStudentIds] = useState<number[]>([]);
+  const [ownerId, setOwnerId] = useState<number>(0);
 
   const [classNotFound, setClassNotFound] = useState<boolean>(false);
 
@@ -82,6 +83,10 @@ export default function ClassDetailsPage() {
         const sIds = res.course.userCourses
           .filter((value) => value.userRoleCourse == RoleCourseNumber.Student)
           .map((item) => item.userId);
+        const oId = res.course.userCourses.filter(
+          (value) => value.userRoleCourse == RoleCourseNumber.Teacher
+        )[0].userId;
+        setOwnerId(oId);
         setTeacherIds(tIds);
         setStudentIds(sIds);
       })
@@ -190,6 +195,7 @@ export default function ClassDetailsPage() {
                 <PeoplePage
                   colorTheme={colorTheme}
                   classEntity={classEntity}
+                  ownerId={ownerId}
                   teacherIds={teacherIds}
                   studentIds={studentIds}
                 />
