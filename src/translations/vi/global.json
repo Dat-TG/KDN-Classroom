@@ -140,5 +140,6 @@
     "classNotFound": "Không tìm thấy lớp học",
     "youAreNotMemberOfThisClass": "Bạn không phải là thành viên của lớp học này",
     "join": "Tham gia",
-    "joinClassSuccessfully": "Tham gia lớp học thành công"
+    "joinClassSuccessfully": "Tham gia lớp học thành công",
+    "sendInviteLinkSuccessfullyTo": "Gửi đường liên kết mời thành công đến "
 }

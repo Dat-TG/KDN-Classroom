@@ -49,3 +49,9 @@ export interface ICreateInviteLinkReq {
   courseCode: string;
   roleCourse: RoleCourseString;
 }
+
+export interface ISendInviteLinkReq {
+  emailAddress: string;
+  courseCode: string;
+  roleCourse: RoleCourseString;
+}
