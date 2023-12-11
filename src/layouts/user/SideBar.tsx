@@ -165,7 +165,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         toast.error((err as IToastError).detail.message);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -267,10 +267,12 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     item,
     index,
     canExpanded,
+    isExpanded,
   }: {
     item: MenuOption;
     index: number;
     canExpanded?: boolean;
+    isExpanded?: boolean;
   }) {
     return (
       <ListItem
@@ -307,7 +309,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 color: "default",
               }}
             >
-              {isEnrolledListExpanded ? <ArrowDropDown /> : <ArrowRight />}
+              {isExpanded ? <ArrowDropDown /> : <ArrowRight />}
             </ListItemIcon>
           )}
           <ListItemIcon
@@ -431,6 +433,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
             index={-2}
             key={t("teaching")}
             canExpanded={true}
+            isExpanded={isTeachingListExpanded}
           />
           {isTeachingListExpanded &&
             TeachingMenuOptions.map((item, index) => (
@@ -452,6 +455,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
             index={-2}
             key={t("enrolled")}
             canExpanded={true}
+            isExpanded={isEnrolledListExpanded}
           />
           {isEnrolledListExpanded &&
             EnrolledMenuOptions.map((item, index) => (
