@@ -64,7 +64,7 @@ export default function HomePage() {
       ) : (
         ownList.length > 0 && (
           <>
-            <Typography variant="h1">{t("yourClass")}</Typography>
+            <Typography variant="h4">{t("yourClass")}</Typography>
             <Grid container sx={{ margin: "30px", rowGap: 3 }}>
               {ownList.map((value, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
@@ -72,14 +72,14 @@ export default function HomePage() {
                 </Grid>
               ))}
             </Grid>
+            <div
+              style={{
+                height: "30px",
+              }}
+            ></div>
           </>
         )
       )}
-      <div
-        style={{
-          height: "30px",
-        }}
-      ></div>
       {isLoadingTeach ? (
         <CircularProgress
           color="primary"
@@ -89,7 +89,7 @@ export default function HomePage() {
       ) : (
         teachList.length > 0 && (
           <>
-            <Typography variant="h1">
+            <Typography variant="h4">
               {t("yourJoinedClassAsTeacher")}
             </Typography>
             <Grid container sx={{ margin: "30px", rowGap: 3 }}>
@@ -99,14 +99,14 @@ export default function HomePage() {
                 </Grid>
               ))}
             </Grid>
+            <div
+              style={{
+                height: "30px",
+              }}
+            ></div>
           </>
         )
       )}{" "}
-      <div
-        style={{
-          height: "30px",
-        }}
-      ></div>
       {isLoadingClass ? (
         <CircularProgress
           color="primary"
@@ -116,7 +116,7 @@ export default function HomePage() {
       ) : (
         classList.length > 0 && (
           <>
-            <Typography variant="h1">
+            <Typography variant="h4">
               {t("yourJoinedClassAsStudent")}
             </Typography>
             <Grid container sx={{ margin: "30px", rowGap: 3 }}>
