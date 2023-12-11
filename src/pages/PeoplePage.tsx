@@ -1,12 +1,25 @@
 import { PersonAddAlt1Outlined } from "@mui/icons-material";
-import { Avatar, Box, Divider, IconButton, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Divider,
+  IconButton,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InviteStudentDialog from "../components/class_details/InviteStudentDialog";
+import { IGetCoursesRes } from "../types/course";
+import { IUserProfileRes } from "../types/user";
+import { getUserById } from "../api/user/apiUser";
 
 interface Props {
   colorTheme: string;
+  classEntity: IGetCoursesRes;
+  teacherIds: number[];
+  studentIds: number[];
 }
 
 export default function PeoplePage(props: Props) {
@@ -15,6 +28,44 @@ export default function PeoplePage(props: Props) {
     useState<boolean>(false);
   const [openInviteStudentDialog, setOpenInviteStudentDialog] =
     useState<boolean>(false);
+  const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
+  const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
+  const [owner, setOwner] = useState<IUserProfileRes | null>(null);
+
+  useEffect(() => {
+    getUserById(props.classEntity.userId)
+      .then((res) => {
+        setOwner(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    for (let i = 0; i < props.teacherIds.length; i++) {
+      getUserById(props.teacherIds[i])
+        .then((res) => {
+          setTeachers((prev) => {
+            if (prev == null) return [res];
+            return [...prev, res];
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    for (let i = 0; i < props.studentIds.length; i++) {
+      getUserById(props.studentIds[i])
+        .then((res) => {
+          setStudents((prev) => {
+            if (prev == null) return [res];
+            return [...prev, res];
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [props.classEntity.userId, props.studentIds, props.teacherIds]);
+
   return (
     <>
       <Box
@@ -66,7 +117,35 @@ export default function PeoplePage(props: Props) {
             marginY: "16px",
           }}
         />
-        <SinglePerson />
+        <SinglePerson user={owner} />
+        {teachers != null && teachers!.length > 0 && (
+          <Divider
+            sx={{
+              marginY: "16px",
+            }}
+          ></Divider>
+        )}
+        {teachers != null && (
+          <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+            {props.teacherIds.map((item, index) => {
+              return (
+                <div>
+                  <SinglePerson
+                    key={`st ${item}`}
+                    user={index < teachers!.length ? teachers![index] : null}
+                  />
+                  {index < props.teacherIds.length - 1 && (
+                    <Divider
+                      sx={{
+                        marginTop: "16px",
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </Box>
+        )}
         {/* Students */}
         <div style={{ height: "48px" }}></div>
         <Box
@@ -89,7 +168,7 @@ export default function PeoplePage(props: Props) {
                 color: props.colorTheme,
                 fontSize: "16px",
               }}
-            >{`11 ${t("studentss")}`}</Typography>
+            >{`${props.studentIds.length} ${t("studentss")}`}</Typography>
             <IconButton
               size="large"
               onClick={() => {
@@ -112,22 +191,27 @@ export default function PeoplePage(props: Props) {
             marginY: "16px",
           }}
         />
-        <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => {
-            return (
-              <div>
-                <SinglePerson key={`st ${item}`} />
-                <Divider
-                  sx={{
-                    marginTop: "16px",
-                  }}
-                />
-              </div>
-            );
-          })}
-
-          <SinglePerson key={`st last`} />
-        </Box>
+        {students != null && (
+          <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+            {props.studentIds.map((item, index) => {
+              return (
+                <div>
+                  <SinglePerson
+                    key={`st ${item}`}
+                    user={index < students!.length ? students![index] : null}
+                  />
+                  {index < props.studentIds.length - 1 && (
+                    <Divider
+                      sx={{
+                        marginTop: "16px",
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </Box>
+        )}
       </Box>
       <InviteTeacherDialog
         open={openInviteTeacherDialog}
@@ -141,18 +225,26 @@ export default function PeoplePage(props: Props) {
   );
 }
 
-function SinglePerson() {
+function SinglePerson({ user }: { user: IUserProfileRes | null }) {
   return (
     <>
       <Box display={"flex"} gap={"16px"} alignItems={"center"} marginX={"24px"}>
-        <Avatar
-          src="https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/blt12dbddde5342ce4c/648866ff21a8556da61fa167/GOAL_-_Blank_WEB_-_Facebook_-_2023-06-13T135350.847.png?auto=webp&format=pjpg&width=3840&quality=60"
-          sx={{
-            width: "40px",
-            height: "40px",
-          }}
-        />
-        <Typography variant="body1">Lionel Messi</Typography>
+        {user != null ? (
+          <Avatar
+            src={user?.avatar}
+            sx={{
+              width: "40px",
+              height: "40px",
+            }}
+          />
+        ) : (
+          <Skeleton variant="circular" width={40} height={40} />
+        )}
+        {user != null ? (
+          <Typography variant="body1">{`${user?.name} ${user.surname}`}</Typography>
+        ) : (
+          <Skeleton variant="text" width={100} height={20} />
+        )}
       </Box>
     </>
   );

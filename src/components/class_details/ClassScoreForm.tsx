@@ -1,164 +1,173 @@
-
 import {
-    Box,
-    Button,
-    Divider,
-    FormControl,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Switch,
-    TextField,
-    Typography,
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Switch,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { ClassEntity } from "../../pages/ClassDetailsPage";
+import { ICourse } from "../../types/course";
 
 interface Props {
-    classEntity: ClassEntity;
-    submitRef?: React.RefObject<HTMLButtonElement> | React.MutableRefObject<HTMLButtonElement>;
+  classEntity: ICourse;
+  submitRef?:
+    | React.RefObject<HTMLButtonElement>
+    | React.MutableRefObject<HTMLButtonElement>;
 }
 
 const ClassScoreForm: React.FC<Props> = (props) => {
+  const classEntity = props.classEntity;
 
-    const classEntity = props.classEntity;
+  const [isLoading /*setIsLoading*/] = useState(false);
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ICourse>({ defaultValues: classEntity });
 
-    const [isLoading /*setIsLoading*/] = useState(false);
+  const onSubmit: SubmitHandler<ICourse> = async (data) => {
+    console.log(data);
+  };
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<ClassEntity>({ defaultValues: classEntity });
+  const [gradeCalculation, setGradeCalculation] = useState("");
+  const handleGradeCalculationChange = (event: SelectChangeEvent) => {
+    setGradeCalculation(event.target.value);
+  };
 
-    const onSubmit: SubmitHandler<ClassEntity> = async (data) => {
+  const [showGrade, setShowGrade] = useState(false);
 
-        console.log(data);
-    };
+  const handleShowGradeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setShowGrade(event.target.checked);
+  };
 
-    const [gradeCalculation, setGradeCalculation] = useState('');
-    const handleGradeCalculationChange = (event: SelectChangeEvent) => {
-        setGradeCalculation(event.target.value);
-    };
+  const [t] = useTranslation("global");
 
-    const [showGrade, setShowGrade] = useState(false);
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Typography
+        id="modal-modal-title"
+        variant="h4"
+        component="h2"
+        sx={{ mb: 2 }}
+      >
+        {t("grading")}
+      </Typography>
 
-    const handleShowGradeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setShowGrade(event.target.checked);
-    };
+      <Typography variant="h5" sx={{ mb: 1, fontWeight: 400 }}>
+        {t("gradeCalculation")}
+      </Typography>
 
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("overallGradeCalculation")}
+        </Typography>
+        <Controller
+          name="room" // test
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <FormControl size="small">
+              <Select
+                {...field}
+                value={gradeCalculation}
+                onChange={handleGradeCalculationChange}
+                sx={{ minWidth: 150, width: 150, overflow: "hidden" }}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxWidth: 150,
+                    },
+                  },
+                }}
+              >
+                <MenuItem value={1}>{t("noOverallGrade")}</MenuItem>
+                <MenuItem value={2} sx={{ overflow: "hidden" }}>
+                  {t("totalPoints")}
+                </MenuItem>
+              </Select>
+            </FormControl>
+          )}
+        />
+      </Box>
 
-
-    const [t] = useTranslation("global");
-
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography id="modal-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
-                {t("grading")}
-            </Typography>
-
-            <Typography variant="h5" sx={{ mb: 1, fontWeight: 400 }}>
-                {t("gradeCalculation")}
-            </Typography>
-
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {t("overallGradeCalculation")}
-                </Typography>
-                <Controller
-                    name="room" // test
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <FormControl size="small">
-                            <Select
-                                {...field}
-                                value={gradeCalculation}
-                                onChange={handleGradeCalculationChange}
-                                sx={{ minWidth: 150, width: 150, overflow: "hidden" }}
-                                MenuProps={{
-                                    PaperProps: {
-                                        style: {
-                                            maxWidth: 150
-                                        },
-                                    },
-                                }}
-                            >
-                                <MenuItem value={1}  >{t("noOverallGrade")}</MenuItem>
-                                <MenuItem value={2} sx={{ overflow: "hidden" }} >{t("totalPoints")}</MenuItem>
-                            </Select>
-                        </FormControl>
-                    )}
-                />
-            </Box>
-
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {t("showOverallGrade")}
-                </Typography>
-                <Controller
-                    name="room" // test
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <Switch
-                            {...field}
-                            checked={showGrade}
-                            onChange={handleShowGradeChange}
-                        />
-                    )}
-                />
-            </Box>
-
-            <Controller
-                name="room"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                    <TextField
-                        {...field}
-                        fullWidth
-                        sx={{ mt: 1 }}
-                        label={t("room")}
-                        variant="filled"
-                        error={!!errors.room}
-                    />
-                )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("showOverallGrade")}
+        </Typography>
+        <Controller
+          name="room" // test
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <Switch
+              {...field}
+              checked={showGrade}
+              onChange={handleShowGradeChange}
             />
+          )}
+        />
+      </Box>
 
-            <Divider sx={{ mt: 3, mr: 1, ml: 1 }}></Divider>
+      <Controller
+        name="room"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            {...field}
+            fullWidth
+            sx={{ mt: 1 }}
+            label={t("room")}
+            variant="filled"
+            error={!!errors.room}
+          />
+        )}
+      />
 
-            <Typography variant="h5" sx={{ mt: 2, fontWeight: 400 }}>
-                {t("gradeCategories")}
-            </Typography>
+      <Divider sx={{ mt: 3, mr: 1, ml: 1 }}></Divider>
 
-            <Button>
-                <Typography variant={"body1"}>
-                    {t("addGradeCateogry")}
-                </Typography>
+      <Typography variant="h5" sx={{ mt: 2, fontWeight: 400 }}>
+        {t("gradeCategories")}
+      </Typography>
 
-            </Button>
+      <Button>
+        <Typography variant={"body1"}>{t("addGradeCateogry")}</Typography>
+      </Button>
 
-
-            <Box sx={{ display: "none" }}>
-                <Button
-                    ref={props.submitRef}
-                    type="submit"
-                    disabled={isLoading || !!errors.name}
-                >
-                    <Typography
-                    >
-                        {t("submit")}
-                    </Typography>
-                </Button>
-            </Box>
-
-        </form>
-
-    );
-}
+      <Box sx={{ display: "none" }}>
+        <Button
+          ref={props.submitRef}
+          type="submit"
+          disabled={isLoading || !!errors.nameCourse}
+        >
+          <Typography>{t("submit")}</Typography>
+        </Button>
+      </Box>
+    </form>
+  );
+};
 
 export default ClassScoreForm;
