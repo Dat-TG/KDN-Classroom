@@ -68,7 +68,7 @@ export default function ClassDetailsPage() {
 
   useEffect(() => {
     getCourseByCode(classCode ?? "")
-      .then((res) => {
+      .then((res: IGetCoursesRes) => {
         console.log("res: ", res);
         if (!res) {
           setNoPermission(true);
@@ -76,10 +76,10 @@ export default function ClassDetailsPage() {
         }
         setClassEntity(res);
         setIsLoading(false);
-        const tIds = classEntity.course.userCourses
+        const tIds = res.course.userCourses
           .filter((value) => value.userRoleCourse == RoleCourseNumber.Coteacher)
           .map((item) => item.userId);
-        const sIds = classEntity.course.userCourses
+        const sIds = res.course.userCourses
           .filter((value) => value.userRoleCourse == RoleCourseNumber.Student)
           .map((item) => item.userId);
         setTeacherIds(tIds);
@@ -91,7 +91,6 @@ export default function ClassDetailsPage() {
           setClassNotFound(true);
         }
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classCode]);
 
   return (
