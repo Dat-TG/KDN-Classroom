@@ -35,6 +35,11 @@ interface Props {
   open: boolean;
 }
 
+interface ClassPreview {
+  class: IGetCoursesRes;
+  ownerAvatar: string;
+}
+
 class MenuOption {
   name: string;
   icon: React.ReactNode;
@@ -66,11 +71,11 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
   const [isTeachingListExpanded, setIsTeachingListExpanded] = useState(false);
   const [isEnrolledListExpanded, setIsEnrolledListExpanded] = useState(false);
 
-  const [classList, setClassList] = useState<IGetCoursesRes[]>([]);
-  const [teachList, setTeachList] = useState<IGetCoursesRes[]>([]);
-  const [ownList, setOwnList] = useState<IGetCoursesRes[]>([]);
+  const [classList, setClassList] = useState<ClassPreview[]>([]);
+  const [teachList, setTeachList] = useState<ClassPreview[]>([]);
+  const [ownList, setOwnList] = useState<ClassPreview[]>([]);
 
-  const [ownerList, setOwnerList] = useState<IUserProfileRes[]>([]);
+
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -82,39 +87,63 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
 
   const [t] = useTranslation("global");
 
-  // useEffect(() => {
-  //   getUserById(props.classEntity.userId)
-  //     .then((res) => {
-  //       setTeacher(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [props.classEntity.userId]);
+  const getUserInfoById = async (userId: number): Promise<IUserProfileRes | null> => {
+    try {
+      const response = await getUserById(userId);
+      return response;
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     document.title = t("homePage");
     getCoursesByRole(RoleCourseString.Student)
-      .then((res) => {
-        setClassList(res);
+      .then( async (res :  IGetCoursesRes[]) => {
+        const classPreviews = await Promise.all(res.map( async (course) =>{
+          const user = await getUserInfoById(course.userId);
+          return {
+            class: course,
+            ownerAvatar: user?.avatar || "",
+          };
+        }));
+        setClassList(classPreviews);
+        //setClassList(res);
         console.log(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Coteacher)
-      .then((res) => {
-        setTeachList(res);
-        console.log(res);
-      })
+    .then( async (res :  IGetCoursesRes[]) => {
+      const classPreviews = await Promise.all(res.map( async (course) =>{
+        const user = await getUserInfoById(course.userId);
+        return {
+          class: course,
+          ownerAvatar: user?.avatar || "",
+        };
+      }));
+      setTeachList(classPreviews);
+      //setClassList(res);
+      console.log(res);
+    })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Teacher)
-      .then((res) => {
-        setOwnList(res);
-        console.log(res);
-      })
+    .then( async (res :  IGetCoursesRes[]) => {
+      const classPreviews = await Promise.all(res.map( async (course) =>{
+        const user = await getUserInfoById(course.userId);
+        return {
+          class: course,
+          ownerAvatar: user?.avatar || "",
+        };
+      }));
+      setOwnList(classPreviews);
+      //setClassList(res);
+      console.log(res);
+    })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
       });
@@ -286,7 +315,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     item,
     index,
   }: {
-    item: IGetCoursesRes;
+    item: ClassPreview;
     index: number;
   }) {
     return (
@@ -312,7 +341,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           }}
           onClick={() => {
             setSelectedIndex(index);
-            navigate(`/class/${item.course.code}`);
+            navigate(`/class/${item.class.course.code}`);
           }}
         >
           <ListItemIcon
@@ -329,8 +358,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 height: "30px",
                 backgroundColor: "primary.main",
               }}
+              src={item.ownerAvatar}
             >
-              Test
+              
             </Avatar>
           </ListItemIcon>
           {(props.open || (!props.open && isHovered)) && (
@@ -342,7 +372,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <Typography noWrap>{item.course.nameCourse}</Typography>
+                <Typography noWrap>{item.class.course.nameCourse}</Typography>
               </div>
               <div
                 style={{
@@ -351,7 +381,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 }}
               >
                 <Typography variant="subtitle1" noWrap>
-                  {item.course.topic}
+                  {item.class.course.topic}
                 </Typography>
               </div>
             </Box>
@@ -402,7 +432,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
               <CourseItem
                 index={index + 6}
                 item={item}
-                key={item.course.nameCourse}
+                key={item.class.course.nameCourse}
               />
             ))}
         </List>
@@ -423,7 +453,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
               <CourseItem
                 index={index + 6 + teachList.length + ownList.length}
                 item={item}
-                key={item.course.nameCourse}
+                key={item.class.course.nameCourse}
               />
             ))}
         </List>
