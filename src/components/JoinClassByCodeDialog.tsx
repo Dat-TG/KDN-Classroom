@@ -18,6 +18,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { joinCourse } from "../api/course/apiCourse";
 import toast from "../utils/toast";
 import { IToastError } from "../types/common";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -40,10 +41,13 @@ export default function JoinClassByCodeDialog(props: Props) {
     mode: "onChange",
   });
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     setIsLoading(true);
     try {
       await joinCourse(data.code.trim());
+      navigate(`/class/${data.code.trim()}`);
       toast.success(t("joinClassSuccessfully"));
     } catch (error) {
       toast.error((error as IToastError).detail.message);

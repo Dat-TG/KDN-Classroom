@@ -88,13 +88,18 @@ export default function HomePage() {
         />
       ) : (
         teachList.length > 0 && (
-          <Grid container sx={{ margin: "30px", rowGap: 3 }}>
-            {teachList.map((value, index) => (
-              <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
-                <CourseCard classEntity={value} />
-              </Grid>
-            ))}
-          </Grid>
+          <>
+            <Typography variant="h1">
+              {t("yourJoinedClassAsTeacher")}
+            </Typography>
+            <Grid container sx={{ margin: "30px", rowGap: 3 }}>
+              {teachList.map((value, index) => (
+                <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
+                  <CourseCard classEntity={value} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
         )
       )}{" "}
       <div
@@ -110,13 +115,18 @@ export default function HomePage() {
         />
       ) : (
         classList.length > 0 && (
-          <Grid container sx={{ margin: "30px", rowGap: 3 }}>
-            {classList.map((value, index) => (
-              <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
-                <CourseCard classEntity={value} />
-              </Grid>
-            ))}
-          </Grid>
+          <>
+            <Typography variant="h1">
+              {t("yourJoinedClassAsStudent")}
+            </Typography>
+            <Grid container sx={{ margin: "30px", rowGap: 3 }}>
+              {classList.map((value, index) => (
+                <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
+                  <CourseCard classEntity={value} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
         )
       )}
     </div>
