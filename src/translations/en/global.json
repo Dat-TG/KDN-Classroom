@@ -133,5 +133,6 @@
     "yourClass": "Your class",
     "yourJoinedClassAsStudent": "Your joined class as student",
     "yourJoinedClassAsTeacher": "Your joined class as teacher",
-    "generatingInviteLink": "Generating invite link..."
+    "generatingInviteLink": "Generating invite link...",
+    "invalidInviteLink": "Invalid invite link"
 }

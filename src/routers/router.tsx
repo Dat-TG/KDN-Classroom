@@ -12,6 +12,7 @@ import LandingPage from "../pages/LandingPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
 import ClassDetailsPage from "../pages/ClassDetailsPage";
+import AcceptInvite from "../pages/AcceptInvite";
 
 const router = createBrowserRouter([
   {
@@ -38,8 +39,8 @@ const router = createBrowserRouter([
             element: <div>To-do</div>,
           },
           {
-            path: "/course/:courseId",
-            element: <div>Course</div>,
+            path: "/course/invite",
+            element: <AcceptInvite />,
           },
           {
             path: "/archived",

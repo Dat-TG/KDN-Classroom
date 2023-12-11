@@ -10,9 +10,9 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { ICourse, ICreateCoursesReq } from "../../types/course";
 import { createCourse } from "../../api/course/apiCourse";
-import { AxiosResponse } from "axios";
 import toast from "../../utils/toast";
 import { IToastError } from "../../types/common";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   classEntity?: ICourse | undefined;
@@ -55,17 +55,23 @@ const ClassInfoForm: React.FC<Props> = (props) => {
     },
   });
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<ICreateCoursesReq> = async (data) => {
     console.log(data);
     setIsLoading(true);
-    const res: AxiosResponse = await createCourse(data);
-    if (res.status === 201) {
-      toast.success(t("createClassSuccessfully"));
-    } else {
-      toast.error((res.data as IToastError).detail.message);
-    }
-    setIsLoading(false);
-    props.onDialogClose!();
+    createCourse(data)
+      .then((res) => {
+        toast.success(t("createClassSuccessfully"));
+        setIsLoading(false);
+        props.onDialogClose!();
+        navigate(`/class/${res.code}`);
+      })
+      .catch((err) => {
+        toast.error((err as IToastError).detail.message);
+        setIsLoading(false);
+        props.onDialogClose!();
+      });
   };
 
   return (
