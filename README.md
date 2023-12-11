@@ -27,8 +27,9 @@ Front-end: https://kdn-classroom.netlify.app/
 Back-end: https://web-advanced-server-v2.onrender.com
 
 ## Demo Video
-
-Youtube: https://youtu.be/GIjBgv-85Ls
+GA02: Youtube: https://youtu.be/PzYCHgaJ0f0
+GA01: Youtube: https://youtu.be/GIjBgv-85Ls
+Midterm: Youtube: https://youtu.be/Db7cxGFMyI8
 
 ## Installation
 
@@ -82,6 +83,25 @@ Users can edit:
 - Reset password by email
 - Upload avatar
 - Edit avatar: crop, rotate, zoom in, zoom out
+
+### Teacher
+
+#### Class management
+- Create class
+- List classes
+- Show class details
+- Show list of teachers and students in class
+
+#### Class invitation
+- Create a class invitation link and join class by link
+- Invite student by email
+- Invite teacher by email
+
+### Student
+
+#### Join class
+- By code
+- By invitation link
 
 ### Public Hosting
 - Includes functionality to upload projects to a public host, facilitating easy sharing and accessibility.
