@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CancelPresentation,
   ContentCopy,
@@ -25,7 +25,9 @@ import ChangeClassThemeDialog from "../components/class_details/ChangeClassTheme
 import ClassCodeDialog from "../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
-import { IGetCoursesRes } from "../types/course";
+import { IGetCoursesRes, RoleCourseString } from "../types/course";
+import { createInviteLink } from "../api/course/apiCourse";
+import toast from "../utils/toast";
 
 interface Props {
   classEntity: IGetCoursesRes;
@@ -207,7 +209,7 @@ export default function StreamPage({
               right: "0px",
             }}
           >
-            <MenuClassCode />
+            <MenuClassCode courseCode={classEntity.course.code} />
           </div>
           <Typography fontWeight={"600"} fontSize={"16px"}>
             {t("classCode")}
@@ -302,7 +304,11 @@ export default function StreamPage({
   );
 }
 
-function MenuClassCode() {
+interface MenuClassCodeProps {
+  courseCode: string;
+}
+
+function MenuClassCode({ courseCode }: MenuClassCodeProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -311,7 +317,20 @@ function MenuClassCode() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [inviteLink, setInviteLink] = useState<string>("");
   const { t } = useTranslation("global");
+  useEffect(() => {
+    createInviteLink({
+      courseCode: courseCode,
+      roleCourse: RoleCourseString.Student,
+    })
+      .then((res) => {
+        setInviteLink(res.url);
+      })
+      .catch((err) => {
+        toast.error(err.detail.message);
+      });
+  }, [courseCode]);
   return (
     <>
       <IconButton onClick={handleClick}>
@@ -326,7 +345,13 @@ function MenuClassCode() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigator.clipboard.writeText(inviteLink!);
+            toast.simple(t("copiedToClipboard"));
+            handleClose();
+          }}
+        >
           <LinkOutlined />
           <Typography marginLeft={"8px"}>{t("copyClassInviteLink")}</Typography>
         </MenuItem>

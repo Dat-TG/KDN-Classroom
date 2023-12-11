@@ -23,7 +23,11 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getCoursesByRole } from "../../api/course/apiCourse";
-import { IGetCoursesRes, RoleCourseString } from "../../types/course";
+import {
+  IGetCoursesRes,
+  RoleCourseNumber,
+  RoleCourseString,
+} from "../../types/course";
 import toast from "../../utils/toast";
 import { IToastError } from "../../types/common";
 import { getUserById } from "../../api/user/apiUser";
@@ -75,8 +79,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
   const [teachList, setTeachList] = useState<ClassPreview[]>([]);
   const [ownList, setOwnList] = useState<ClassPreview[]>([]);
 
-
-
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -87,7 +89,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
 
   const [t] = useTranslation("global");
 
-  const getUserInfoById = async (userId: number): Promise<IUserProfileRes | null> => {
+  const getUserInfoById = async (
+    userId: number
+  ): Promise<IUserProfileRes | null> => {
     try {
       const response = await getUserById(userId);
       return response;
@@ -99,15 +103,21 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     document.title = t("homePage");
+
     getCoursesByRole(RoleCourseString.Student)
-      .then( async (res :  IGetCoursesRes[]) => {
-        const classPreviews = await Promise.all(res.map( async (course) =>{
-          const user = await getUserInfoById(course.userId);
-          return {
-            class: course,
-            ownerAvatar: user?.avatar || "",
-          };
-        }));
+      .then(async (res: IGetCoursesRes[]) => {
+        const classPreviews = await Promise.all(
+          res.map(async (course) => {
+            const teacherId = course.course.userCourses.find(
+              (item) => item.userRoleCourse == RoleCourseNumber.Teacher
+            )?.userId;
+            const user = await getUserInfoById(teacherId!);
+            return {
+              class: course,
+              ownerAvatar: user?.avatar || "",
+            };
+          })
+        );
         setClassList(classPreviews);
         //setClassList(res);
         console.log(res);
@@ -116,34 +126,41 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Coteacher)
-    .then( async (res :  IGetCoursesRes[]) => {
-      const classPreviews = await Promise.all(res.map( async (course) =>{
-        const user = await getUserInfoById(course.userId);
-        return {
-          class: course,
-          ownerAvatar: user?.avatar || "",
-        };
-      }));
-      setTeachList(classPreviews);
-      //setClassList(res);
-      console.log(res);
-    })
+      .then(async (res: IGetCoursesRes[]) => {
+        const classPreviews = await Promise.all(
+          res.map(async (course) => {
+            const teacherId = course.course.userCourses.find(
+              (item) => item.userRoleCourse == RoleCourseNumber.Teacher
+            )?.userId;
+            const user = await getUserInfoById(teacherId!);
+            return {
+              class: course,
+              ownerAvatar: user?.avatar || "",
+            };
+          })
+        );
+        setTeachList(classPreviews);
+        //setClassList(res);
+        console.log(res);
+      })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Teacher)
-    .then( async (res :  IGetCoursesRes[]) => {
-      const classPreviews = await Promise.all(res.map( async (course) =>{
-        const user = await getUserInfoById(course.userId);
-        return {
-          class: course,
-          ownerAvatar: user?.avatar || "",
-        };
-      }));
-      setOwnList(classPreviews);
-      //setClassList(res);
-      console.log(res);
-    })
+      .then(async (res: IGetCoursesRes[]) => {
+        const classPreviews = await Promise.all(
+          res.map(async (course) => {
+            const user = await getUserInfoById(course.userId);
+            return {
+              class: course,
+              ownerAvatar: user?.avatar || "",
+            };
+          })
+        );
+        setOwnList(classPreviews);
+        //setClassList(res);
+        console.log(res);
+      })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
       });
@@ -311,13 +328,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     );
   }
 
-  function CourseItem({
-    item,
-    index,
-  }: {
-    item: ClassPreview;
-    index: number;
-  }) {
+  function CourseItem({ item, index }: { item: ClassPreview; index: number }) {
     return (
       <ListItem
         disablePadding
@@ -359,9 +370,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 backgroundColor: "primary.main",
               }}
               src={item.ownerAvatar}
-            >
-              
-            </Avatar>
+            ></Avatar>
           </ListItemIcon>
           {(props.open || (!props.open && isHovered)) && (
             <Box display={"flex"} flexDirection={"column"}>
