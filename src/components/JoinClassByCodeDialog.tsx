@@ -49,8 +49,19 @@ export default function JoinClassByCodeDialog(props: Props) {
       await joinCourse(data.code.trim());
       navigate(`/class/${data.code.trim()}`);
       toast.success(t("joinClassSuccessfully"));
-    } catch (error) {
-      toast.error((error as IToastError).detail.message);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err.courseCode) {
+        navigate(`/class/${err.courseCode}`);
+        toast.error(err.message, {
+          preventDuplicate: true,
+        });
+      } else {
+        navigate("/");
+        toast.error((err as IToastError).detail.message, {
+          preventDuplicate: true,
+        });
+      }
     }
     props.onClose();
     setIsLoading(false);
