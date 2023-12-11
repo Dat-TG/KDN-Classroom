@@ -137,6 +137,8 @@
     "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên",
     "generatingInviteLink": "Đang tạo đường liên kết mời...",
     "invalidInviteLink": "Đường liên kết mời không hợp lệ",
+    "teaching" : "Giảng dạy",
+    "toReview": "Cần xem xét",
     "classNotFound": "Không tìm thấy lớp học",
     "youAreNotMemberOfThisClass": "Bạn không phải là thành viên của lớp học này",
     "join": "Tham gia",

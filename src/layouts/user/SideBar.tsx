@@ -13,18 +13,31 @@ import {
   ArrowDropDown,
   ArrowRight,
   CalendarMonth,
+  Grading,
+  Group,
   Home,
   School,
   Settings,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getCoursesByRole } from "../../api/course/apiCourse";
+import { IGetCoursesRes, RoleCourseString } from "../../types/course";
+import toast from "../../utils/toast";
+import { IToastError } from "../../types/common";
+import { getUserById } from "../../api/user/apiUser";
+import { IUserProfileRes } from "../../types/user";
 
 const drawerWidth = 300;
 
 interface Props {
   open: boolean;
+}
+
+interface ClassPreview {
+  class: IGetCoursesRes;
+  ownerAvatar: string;
 }
 
 class MenuOption {
@@ -47,27 +60,6 @@ class MenuOption {
   }
 }
 
-class Course {
-  name: string;
-  topic?: string;
-
-  slug?: string;
-
-  constructor({
-    name,
-    topic,
-    slug,
-  }: {
-    name: string;
-    topic?: string;
-    slug?: string;
-  }) {
-    this.name = name;
-    this.topic = topic;
-    this.slug = slug;
-  }
-}
-
 const MiniDrawer: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,7 +68,14 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
 
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTeachingListExpanded, setIsTeachingListExpanded] = useState(false);
+  const [isEnrolledListExpanded, setIsEnrolledListExpanded] = useState(false);
+
+  const [classList, setClassList] = useState<ClassPreview[]>([]);
+  const [teachList, setTeachList] = useState<ClassPreview[]>([]);
+  const [ownList, setOwnList] = useState<ClassPreview[]>([]);
+
+
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -88,7 +87,70 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
 
   const [t] = useTranslation("global");
 
-  React.useEffect(() => {
+  const getUserInfoById = async (userId: number): Promise<IUserProfileRes | null> => {
+    try {
+      const response = await getUserById(userId);
+      return response;
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    document.title = t("homePage");
+    getCoursesByRole(RoleCourseString.Student)
+      .then( async (res :  IGetCoursesRes[]) => {
+        const classPreviews = await Promise.all(res.map( async (course) =>{
+          const user = await getUserInfoById(course.userId);
+          return {
+            class: course,
+            ownerAvatar: user?.avatar || "",
+          };
+        }));
+        setClassList(classPreviews);
+        //setClassList(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error((err as IToastError).detail.message);
+      });
+    getCoursesByRole(RoleCourseString.Coteacher)
+    .then( async (res :  IGetCoursesRes[]) => {
+      const classPreviews = await Promise.all(res.map( async (course) =>{
+        const user = await getUserInfoById(course.userId);
+        return {
+          class: course,
+          ownerAvatar: user?.avatar || "",
+        };
+      }));
+      setTeachList(classPreviews);
+      //setClassList(res);
+      console.log(res);
+    })
+      .catch((err) => {
+        toast.error((err as IToastError).detail.message);
+      });
+    getCoursesByRole(RoleCourseString.Teacher)
+    .then( async (res :  IGetCoursesRes[]) => {
+      const classPreviews = await Promise.all(res.map( async (course) =>{
+        const user = await getUserInfoById(course.userId);
+        return {
+          class: course,
+          ownerAvatar: user?.avatar || "",
+        };
+      }));
+      setOwnList(classPreviews);
+      //setClassList(res);
+      console.log(res);
+    })
+      .catch((err) => {
+        toast.error((err as IToastError).detail.message);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     switch (location.pathname) {
       case "/":
         setSelectedIndex(0);
@@ -96,19 +158,22 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
       case "/calendar":
         setSelectedIndex(1);
         break;
-      case "/todo":
+      case "/to-review":
         setSelectedIndex(2);
         break;
-      case "/archived":
+      case "/todo":
         setSelectedIndex(3);
         break;
-      case "/settings":
+      case "/archived":
         setSelectedIndex(4);
         break;
-
-      default:
-        setSelectedIndex(-1);
+      case "/settings":
+        setSelectedIndex(5);
         break;
+
+      // default:
+      //   setSelectedIndex(-1);
+      //   break;
     }
   }, [location]);
 
@@ -128,14 +193,34 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
       },
     }),
   ];
+
+  const teachingOption = new MenuOption({
+    name: t("teaching"),
+    icon: <Group />,
+    onClick: () => {
+      setIsTeachingListExpanded(!isTeachingListExpanded);
+    },
+  });
+
   const enrolledOption = new MenuOption({
     name: t("enrolled"),
     icon: <School />,
     onClick: () => {
-      setIsExpanded(!isExpanded);
+      setIsEnrolledListExpanded(!isEnrolledListExpanded);
     },
   });
-  const expanedMenuOptions: MenuOption[] = [
+
+  const TeachingMenuOptions: MenuOption[] = [
+    new MenuOption({
+      name: t("toReview"),
+      icon: <Grading />,
+      onClick: () => {
+        navigate("/to-review");
+      },
+    }),
+  ];
+
+  const EnrolledMenuOptions: MenuOption[] = [
     new MenuOption({
       name: t("todo"),
       icon: <InboxIcon />,
@@ -158,18 +243,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
       onClick: () => {
         navigate("/settings");
       },
-    }),
-  ];
-
-  const listCourses = [
-    new Course({
-      name: "2309-PTUDWNC-20_3",
-      topic: "Phát triển ứng dụng web nâng cao",
-      slug: "PTUDWNC",
-    }),
-    new Course({
-      name: "Vi tích phân 1B (HK1, 2020-2021)",
-      slug: "VTP1B",
     }),
   ];
 
@@ -217,7 +290,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 color: "default",
               }}
             >
-              {isExpanded ? <ArrowDropDown /> : <ArrowRight />}
+              {isEnrolledListExpanded ? <ArrowDropDown /> : <ArrowRight />}
             </ListItemIcon>
           )}
           <ListItemIcon
@@ -238,7 +311,13 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     );
   }
 
-  function CourseItem({ item, index }: { item: Course; index: number }) {
+  function CourseItem({
+    item,
+    index,
+  }: {
+    item: ClassPreview;
+    index: number;
+  }) {
     return (
       <ListItem
         disablePadding
@@ -262,7 +341,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           }}
           onClick={() => {
             setSelectedIndex(index);
-            navigate(`/course/${item.slug}`);
+            navigate(`/class/${item.class.course.code}`);
           }}
         >
           <ListItemIcon
@@ -279,8 +358,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 height: "30px",
                 backgroundColor: "primary.main",
               }}
+              src={item.ownerAvatar}
             >
-              {item.name[0]}
+              
             </Avatar>
           </ListItemIcon>
           {(props.open || (!props.open && isHovered)) && (
@@ -292,7 +372,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <Typography noWrap>{item.name}</Typography>
+                <Typography noWrap>{item.class.course.nameCourse}</Typography>
               </div>
               <div
                 style={{
@@ -301,7 +381,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 }}
               >
                 <Typography variant="subtitle1" noWrap>
-                  {item.topic}
+                  {item.class.course.topic}
                 </Typography>
               </div>
             </Box>
@@ -338,28 +418,49 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         <Divider />
         <List>
           <MenuOptionItem
+            item={teachingOption}
+            index={-2}
+            key={t("teaching")}
+            canExpanded={true}
+          />
+          {isTeachingListExpanded &&
+            TeachingMenuOptions.map((item, index) => (
+              <MenuOptionItem item={item} index={index + 2} key={item.name} />
+            ))}
+          {isTeachingListExpanded &&
+            ownList.map((item, index) => (
+              <CourseItem
+                index={index + 6}
+                item={item}
+                key={item.class.course.nameCourse}
+              />
+            ))}
+        </List>
+        <Divider />
+        <List>
+          <MenuOptionItem
             item={enrolledOption}
             index={-2}
             key={t("enrolled")}
             canExpanded={true}
           />
-          {isExpanded &&
-            expanedMenuOptions.map((item, index) => (
-              <MenuOptionItem item={item} index={index + 2} key={item.name} />
+          {isEnrolledListExpanded &&
+            EnrolledMenuOptions.map((item, index) => (
+              <MenuOptionItem item={item} index={index + 3} key={item.name} />
             ))}
-          {isExpanded &&
-            listCourses.map((item, index) => (
+          {isEnrolledListExpanded &&
+            classList.map((item, index) => (
               <CourseItem
-                index={index + 3 + listCourses.length}
+                index={index + 6 + teachList.length + ownList.length}
                 item={item}
-                key={item.name}
+                key={item.class.course.nameCourse}
               />
             ))}
         </List>
         <Divider />
         <List>
           {menuOptions2.map((item, index) => (
-            <MenuOptionItem item={item} index={index + 3} key={item.name} />
+            <MenuOptionItem item={item} index={index + 4} key={item.name} />
           ))}
         </List>
       </div>

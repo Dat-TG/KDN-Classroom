@@ -39,6 +39,10 @@ const router = createBrowserRouter([
             element: <div>To-do</div>,
           },
           {
+            path: "/to-review",
+            element: <div>To-review</div>,
+          },
+          {
             path: "/course/invite",
             element: <AcceptInvite />,
           },
