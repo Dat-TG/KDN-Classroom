@@ -5,6 +5,7 @@ import {
   Tab,
   Tabs,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,9 +33,22 @@ export default function ClassDetailsPage() {
   };
   const { t } = useTranslation("global");
   const { classCode } = useParams();
-  const [classEntity, setClassEntity] = useState<IGetCoursesRes>(
-    {} as IGetCoursesRes
-  );
+  const [classEntity, setClassEntity] = useState<IGetCoursesRes>({
+    courseId: 0,
+    id: 0,
+    userId: 0,
+    userRoleCourse: 1,
+    course: {
+      userCourses: [],
+      code: "",
+      nameCourse: "",
+      description: "",
+      part: "",
+      id: 0,
+      room: "",
+      topic: "",
+    },
+  } as IGetCoursesRes);
   const [bgImg, setBgImg] = useState<string>(
     `${baseUrlBackground}/${bgGeneral[0]}${extension}`
   );
@@ -48,9 +62,18 @@ export default function ClassDetailsPage() {
   const [teacherIds, setTeacherIds] = useState<number[]>([]);
   const [studentIds, setStudentIds] = useState<number[]>([]);
 
+  const [classNotFound, setClassNotFound] = useState<boolean>(false);
+
+  const [noPermission, setNoPermission] = useState<boolean>(false);
+
   useEffect(() => {
     getCourseByCode(classCode ?? "")
       .then((res) => {
+        console.log("res: ", res);
+        if (!res) {
+          setNoPermission(true);
+          return;
+        }
         setClassEntity(res);
         setIsLoading(false);
         const tIds = classEntity.course.userCourses
@@ -64,111 +87,126 @@ export default function ClassDetailsPage() {
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
+        if ((err as IToastError).detail.message == "Course not existed") {
+          setClassNotFound(true);
+        }
       });
-  }, [classCode]);
+  }, [classCode, classEntity.course.userCourses]);
 
   return (
     <>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        TabIndicatorProps={{
-          style: {
-            backgroundColor: colorTheme,
-          },
-        }}
-        sx={{
-          position: "relative",
-          paddingX: 2,
-        }}
-      >
-        <Tab
-          value={0}
-          label={t("stream")}
-          style={{
-            color: value === 0 ? colorTheme : "grey",
-          }}
-        />
-        <Tab
-          value={1}
-          label={t("classwork")}
-          style={{
-            color: value === 1 ? colorTheme : "grey",
-          }}
-        />
-        <Tab
-          value={2}
-          label={t("people")}
-          style={{
-            color: value === 2 ? colorTheme : "grey",
-          }}
-        />
-        <Tab
-          value={3}
-          label={t("grades")}
-          style={{
-            color: value === 3 ? colorTheme : "grey",
-          }}
-        />
-        <Tooltip title={t("classSettings")}>
-          <IconButton
-            sx={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              bottom: 0,
-              margin: "auto",
-            }}
-            size="large"
-            onClick={() => {
-              setOpenClassSettingsDialog(true);
-            }}
-          >
-            <Settings />
-          </IconButton>
-        </Tooltip>
-      </Tabs>
-      <Divider />
-      {isLoading ? (
-        <CircularProgress
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            marginTop: "-20px",
-            marginLeft: "-20px",
-          }}
-        />
+      {classNotFound ? (
+        <Typography marginLeft={"30px"} marginTop={"30px"} variant="h6">
+          {t("classNotFound")}
+        </Typography>
+      ) : noPermission ? (
+        <Typography marginLeft={"30px"} marginTop={"30px"} variant="h6">
+          {t("youAreNotMemberOfThisClass")}
+        </Typography>
       ) : (
         <>
-          <div hidden={value != 0}>
-            <StreamPage
-              bgImg={bgImg}
-              classEntity={classEntity}
-              colorTheme={colorTheme}
-              setBgImg={setBgImg}
-              setColorTheme={setColorTheme}
-            />
-          </div>
-          <div hidden={value != 2}>
-            <PeoplePage
-              colorTheme={colorTheme}
-              classEntity={classEntity}
-              teacherIds={teacherIds}
-              studentIds={studentIds}
-            />
-          </div>
-          <ClassSettingsDialog
-            classId={classEntity.course.code}
-            name={classEntity.course.nameCourse}
-            section={classEntity.course.part}
-            colorTheme={colorTheme}
-            inviteLink="https://invitelink"
-            open={openClassSettingsDialog}
-            onClose={() => {
-              setOpenClassSettingsDialog(false);
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            TabIndicatorProps={{
+              style: {
+                backgroundColor: colorTheme,
+              },
             }}
-          />
+            sx={{
+              position: "relative",
+              paddingX: 2,
+            }}
+          >
+            <Tab
+              value={0}
+              label={t("stream")}
+              style={{
+                color: value === 0 ? colorTheme : "grey",
+              }}
+            />
+            <Tab
+              value={1}
+              label={t("classwork")}
+              style={{
+                color: value === 1 ? colorTheme : "grey",
+              }}
+            />
+            <Tab
+              value={2}
+              label={t("people")}
+              style={{
+                color: value === 2 ? colorTheme : "grey",
+              }}
+            />
+            <Tab
+              value={3}
+              label={t("grades")}
+              style={{
+                color: value === 3 ? colorTheme : "grey",
+              }}
+            />
+            <Tooltip title={t("classSettings")}>
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  margin: "auto",
+                }}
+                size="large"
+                onClick={() => {
+                  setOpenClassSettingsDialog(true);
+                }}
+              >
+                <Settings />
+              </IconButton>
+            </Tooltip>
+          </Tabs>
+          <Divider />
+          {isLoading ? (
+            <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: "-20px",
+                marginLeft: "-20px",
+              }}
+            />
+          ) : (
+            <>
+              <div hidden={value != 0}>
+                <StreamPage
+                  bgImg={bgImg}
+                  classEntity={classEntity}
+                  colorTheme={colorTheme}
+                  setBgImg={setBgImg}
+                  setColorTheme={setColorTheme}
+                />
+              </div>
+              <div hidden={value != 2}>
+                <PeoplePage
+                  colorTheme={colorTheme}
+                  classEntity={classEntity}
+                  teacherIds={teacherIds}
+                  studentIds={studentIds}
+                />
+              </div>
+              <ClassSettingsDialog
+                classId={classEntity.course.code}
+                name={classEntity.course.nameCourse}
+                section={classEntity.course.part}
+                colorTheme={colorTheme}
+                inviteLink="https://invitelink"
+                open={openClassSettingsDialog}
+                onClose={() => {
+                  setOpenClassSettingsDialog(false);
+                }}
+              />
+            </>
+          )}
         </>
       )}
     </>
