@@ -1,6 +1,7 @@
 import {
   ICreateCoursesReq,
   ICreateInviteLinkReq,
+  ISendInviteLinkReq,
   RoleCourseString,
 } from "../../types/course";
 import AxiosClient from "../axios";
@@ -36,5 +37,10 @@ export const acceptInviteLink = async (token: string) => {
   const res = await AxiosClient.post(`/course/accept-invite`, {
     token,
   });
+  return res.data;
+};
+
+export const sendInviteLink = async (params: ISendInviteLinkReq) => {
+  const res = await AxiosClient.post("/course/send-invitation", params);
   return res.data;
 };
