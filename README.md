@@ -28,7 +28,7 @@ Back-end: https://web-advanced-server-v2.onrender.com
 
 ## Demo Video
 
-GA02: Youtube: https://youtu.be/PzYCHgaJ0f0
+GA02: Youtube: https://youtu.be/poKaQUmJOx8
 
 GA01: Youtube: https://youtu.be/GIjBgv-85Ls
 
