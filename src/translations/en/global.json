@@ -136,5 +136,8 @@
     "generatingInviteLink": "Generating invite link...",
     "invalidInviteLink": "Invalid invite link",
     "classNotFound": "Class not found",
-    "youAreNotMemberOfThisClass": "You are not member of this class"
+    "youAreNotMemberOfThisClass": "You are not member of this class",
+    "join": "Join",
+    "joinClassGuide": "Ask your teacher for the class code, then enter it here.",
+    "joinClassSuccessfully": "Join class successfully"
 }

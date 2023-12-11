@@ -91,7 +91,8 @@ export default function ClassDetailsPage() {
           setClassNotFound(true);
         }
       });
-  }, [classCode, classEntity.course.userCourses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classCode]);
 
   return (
     <>
