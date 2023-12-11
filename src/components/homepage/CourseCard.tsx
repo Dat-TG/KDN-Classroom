@@ -91,7 +91,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
           image={`${baseUrlBackground}/${bgArts[0]}${extension}`}
           alt="Paella dish"
           sx={{
-            width: "100%",
+            maxWidth: "100%",
             height: 120,
             objectFit: "cover",
             zIndex: 0,
@@ -99,14 +99,11 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
         />
       </Box>
 
-      <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+      <Box sx={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
         <CardHeader
           avatar={
             <Box sx={{ pt: 1 }}>
-              <Avatar
-                sx={{ bgcolor: red[500] }}
-                src={teacher?.avatar}
-              >
+              <Avatar sx={{ bgcolor: red[500] }} src={teacher?.avatar}>
                 {teacher?.name}
               </Avatar>
             </Box>
@@ -128,7 +125,11 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
                 pt: 1,
                 textDecoration: "none",
                 "&:hover": { textDecoration: "underline" },
+
+                textOverflow: "ellipsis",
+                maxWidth: "100%",
               }}
+              noWrap
               variant="h6"
               onClick={() => {
                 navigate(`/class/${props.classEntity.course.code}`);
@@ -138,7 +139,11 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
             </Typography>
           }
           subheader={
-            <Typography sx={{ fontSize: 13 }} component="p">
+            <Typography
+              sx={{ fontSize: 13, textOverflow: "ellipsis", maxWidth: "100%" }}
+              noWrap
+              component="p"
+            >
               {props.classEntity.course.topic}
             </Typography>
           }
@@ -147,6 +152,10 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
             zIndex: 1,
             height: 120,
             alignItems: "center",
+            display: "flex",
+            "& .MuiCardHeader-content": {
+              overflow: "hidden"
+            }
           }}
         />
 
