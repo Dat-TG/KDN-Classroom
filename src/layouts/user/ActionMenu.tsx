@@ -1,8 +1,9 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import CreateClassModal from "../../components/CreateClassModal";
+import JoinClassByCodeDialog from "../../components/JoinClassByCodeDialog";
 
 const ActionMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -19,14 +20,26 @@ const ActionMenu: React.FC = () => {
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
 
+  const [isJoinClassDialogOpen, setIsJoinClassDialogOpen] =
+    useState<boolean>(false);
+
   const handleOpenCreateDialog = () => {
     setIsCreateDialogOpen(true);
     handleClose();
-  }
+  };
 
   const handleCloseCreateDialog = () => {
     setIsCreateDialogOpen(false);
-  }
+  };
+
+  const handleOpenJoinClassDialog = () => {
+    setIsJoinClassDialogOpen(true);
+    handleClose();
+  };
+
+  const handleCloseJoinClassDialog = () => {
+    setIsJoinClassDialogOpen(false);
+  };
 
   return (
     <div>
@@ -41,23 +54,22 @@ const ActionMenu: React.FC = () => {
         <Add />
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem
-          onClick={() => {
-            handleClose();
-          }}
-        >
+        <MenuItem onClick={handleOpenJoinClassDialog}>
           {t("joinClass")}
         </MenuItem>
 
-        <MenuItem
-          onClick={handleOpenCreateDialog}
-        >
-          {t("createClass")}
-        </MenuItem>
+        <MenuItem onClick={handleOpenCreateDialog}>{t("createClass")}</MenuItem>
       </Menu>
-      
-      <CreateClassModal isOpen={isCreateDialogOpen} onClose={handleCloseCreateDialog} />
 
+      <CreateClassModal
+        isOpen={isCreateDialogOpen}
+        onClose={handleCloseCreateDialog}
+      />
+
+      <JoinClassByCodeDialog
+        open={isJoinClassDialogOpen}
+        onClose={handleCloseJoinClassDialog}
+      />
     </div>
   );
 };
