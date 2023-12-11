@@ -136,5 +136,7 @@
     "yourJoinedClassAsStudent": "Lớp học bạn đã tham gia làm học viên",
     "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên",
     "generatingInviteLink": "Đang tạo đường liên kết mời...",
-    "invalidInviteLink": "Đường liên kết mời không hợp lệ"
+    "invalidInviteLink": "Đường liên kết mời không hợp lệ",
+    "teaching" : "Giảng dạy",
+    "toReview": "Cần xem xét"
 }

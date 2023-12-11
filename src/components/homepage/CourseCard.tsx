@@ -105,7 +105,6 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
             <Box sx={{ pt: 1 }}>
               <Avatar
                 sx={{ bgcolor: red[500] }}
-                aria-label="recipe"
                 src={teacher?.avatar}
               >
                 {teacher?.name}
