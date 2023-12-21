@@ -147,5 +147,8 @@
     "gradesTable": "Bảng điểm",
     "gradeScaleTable": "Bảng thành phần điểm",
     "addGradeScale": "Thêm thành phần điểm",
-    "addStudent": "Thêm học viên"
+    "addStudent": "Thêm học viên",
+    "deleteRowAlert": "Bạn có chắc chắn muốn xóa dòng này?",
+    "undo": "Hoàn tác",
+    "redo": "Quay lại"
 }

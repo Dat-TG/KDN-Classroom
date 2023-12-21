@@ -146,5 +146,8 @@
     "gradesTable": "Grades table",
     "gradeScaleTable": "Grade scale table",
     "addGradeScale": "Add grade scale",
-    "addStudent": "Add student"
+    "addStudent": "Add student",
+    "deleteRowAlert": "Are you sure you want to delete this row?",
+    "undo": "Undo",
+    "redo": "Redo"
 }

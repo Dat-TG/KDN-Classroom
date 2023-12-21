@@ -132,6 +132,7 @@ export default function GradesPage(props: Props) {
         movableColumns: true,
         data: tableData,
         layout: "fitDataTable",
+        history: true,
         cellEdited: (cell) => {
           // This function will be called whenever a cell is edited
           console.log("Cell edited:", cell);
@@ -184,6 +185,19 @@ export default function GradesPage(props: Props) {
             editor: "number",
             sorter: "number",
           },
+          {
+            title: "",
+            rowHandle: true,
+            formatter: "buttonCross",
+            headerSort: false,
+            frozen: true,
+            hozAlign: "center",
+            cellClick: function (_e, cell) {
+              if (window.confirm(t("deleteRowAlert"))) {
+                cell.getRow().delete();
+              }
+            },
+          },
         ],
       });
 
@@ -191,7 +205,7 @@ export default function GradesPage(props: Props) {
 
       //listen for row move
       gradeTable.on("rowMoved", function (row) {
-        console.log("Row: " + row.getData().name + " has been moved");
+        console.log("Row: " + row.getData().studentId + " has been moved");
       });
     }
 
@@ -199,6 +213,7 @@ export default function GradesPage(props: Props) {
       // Initialize Tabulator
       gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
         movableRows: true,
+        history: true,
         movableColumns: true,
         data: gradeScale,
         layout: "fitDataTable",
@@ -231,6 +246,19 @@ export default function GradesPage(props: Props) {
               step: 0.1,
             },
             sorter: "number",
+          },
+          {
+            title: "",
+            rowHandle: true,
+            formatter: "buttonCross",
+            headerSort: false,
+            frozen: true,
+            hozAlign: "center",
+            cellClick: function (_e, cell) {
+              if (window.confirm(t("deleteRowAlert"))) {
+                cell.getRow().delete();
+              }
+            },
           },
         ],
       });
@@ -294,15 +322,14 @@ export default function GradesPage(props: Props) {
         style={{
           display: "flex",
           flexDirection: "row",
-          gap: "32px",
+          gap: "8px",
           alignItems: "center",
+          marginBottom: "16px",
         }}
       >
-        <Typography variant={"h5"} marginBottom={"16px"}>
-          {t("gradeScaleTable")}
-        </Typography>
+        <Typography variant={"h5"}>{t("gradeScaleTable")}</Typography>
         <Button
-          variant="contained"
+          variant="text"
           color="primary"
           sx={{
             padding: "8px",
@@ -313,6 +340,30 @@ export default function GradesPage(props: Props) {
         >
           {t("addGradeScale")}
         </Button>
+        <Button
+          variant="text"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradeScaleTable?.undo();
+          }}
+        >
+          {t("undo")}
+        </Button>
+        <Button
+          variant="text"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradeScaleTable?.redo();
+          }}
+        >
+          {t("redo")}
+        </Button>
       </div>
 
       <div ref={gradeScaleTableRef} />
@@ -320,15 +371,15 @@ export default function GradesPage(props: Props) {
         style={{
           display: "flex",
           flexDirection: "row",
-          gap: "32px",
+          gap: "8px",
           alignItems: "center",
+          marginBottom: "16px",
+          marginTop: "16px",
         }}
       >
-        <Typography variant={"h5"} marginY={"16px"}>
-          {t("gradesTable")}
-        </Typography>
+        <Typography variant={"h5"}>{t("gradesTable")}</Typography>
         <Button
-          variant="contained"
+          variant="text"
           color="primary"
           sx={{
             padding: "8px",
@@ -338,6 +389,30 @@ export default function GradesPage(props: Props) {
           }}
         >
           {t("addStudent")}
+        </Button>
+        <Button
+          variant="text"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradesTable?.undo();
+          }}
+        >
+          {t("undo")}
+        </Button>
+        <Button
+          variant="text"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradesTable?.redo();
+          }}
+        >
+          {t("redo")}
         </Button>
       </div>
 
