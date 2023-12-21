@@ -137,11 +137,20 @@
     "yourJoinedClassAsTeacher": "Lớp học bạn đã tham gia làm giáo viên",
     "generatingInviteLink": "Đang tạo đường liên kết mời...",
     "invalidInviteLink": "Đường liên kết mời không hợp lệ",
-    "teaching" : "Giảng dạy",
+    "teaching": "Giảng dạy",
     "toReview": "Cần xem xét",
     "classNotFound": "Không tìm thấy lớp học",
     "youAreNotMemberOfThisClass": "Bạn không phải là thành viên của lớp học này",
     "join": "Tham gia",
     "joinClassSuccessfully": "Tham gia lớp học thành công",
-    "sendInviteLinkSuccessfullyTo": "Gửi đường liên kết mời thành công đến "
+    "sendInviteLinkSuccessfullyTo": "Gửi đường liên kết mời thành công đến ",
+    "gradesTable": "Bảng điểm",
+    "gradeScaleTable": "Bảng thành phần điểm",
+    "addGradeScale": "Thêm thành phần điểm",
+    "addStudent": "Thêm học viên",
+    "deleteRowAlert": "Bạn có chắc chắn muốn xóa dòng này?",
+    "undo": "Hoàn tác",
+    "redo": "Quay lại",
+    "delete": "Xóa",
+    "gradeScale": "thành phần điểm"
 }
