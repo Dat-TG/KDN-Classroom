@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { IGetCoursesRes } from "../types/course";
-import { IUserProfileRes } from "../types/user";
-import { getUserById } from "../api/user/apiUser";
+// import { IUserProfileRes } from "../types/user";
+// import { getUserById } from "../api/user/apiUser";
 
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
@@ -16,19 +16,20 @@ interface Props {
   ownerId: number;
 }
 
-export default function GradesPage(props: Props) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function GradesPage(_props: Props) {
   const gradeTableRef = useRef(null);
   const gradeScaleTableRef = useRef(null);
   const { t } = useTranslation("global");
-  const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
-  const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
-  const [owner, setOwner] = useState<IUserProfileRes | null>(null);
+  // const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
+  // const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
+  // const [owner, setOwner] = useState<IUserProfileRes | null>(null);
   const [gradeScaleTable, setGradeScaleTable] = useState<Tabulator | null>(
     null
   );
   const [gradesTable, setGradesTable] = useState<Tabulator | null>(null);
 
-  const gradeScale = [
+  const [gradeScale, setGradeScale] = useState([
     {
       name: "Midterm",
       scale: 0.3,
@@ -37,90 +38,91 @@ export default function GradesPage(props: Props) {
       name: "Final",
       scale: 0.7,
     },
-  ];
+  ]);
 
-  const tableData = [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [grades, setGrades] = useState<any[]>([
     {
       studentId: "20120454",
       firstName: "Đắt",
       lastName: "Lê Công",
-      midterm: 10,
-      final: 10,
+      Midterm: 10,
+      Final: 10,
       average: 10,
     },
     {
       studentId: "20120455",
       firstName: "Hoa",
       lastName: "Nguyễn Thị",
-      midterm: 9,
-      final: 8,
+      Midterm: 9,
+      Final: 8,
       average: 8.5,
     },
     {
       studentId: "20120456",
       firstName: "Tuấn",
       lastName: "Trần Văn",
-      midterm: 7,
-      final: 6,
+      Midterm: 7,
+      Final: 6,
       average: 6.5,
     },
     {
       studentId: "20120457",
       firstName: "Hằng",
       lastName: "Phạm Thị",
-      midterm: 5,
-      final: 4,
+      Midterm: 5,
+      Final: 4,
       average: 4.5,
     },
     {
       studentId: "20120458",
       firstName: "Minh",
       lastName: "Vũ Minh",
-      midterm: 8,
-      final: 9,
+      Midterm: 8,
+      Final: 9,
       average: 8.5,
     },
     {
       studentId: "20120459",
       firstName: "Nam",
       lastName: "Hoàng Văn",
-      midterm: 6,
-      final: 7,
+      Midterm: 6,
+      Final: 7,
       average: 6.5,
     },
     {
       studentId: "20120460",
       firstName: "Thảo",
       lastName: "Đặng Thị",
-      midterm: 9,
-      final: 9,
+      Midterm: 9,
+      Final: 9,
       average: 9,
     },
     {
       studentId: "20120461",
       firstName: "Long",
       lastName: "Nguyễn Văn",
-      midterm: 7,
-      final: 8,
+      Midterm: 7,
+      Final: 8,
       average: 7.5,
     },
     {
       studentId: "20120462",
       firstName: "Linh",
       lastName: "Trần Thị",
-      midterm: 8,
-      final: 6,
+      Midterm: 8,
+      Final: 6,
       average: 7,
     },
     {
       studentId: "20120463",
       firstName: "Hoàng",
       lastName: "Lê Văn",
-      midterm: 9,
-      final: 10,
+      Midterm: 9,
+      Final: 10,
       average: 9.5,
     },
-  ];
+  ]);
 
   useEffect(() => {
     let gradeTable: Tabulator;
@@ -130,7 +132,7 @@ export default function GradesPage(props: Props) {
       gradeTable = new Tabulator(gradeTableRef.current, {
         movableRows: true,
         movableColumns: true,
-        data: tableData,
+        data: grades,
         layout: "fitDataTable",
         history: true,
         cellEdited: (cell) => {
@@ -166,14 +168,14 @@ export default function GradesPage(props: Props) {
           },
           {
             title: "Midterm",
-            field: "midterm",
+            field: "Midterm",
             editable: true,
             editor: "number",
             sorter: "number",
           },
           {
             title: "Final",
-            field: "final",
+            field: "Final",
             editable: true,
             editor: "number",
             sorter: "number",
@@ -257,6 +259,7 @@ export default function GradesPage(props: Props) {
             cellClick: function (_e, cell) {
               if (window.confirm(t("deleteRowAlert"))) {
                 cell.getRow().delete();
+                gradeTable.deleteColumn(cell.getRow().getData().name);
               }
             },
           },
@@ -266,6 +269,54 @@ export default function GradesPage(props: Props) {
       //listen for row move
       gradeScaleTable.on("rowMoved", function (row) {
         console.log("Row: " + row.getData().name + " has been moved");
+      });
+      gradeScaleTable.on("cellEdited", function (cell) {
+        //cell - cell component
+        console.log(
+          "Cell edited:",
+          cell.getField(),
+          cell.getValue(),
+          cell.getOldValue()
+        );
+        setGradeScale((prev) => {
+          let isExist = false;
+          prev.forEach((gradeScale) => {
+            if (gradeScale.name === cell.getOldValue()) {
+              gradeScale.name = cell.getValue();
+              isExist = true;
+              return true;
+            }
+          });
+          if (!isExist) {
+            prev.push({
+              name: cell.getRow().getData().name,
+              scale: cell.getRow().getData().scale,
+            });
+          }
+          return prev;
+        });
+        if (cell.getField() === "name") {
+          gradeTable.deleteColumn(cell.getOldValue());
+          gradeTable.addColumn(
+            {
+              title: cell.getValue(),
+              field: cell.getValue(),
+              editable: true,
+              editor: "number",
+              sorter: "number",
+            },
+            true,
+            "average"
+          );
+          setGrades((prev) => {
+            prev.forEach((grade) => {
+              grade[cell.getValue()] = grade[cell.getOldValue()];
+              delete grade[cell.getOldValue()];
+            });
+            gradeTable.setData(prev);
+            return prev;
+          });
+        }
       });
     }
 
@@ -278,39 +329,39 @@ export default function GradesPage(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    getUserById(props.ownerId)
-      .then((res) => {
-        setOwner(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    for (let i = 0; i < props.teacherIds.length; i++) {
-      getUserById(props.teacherIds[i])
-        .then((res) => {
-          setTeachers((prev) => {
-            if (prev == null) return [res];
-            return [...prev, res];
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    for (let i = 0; i < props.studentIds.length; i++) {
-      getUserById(props.studentIds[i])
-        .then((res) => {
-          setStudents((prev) => {
-            if (prev == null) return [res];
-            return [...prev, res];
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [props.ownerId, props.studentIds, props.teacherIds]);
+  // useEffect(() => {
+  //   getUserById(props.ownerId)
+  //     .then((res) => {
+  //       setOwner(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   for (let i = 0; i < props.teacherIds.length; i++) {
+  //     getUserById(props.teacherIds[i])
+  //       .then((res) => {
+  //         setTeachers((prev) => {
+  //           if (prev == null) return [res];
+  //           return [...prev, res];
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  //   for (let i = 0; i < props.studentIds.length; i++) {
+  //     getUserById(props.studentIds[i])
+  //       .then((res) => {
+  //         setStudents((prev) => {
+  //           if (prev == null) return [res];
+  //           return [...prev, res];
+  //         });
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // }, [props.ownerId, props.studentIds, props.teacherIds]);
 
   return (
     <div
