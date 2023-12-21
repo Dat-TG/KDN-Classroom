@@ -24,6 +24,7 @@ import { getCourseByCode } from "../api/course/apiCourse";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "../utils/toast";
 import { IToastError } from "../types/common";
+import GradesPage from "./GradesPage";
 
 export default function ClassDetailsPage({ initTab }: { initTab: number }) {
   const [value, setValue] = React.useState(initTab);
@@ -239,6 +240,15 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
               </div>
               <div hidden={value != 2}>
                 <PeoplePage
+                  colorTheme={colorTheme}
+                  classEntity={classEntity}
+                  ownerId={ownerId}
+                  teacherIds={teacherIds}
+                  studentIds={studentIds}
+                />
+              </div>
+              <div hidden={value != 3}>
+                <GradesPage
                   colorTheme={colorTheme}
                   classEntity={classEntity}
                   ownerId={ownerId}

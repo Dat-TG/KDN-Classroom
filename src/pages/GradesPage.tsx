@@ -1,19 +1,11 @@
-import { PersonAddAlt1Outlined } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Divider,
-  IconButton,
-  Skeleton,
-  Typography,
-} from "@mui/material";
 import { useTranslation } from "react-i18next";
-import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
-import { useEffect, useState } from "react";
-import InviteStudentDialog from "../components/class_details/InviteStudentDialog";
+import { useEffect, useRef, useState } from "react";
 import { IGetCoursesRes } from "../types/course";
 import { IUserProfileRes } from "../types/user";
 import { getUserById } from "../api/user/apiUser";
+
+import { TabulatorFull as Tabulator } from "tabulator-tables";
+import "tabulator-tables/dist/css/tabulator.min.css";
 
 interface Props {
   colorTheme: string;
@@ -24,14 +16,173 @@ interface Props {
 }
 
 export default function GradesPage(props: Props) {
+  const tableRef = useRef(null);
   const { t } = useTranslation("global");
-  const [openInviteTeacherDialog, setOpenInviteTeacherDialog] =
-    useState<boolean>(false);
-  const [openInviteStudentDialog, setOpenInviteStudentDialog] =
-    useState<boolean>(false);
   const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
   const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
+
+  const gradeScale = {
+    midterm: 0.3,
+    final: 0.7,
+  };
+
+  const tableData = [
+    {
+      studentId: "20120454",
+      firstName: "Đắt",
+      lastName: "Lê Công",
+      midterm: 10,
+      final: 10,
+      average: 10,
+    },
+    {
+      studentId: "20120455",
+      firstName: "Hoa",
+      lastName: "Nguyễn Thị",
+      midterm: 9,
+      final: 8,
+      average: 8.5,
+    },
+    {
+      studentId: "20120456",
+      firstName: "Tuấn",
+      lastName: "Trần Văn",
+      midterm: 7,
+      final: 6,
+      average: 6.5,
+    },
+    {
+      studentId: "20120457",
+      firstName: "Hằng",
+      lastName: "Phạm Thị",
+      midterm: 5,
+      final: 4,
+      average: 4.5,
+    },
+    {
+      studentId: "20120458",
+      firstName: "Minh",
+      lastName: "Vũ Minh",
+      midterm: 8,
+      final: 9,
+      average: 8.5,
+    },
+    {
+      studentId: "20120459",
+      firstName: "Nam",
+      lastName: "Hoàng Văn",
+      midterm: 6,
+      final: 7,
+      average: 6.5,
+    },
+    {
+      studentId: "20120460",
+      firstName: "Thảo",
+      lastName: "Đặng Thị",
+      midterm: 9,
+      final: 9,
+      average: 9,
+    },
+    {
+      studentId: "20120461",
+      firstName: "Long",
+      lastName: "Nguyễn Văn",
+      midterm: 7,
+      final: 8,
+      average: 7.5,
+    },
+    {
+      studentId: "20120462",
+      firstName: "Linh",
+      lastName: "Trần Thị",
+      midterm: 8,
+      final: 6,
+      average: 7,
+    },
+    {
+      studentId: "20120463",
+      firstName: "Hoàng",
+      lastName: "Lê Văn",
+      midterm: 9,
+      final: 10,
+      average: 9.5,
+    },
+  ];
+
+  useEffect(() => {
+    if (tableRef && tableRef.current) {
+      // Initialize Tabulator
+      const table = new Tabulator(tableRef.current, {
+        movableRows: true,
+        movableColumns: true,
+        data: tableData,
+        layout: "fitDataTable",
+        cellEdited: (cell) => {
+          // This function will be called whenever a cell is edited
+          console.log("Cell edited:", cell);
+          // You can perform your logic here when a cell is edited
+        },
+        columns: [
+          {
+            title: "",
+            rowHandle: true,
+            formatter: "handle",
+            headerSort: false,
+            frozen: true,
+          },
+          {
+            title: "Student ID",
+            field: "studentId",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "First name",
+            field: "firstName",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "Last name",
+            field: "lastName",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "Midterm",
+            field: "midterm",
+            editable: true,
+            editor: "input",
+            sorter: "number",
+          },
+          {
+            title: "Final",
+            field: "final",
+            editable: true,
+            editor: "input",
+            sorter: "number",
+          },
+          {
+            title: "Average",
+            field: "average",
+            editable: true,
+            editor: "input",
+            sorter: "number",
+          },
+        ],
+      });
+
+      //listen for row move
+      table.on("rowMoved", function (row) {
+        console.log("Row: " + row.getData().name + " has been moved");
+      });
+
+      // Cleanup when component unmounts
+      return () => table.destroy();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getUserById(props.ownerId)
@@ -67,188 +218,5 @@ export default function GradesPage(props: Props) {
     }
   }, [props.ownerId, props.studentIds, props.teacherIds]);
 
-  return (
-    <>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        paddingY={"24px"}
-        paddingX={{
-          xs: "32px",
-          sm: "48px",
-          md: "64px",
-          lg: "96px",
-          xl: "128px",
-        }}
-        justifyContent={"center"}
-      >
-        {/* Teachers */}
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          width={"100%"}
-          alignItems={"flex-end"}
-        >
-          <Typography
-            sx={{
-              color: props.colorTheme,
-              fontSize: "36px",
-            }}
-          >
-            {t("teachers")}
-          </Typography>
-          <IconButton
-            size="large"
-            onClick={() => {
-              setOpenInviteTeacherDialog(true);
-            }}
-          >
-            <PersonAddAlt1Outlined
-              sx={{
-                color: props.colorTheme,
-                fontSize: "28px",
-              }}
-            />
-          </IconButton>
-        </Box>
-        <Divider
-          sx={{
-            borderWidth: "1px",
-            background: props.colorTheme,
-            marginY: "16px",
-          }}
-        />
-        <SinglePerson user={owner} />
-        {teachers != null && teachers!.length > 0 && (
-          <Divider
-            sx={{
-              marginY: "16px",
-            }}
-          ></Divider>
-        )}
-        {teachers != null && (
-          <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-            {props.teacherIds.map((item, index) => {
-              return (
-                <div>
-                  <SinglePerson
-                    key={`st ${item}`}
-                    user={index < teachers!.length ? teachers![index] : null}
-                  />
-                  {index < props.teacherIds.length - 1 && (
-                    <Divider
-                      sx={{
-                        marginTop: "16px",
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </Box>
-        )}
-        {/* Students */}
-        <div style={{ height: "48px" }}></div>
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          width={"100%"}
-          alignItems={"flex-end"}
-        >
-          <Typography
-            sx={{
-              color: props.colorTheme,
-              fontSize: "36px",
-            }}
-          >
-            {t("students")}
-          </Typography>
-          <Box display={"flex"} gap={"16px"} alignItems={"center"}>
-            <Typography
-              sx={{
-                color: props.colorTheme,
-                fontSize: "16px",
-              }}
-            >{`${props.studentIds.length} ${t("studentss")}`}</Typography>
-            <IconButton
-              size="large"
-              onClick={() => {
-                setOpenInviteStudentDialog(true);
-              }}
-            >
-              <PersonAddAlt1Outlined
-                sx={{
-                  color: props.colorTheme,
-                  fontSize: "28px",
-                }}
-              />
-            </IconButton>
-          </Box>
-        </Box>
-        <Divider
-          sx={{
-            borderWidth: "1px",
-            background: props.colorTheme,
-            marginY: "16px",
-          }}
-        />
-        {students != null && (
-          <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-            {props.studentIds.map((item, index) => {
-              return (
-                <div>
-                  <SinglePerson
-                    key={`st ${item}`}
-                    user={index < students!.length ? students![index] : null}
-                  />
-                  {index < props.studentIds.length - 1 && (
-                    <Divider
-                      sx={{
-                        marginTop: "16px",
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </Box>
-        )}
-      </Box>
-      <InviteTeacherDialog
-        open={openInviteTeacherDialog}
-        onClose={() => setOpenInviteTeacherDialog(false)}
-        courseCode={props.classEntity.course.code}
-      />
-      <InviteStudentDialog
-        open={openInviteStudentDialog}
-        onClose={() => setOpenInviteStudentDialog(false)}
-        courseCode={props.classEntity.course.code}
-      />
-    </>
-  );
-}
-
-function SinglePerson({ user }: { user: IUserProfileRes | null }) {
-  return (
-    <>
-      <Box display={"flex"} gap={"16px"} alignItems={"center"} marginX={"24px"}>
-        {user != null ? (
-          <Avatar
-            src={user?.avatar}
-            sx={{
-              width: "40px",
-              height: "40px",
-            }}
-          />
-        ) : (
-          <Skeleton variant="circular" width={40} height={40} />
-        )}
-        {user != null ? (
-          <Typography variant="body1">{`${user?.name} ${user.surname}`}</Typography>
-        ) : (
-          <Skeleton variant="text" width={100} height={20} />
-        )}
-      </Box>
-    </>
-  );
+  return <div ref={tableRef}></div>;
 }
