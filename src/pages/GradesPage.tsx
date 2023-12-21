@@ -296,18 +296,31 @@ export default function GradesPage(_props: Props) {
           return prev;
         });
         if (cell.getField() === "name") {
-          gradeTable.deleteColumn(cell.getOldValue());
-          gradeTable.addColumn(
-            {
-              title: cell.getValue(),
-              field: cell.getValue(),
-              editable: true,
-              editor: "number",
-              sorter: "number",
-            },
-            true,
-            "average"
+          let isExist = false;
+          gradeTable.setColumns(
+            gradeTable.getColumnDefinitions().map((col) => {
+              if (col.field === cell.getOldValue() && col.field != undefined) {
+                col.title = cell.getValue();
+                col.field = cell.getValue();
+                isExist = true;
+              }
+              return col;
+            })
           );
+          console.log("isExist", isExist);
+          if (!isExist) {
+            gradeTable.addColumn(
+              {
+                title: cell.getValue(),
+                field: cell.getValue(),
+                editable: true,
+                editor: "number",
+                sorter: "number",
+              },
+              true,
+              "average"
+            );
+          }
           setGrades((prev) => {
             prev.forEach((grade) => {
               grade[cell.getValue()] = grade[cell.getOldValue()];
