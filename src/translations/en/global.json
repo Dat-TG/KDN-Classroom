@@ -144,10 +144,12 @@
     "joinClassSuccessfully": "Join class successfully",
     "sendInviteLinkSuccessfullyTo": "Send invite link successfully to ",
     "gradesTable": "Grades table",
-    "gradeScaleTable": "Grade scale table",
-    "addGradeScale": "Add grade scale",
+    "gradeScaleTable": "Grade composition table",
+    "addGradeScale": "Add grade composition",
     "addStudent": "Add student",
-    "deleteRowAlert": "Are you sure you want to delete this row?",
+    "deleteRowAlert": "Are you sure you want to delete",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "delete": "Delete",
+    "gradeScale": "grade composition"
 }

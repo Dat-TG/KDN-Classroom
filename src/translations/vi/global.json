@@ -150,5 +150,7 @@
     "addStudent": "Thêm học viên",
     "deleteRowAlert": "Bạn có chắc chắn muốn xóa dòng này?",
     "undo": "Hoàn tác",
-    "redo": "Quay lại"
+    "redo": "Quay lại",
+    "delete": "Xóa",
+    "gradeScale": "thành phần điểm"
 }

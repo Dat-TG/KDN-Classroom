@@ -4,7 +4,7 @@ import { IGetCoursesRes } from "../types/course";
 // import { IUserProfileRes } from "../types/user";
 // import { getUserById } from "../api/user/apiUser";
 
-import { TabulatorFull as Tabulator } from "tabulator-tables";
+import { RowComponent, TabulatorFull as Tabulator } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { Button, Typography } from "@mui/material";
 
@@ -28,6 +28,11 @@ export default function GradesPage(_props: Props) {
     null
   );
   const [gradesTable, setGradesTable] = useState<Tabulator | null>(null);
+
+  const [selectedGradeScale, setSelectedGradeScale] = useState<RowComponent[]>(
+    []
+  );
+  const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
   const [gradeScale, setGradeScale] = useState([
     {
@@ -149,6 +154,15 @@ export default function GradesPage(_props: Props) {
             frozen: true,
           },
           {
+            title: "",
+            formatter: "rowSelection",
+            titleFormatter: "rowSelection",
+            hozAlign: "center",
+            vertAlign: "middle",
+            headerHozAlign: "center",
+            headerSort: false,
+          },
+          {
             title: "Student ID",
             field: "studentId",
             editable: true,
@@ -187,19 +201,6 @@ export default function GradesPage(_props: Props) {
             editor: "number",
             sorter: "number",
           },
-          {
-            title: "",
-            rowHandle: true,
-            formatter: "buttonCross",
-            headerSort: false,
-            frozen: true,
-            hozAlign: "center",
-            cellClick: function (_e, cell) {
-              if (window.confirm(t("deleteRowAlert"))) {
-                cell.getRow().delete();
-              }
-            },
-          },
         ],
       });
 
@@ -208,6 +209,13 @@ export default function GradesPage(_props: Props) {
       //listen for row move
       gradeTable.on("rowMoved", function (row) {
         console.log("Row: " + row.getData().studentId + " has been moved");
+      });
+      gradeTable.on("rowSelectionChanged", function (_data, rows) {
+        //rows - array of row components for the currently selected rows in order of selection
+        //data - array of data objects for the currently selected rows in order of selection
+        //selected - array of row components that were selected in the last action
+        //deselected - array of row components that were deselected in the last action
+        setSelectedStudent(rows);
       });
     }
 
@@ -233,6 +241,15 @@ export default function GradesPage(_props: Props) {
             frozen: true,
           },
           {
+            title: "",
+            formatter: "rowSelection",
+            titleFormatter: "rowSelection",
+            hozAlign: "center",
+            vertAlign: "middle",
+            headerHozAlign: "center",
+            headerSort: false,
+          },
+          {
             title: "Name",
             field: "name",
             editable: true,
@@ -249,26 +266,19 @@ export default function GradesPage(_props: Props) {
             },
             sorter: "number",
           },
-          {
-            title: "",
-            rowHandle: true,
-            formatter: "buttonCross",
-            headerSort: false,
-            frozen: true,
-            hozAlign: "center",
-            cellClick: function (_e, cell) {
-              if (window.confirm(t("deleteRowAlert"))) {
-                cell.getRow().delete();
-                gradeTable.deleteColumn(cell.getRow().getData().name);
-              }
-            },
-          },
         ],
       });
       setGradeScaleTable(gradeScaleTable);
       //listen for row move
       gradeScaleTable.on("rowMoved", function (row) {
         console.log("Row: " + row.getData().name + " has been moved");
+      });
+      gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
+        //rows - array of row components for the currently selected rows in order of selection
+        //data - array of data objects for the currently selected rows in order of selection
+        //selected - array of row components that were selected in the last action
+        //deselected - array of row components that were deselected in the last action
+        setSelectedGradeScale(rows);
       });
       gradeScaleTable.on("cellEdited", function (cell) {
         //cell - cell component
@@ -429,7 +439,37 @@ export default function GradesPage(_props: Props) {
           {t("redo")}
         </Button>
       </div>
-
+      {selectedGradeScale.length > 0 && (
+        <div
+          style={{
+            marginBottom: "16px",
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="warning"
+            onClick={() => {
+              if (
+                window.confirm(
+                  `${t("deleteRowAlert")} ${selectedGradeScale.length} ${t(
+                    "gradeScale"
+                  )}?`
+                )
+              ) {
+                for (let i = 0; i < selectedGradeScale.length; i++) {
+                  selectedGradeScale[i].delete();
+                  gradesTable?.deleteColumn(
+                    selectedGradeScale[i].getData().name
+                  );
+                }
+                setSelectedGradeScale([]);
+              }
+            }}
+          >
+            {`${t("delete")} ${selectedGradeScale.length} ${t("gradeScale")}`}
+          </Button>
+        </div>
+      )}
       <div ref={gradeScaleTableRef} />
       <div
         style={{
@@ -479,7 +519,34 @@ export default function GradesPage(_props: Props) {
           {t("redo")}
         </Button>
       </div>
-
+      {selectedStudent.length > 0 && (
+        <div
+          style={{
+            marginBottom: "16px",
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="warning"
+            onClick={() => {
+              if (
+                window.confirm(
+                  `${t("deleteRowAlert")} ${selectedStudent.length} ${t(
+                    "student"
+                  )}?`
+                )
+              ) {
+                for (let i = 0; i < selectedStudent.length; i++) {
+                  selectedStudent[i].delete();
+                }
+                setSelectedStudent([]);
+              }
+            }}
+          >
+            {`${t("delete")} ${selectedStudent.length} ${t("student")}`}
+          </Button>
+        </div>
+      )}
       <div ref={gradeTableRef} />
     </div>
   );
