@@ -135,7 +135,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
               noWrap
               variant="h6"
               onClick={() => {
-                navigate(`/class/${props.classEntity.course.code}`);
+                navigate(`/class/${props.classEntity.course.code}/stream`);
               }}
             >
               {props.classEntity.course.nameCourse}
@@ -157,8 +157,8 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
             alignItems: "center",
             display: "flex",
             "& .MuiCardHeader-content": {
-              overflow: "hidden"
-            }
+              overflow: "hidden",
+            },
           }}
         />
 

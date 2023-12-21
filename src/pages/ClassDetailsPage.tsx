@@ -21,12 +21,12 @@ import {
 import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
 import { IGetCoursesRes, RoleCourseNumber } from "../types/course";
 import { getCourseByCode } from "../api/course/apiCourse";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "../utils/toast";
 import { IToastError } from "../types/common";
 
-export default function ClassDetailsPage() {
-  const [value, setValue] = React.useState(0);
+export default function ClassDetailsPage({ initTab }: { initTab: number }) {
+  const [value, setValue] = React.useState(initTab);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -66,6 +66,8 @@ export default function ClassDetailsPage() {
   const [classNotFound, setClassNotFound] = useState<boolean>(false);
 
   const [noPermission, setNoPermission] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCourseByCode(classCode ?? "")
@@ -129,12 +131,34 @@ export default function ClassDetailsPage() {
               style={{
                 color: value === 0 ? colorTheme : "grey",
               }}
+              LinkComponent={"a"}
+              href={`/class/${classCode}/stream`}
+              onClick={(
+                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+              ) => {
+                // Routing libraries handle this, you can remove the onClick handle when using them.
+                if (event.currentTarget.href.includes(`/class/${classCode}`)) {
+                  event.preventDefault();
+                  navigate(`/class/${classCode}/stream`);
+                }
+              }}
             />
             <Tab
               value={1}
               label={t("classwork")}
               style={{
                 color: value === 1 ? colorTheme : "grey",
+              }}
+              LinkComponent={"a"}
+              href={`/class/${classCode}/classwork`}
+              onClick={(
+                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+              ) => {
+                // Routing libraries handle this, you can remove the onClick handle when using them.
+                if (event.currentTarget.href.includes(`/class/${classCode}`)) {
+                  event.preventDefault();
+                  navigate(`/class/${classCode}/classwork`);
+                }
               }}
             />
             <Tab
@@ -143,12 +167,34 @@ export default function ClassDetailsPage() {
               style={{
                 color: value === 2 ? colorTheme : "grey",
               }}
+              LinkComponent={"a"}
+              href={`/class/${classCode}/people`}
+              onClick={(
+                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+              ) => {
+                // Routing libraries handle this, you can remove the onClick handle when using them.
+                if (event.currentTarget.href.includes(`/class/${classCode}`)) {
+                  event.preventDefault();
+                  navigate(`/class/${classCode}/people`);
+                }
+              }}
             />
             <Tab
               value={3}
               label={t("grades")}
               style={{
                 color: value === 3 ? colorTheme : "grey",
+              }}
+              LinkComponent={"a"}
+              href={`/class/${classCode}/grades`}
+              onClick={(
+                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+              ) => {
+                // Routing libraries handle this, you can remove the onClick handle when using them.
+                if (event.currentTarget.href.includes(`/class/${classCode}`)) {
+                  event.preventDefault();
+                  navigate(`/class/${classCode}/grades`);
+                }
               }}
             />
             <Tooltip title={t("classSettings")}>
