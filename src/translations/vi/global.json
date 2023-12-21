@@ -145,5 +145,7 @@
     "joinClassSuccessfully": "Tham gia lớp học thành công",
     "sendInviteLinkSuccessfullyTo": "Gửi đường liên kết mời thành công đến ",
     "gradesTable": "Bảng điểm",
-    "gradeScaleTable": "Bảng thành phần điểm"
+    "gradeScaleTable": "Bảng thành phần điểm",
+    "addGradeScale": "Thêm thành phần điểm",
+    "addStudent": "Thêm học viên"
 }

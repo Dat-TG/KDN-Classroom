@@ -6,7 +6,7 @@ import { getUserById } from "../api/user/apiUser";
 
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Box, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 interface Props {
   colorTheme: string;
@@ -23,6 +23,10 @@ export default function GradesPage(props: Props) {
   const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
   const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
+  const [gradeScaleTable, setGradeScaleTable] = useState<Tabulator | null>(
+    null
+  );
+  const [gradesTable, setGradesTable] = useState<Tabulator | null>(null);
 
   const gradeScale = [
     {
@@ -163,25 +167,27 @@ export default function GradesPage(props: Props) {
             title: "Midterm",
             field: "midterm",
             editable: true,
-            editor: "input",
+            editor: "number",
             sorter: "number",
           },
           {
             title: "Final",
             field: "final",
             editable: true,
-            editor: "input",
+            editor: "number",
             sorter: "number",
           },
           {
             title: "Average",
             field: "average",
             editable: true,
-            editor: "input",
+            editor: "number",
             sorter: "number",
           },
         ],
       });
+
+      setGradesTable(gradeTable);
 
       //listen for row move
       gradeTable.on("rowMoved", function (row) {
@@ -219,10 +225,16 @@ export default function GradesPage(props: Props) {
             title: "Scale",
             field: "scale",
             editable: true,
-            editor: "input",
+            editor: "number",
+            editorParams: {
+              min: 0,
+              step: 0.1,
+            },
+            sorter: "number",
           },
         ],
       });
+      setGradeScaleTable(gradeScaleTable);
       //listen for row move
       gradeScaleTable.on("rowMoved", function (row) {
         console.log("Row: " + row.getData().name + " has been moved");
@@ -278,13 +290,57 @@ export default function GradesPage(props: Props) {
         padding: "24px",
       }}
     >
-      <Typography variant={"h5"} marginBottom={"16px"}>
-        {t("gradeScaleTable")}
-      </Typography>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "32px",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant={"h5"} marginBottom={"16px"}>
+          {t("gradeScaleTable")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradeScaleTable?.addRow({});
+          }}
+        >
+          {t("addGradeScale")}
+        </Button>
+      </div>
+
       <div ref={gradeScaleTableRef} />
-      <Typography variant={"h5"} marginY={"16px"}>
-        {t("gradesTable")}
-      </Typography>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "32px",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant={"h5"} marginY={"16px"}>
+          {t("gradesTable")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            padding: "8px",
+          }}
+          onClick={() => {
+            gradesTable?.addRow({});
+          }}
+        >
+          {t("addStudent")}
+        </Button>
+      </div>
+
       <div ref={gradeTableRef} />
     </div>
   );
