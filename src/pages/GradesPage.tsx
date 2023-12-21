@@ -6,6 +6,7 @@ import { getUserById } from "../api/user/apiUser";
 
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
+import { Box, Typography } from "@mui/material";
 
 interface Props {
   colorTheme: string;
@@ -16,16 +17,23 @@ interface Props {
 }
 
 export default function GradesPage(props: Props) {
-  const tableRef = useRef(null);
+  const gradeTableRef = useRef(null);
+  const gradeScaleTableRef = useRef(null);
   const { t } = useTranslation("global");
   const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
   const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
 
-  const gradeScale = {
-    midterm: 0.3,
-    final: 0.7,
-  };
+  const gradeScale = [
+    {
+      name: "Midterm",
+      scale: 0.3,
+    },
+    {
+      name: "Final",
+      scale: 0.7,
+    },
+  ];
 
   const tableData = [
     {
@@ -111,9 +119,11 @@ export default function GradesPage(props: Props) {
   ];
 
   useEffect(() => {
-    if (tableRef && tableRef.current) {
+    let gradeTable: Tabulator;
+    let gradeScaleTable: Tabulator;
+    if (gradeTableRef && gradeTableRef.current) {
       // Initialize Tabulator
-      const table = new Tabulator(tableRef.current, {
+      gradeTable = new Tabulator(gradeTableRef.current, {
         movableRows: true,
         movableColumns: true,
         data: tableData,
@@ -174,13 +184,57 @@ export default function GradesPage(props: Props) {
       });
 
       //listen for row move
-      table.on("rowMoved", function (row) {
+      gradeTable.on("rowMoved", function (row) {
         console.log("Row: " + row.getData().name + " has been moved");
       });
-
-      // Cleanup when component unmounts
-      return () => table.destroy();
     }
+
+    if (gradeScaleTableRef && gradeScaleTableRef.current) {
+      // Initialize Tabulator
+      gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
+        movableRows: true,
+        movableColumns: true,
+        data: gradeScale,
+        layout: "fitDataTable",
+        cellEdited: (cell) => {
+          // This function will be called whenever a cell is edited
+          console.log("Cell edited:", cell);
+          // You can perform your logic here when a cell is edited
+        },
+        columns: [
+          {
+            title: "",
+            rowHandle: true,
+            formatter: "handle",
+            headerSort: false,
+            frozen: true,
+          },
+          {
+            title: "Name",
+            field: "name",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "Scale",
+            field: "scale",
+            editable: true,
+            editor: "input",
+          },
+        ],
+      });
+      //listen for row move
+      gradeScaleTable.on("rowMoved", function (row) {
+        console.log("Row: " + row.getData().name + " has been moved");
+      });
+    }
+
+    // Cleanup when component unmounts
+    return () => {
+      gradeScaleTable.destroy();
+      gradeTable.destroy();
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -218,5 +272,20 @@ export default function GradesPage(props: Props) {
     }
   }, [props.ownerId, props.studentIds, props.teacherIds]);
 
-  return <div ref={tableRef}></div>;
+  return (
+    <div
+      style={{
+        padding: "24px",
+      }}
+    >
+      <Typography variant={"h5"} marginBottom={"16px"}>
+        {t("gradeScaleTable")}
+      </Typography>
+      <div ref={gradeScaleTableRef} />
+      <Typography variant={"h5"} marginY={"16px"}>
+        {t("gradesTable")}
+      </Typography>
+      <div ref={gradeTableRef} />
+    </div>
+  );
 }
