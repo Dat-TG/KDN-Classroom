@@ -56,7 +56,24 @@ const router = createBrowserRouter([
           },
           {
             path: "/class/:classCode",
-            element: <ClassDetailsPage />,
+            children: [
+              {
+                path: "stream",
+                element: <ClassDetailsPage initTab={0} />,
+              },
+              {
+                path: "classwork",
+                element: <ClassDetailsPage initTab={1} />,
+              },
+              {
+                path: "people",
+                element: <ClassDetailsPage initTab={2} />,
+              },
+              {
+                path: "grades",
+                element: <ClassDetailsPage initTab={3} />,
+              },
+            ],
           },
         ],
       },
