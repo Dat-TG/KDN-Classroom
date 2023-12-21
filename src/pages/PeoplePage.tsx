@@ -14,6 +14,8 @@ import InviteStudentDialog from "../components/class_details/InviteStudentDialog
 import { IGetCoursesRes } from "../types/course";
 import { IUserProfileRes } from "../types/user";
 import { getUserById } from "../api/user/apiUser";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../store/user/selector";
 
 interface Props {
   colorTheme: string;
@@ -32,6 +34,7 @@ export default function PeoplePage(props: Props) {
   const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
   const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
   const [owner, setOwner] = useState<IUserProfileRes | null>(null);
+  const user = useSelector(sGetUserInfo);
 
   useEffect(() => {
     getUserById(props.ownerId)
@@ -97,19 +100,21 @@ export default function PeoplePage(props: Props) {
           >
             {t("teachers")}
           </Typography>
-          <IconButton
-            size="large"
-            onClick={() => {
-              setOpenInviteTeacherDialog(true);
-            }}
-          >
-            <PersonAddAlt1Outlined
-              sx={{
-                color: props.colorTheme,
-                fontSize: "28px",
+          {user?.id == owner?.id && (
+            <IconButton
+              size="large"
+              onClick={() => {
+                setOpenInviteTeacherDialog(true);
               }}
-            />
-          </IconButton>
+            >
+              <PersonAddAlt1Outlined
+                sx={{
+                  color: props.colorTheme,
+                  fontSize: "28px",
+                }}
+              />
+            </IconButton>
+          )}
         </Box>
         <Divider
           sx={{
