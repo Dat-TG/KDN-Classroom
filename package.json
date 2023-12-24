@@ -18,6 +18,7 @@
     "@mui/material": "^5.14.18",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^1.9.7",
+    "@refinedev/antd": "^5.37.0",
     "axios": "^1.6.2",
     "i18next": "^23.7.6",
     "notistack": "^3.0.1",
@@ -31,6 +32,7 @@
     "tabulator-tables": "^5.5.2"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.3.14",
     "@types/react": "^18.2.37",
     "@types/react-avatar-editor": "^13.0.2",
     "@types/react-dom": "^18.2.15",

@@ -120,7 +120,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         );
         setClassList(classPreviews);
         //setClassList(res);
-        console.log(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
@@ -141,7 +140,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         );
         setTeachList(classPreviews);
         //setClassList(res);
-        console.log(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
@@ -158,8 +156,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           })
         );
         setOwnList(classPreviews);
-        //setClassList(res);
-        console.log(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
