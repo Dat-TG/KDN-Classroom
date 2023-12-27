@@ -1,8 +1,5 @@
 
 import { useEffect, useRef, useState } from "react";
-import CSVSelector from "./CSVSelector";
-
-
 import {
   ColumnDefinition,
   RowComponent,
@@ -10,6 +7,7 @@ import {
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { Box } from "@mui/material";
+import StudentListSelector from "./StudentListSelector";
 
 type Student = {
   id: string;
@@ -17,7 +15,7 @@ type Student = {
   lastName: string;
 }
 
-const ImportCSVFile = () => {
+const ImportStudentList = () => {
   const [data, setData] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
@@ -48,7 +46,6 @@ const ImportCSVFile = () => {
       ];
 
       const table = new Tabulator(previewTableRef.current, {
-        height: 205,
         data: data,
         layout: "fitDataTable",
         selectable: true,
@@ -69,7 +66,7 @@ const ImportCSVFile = () => {
 
   return (
     <div>
-      <CSVSelector onChange={(_data) => setData(_data)} />
+      <StudentListSelector onChange={(_data) => setData(_data)} />
 
       {data.length > 0 &&
         (<Box ref={previewTableRef} className="p-2" sx={{ height: 'auto', width: 'auto'}} >
@@ -78,8 +75,9 @@ const ImportCSVFile = () => {
 
       <button onClick={deleteSelectedRows}>Delete Selected Rows</button>
 
+
     </div>
   );
 };
 
-export default ImportCSVFile;
+export default ImportStudentList;

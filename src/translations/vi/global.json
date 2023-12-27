@@ -153,6 +153,6 @@
     "redo": "Quay lại",
     "delete": "Xóa",
     "gradeScale": "thành phần điểm",
-    "wrongFormatCSV": "Tệp CSV sai định dạng!",
-    "onlyAcceptCSV": "Chỉ chấp nhận tệp CSV..."
+    "wrongFormatImportFile": "Tệp Csv/Xlsx sai định dạng!",
+    "emptyFile" : "Tệp rỗng..."
 }

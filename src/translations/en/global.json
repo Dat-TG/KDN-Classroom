@@ -151,5 +151,7 @@
     "undo": "Undo",
     "redo": "Redo",
     "delete": "Delete",
-    "gradeScale": "grade composition"
+    "gradeScale": "grade composition",
+    "wrongFormatImportFile": "Wrong format CSV/XLSX file!",
+    "emptyFile" : "Empty file..."
 }

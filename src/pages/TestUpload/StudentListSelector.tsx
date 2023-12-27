@@ -15,14 +15,14 @@ type Student = {
   lastName: string;
 };
 
-const CSVSelector = ({ onChange }: Props) => {
+const StudentListSelector = ({ onChange }: Props) => {
   const { t } = useTranslation("global");
 
   const handleRawData = (rawData: string[][]): void => {
     if (rawData.length > 0) {
       console.log("Hello");
       if (
-        rawData[0][0] != "id" ||
+        rawData[0][0] != "studentId" ||
         rawData[0][1] != "firstName" ||
         rawData[0][2] != "lastName"
       ) {
@@ -59,6 +59,7 @@ const CSVSelector = ({ onChange }: Props) => {
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ) {
           readXlsxFile(file).then((rows) => {
+            console.log("rows: ",rows);
             const data: string[][] = [];
             rows.map((row) => {
               const rowArray: string[] = [];
@@ -68,31 +69,21 @@ const CSVSelector = ({ onChange }: Props) => {
               data.push(rowArray);
             });
 
+            console.log("raw data: ",data);
             handleRawData(data);
        
           });
 
         } else if (file.type == "text/csv") {
-          // 1. create url from the file
-          const fileUrl = URL.createObjectURL(file);
-
-          // 2. use fetch API to read the file
-          const response = await fetch(fileUrl);
-
-          // 3. get the text from the response
-          const text = await response.text();
-
-          // 4. split the text by newline
-          Papa.parse(text, {
+          Papa.parse(file, {
             complete: (result: Papa.ParseResult<string[]>) => {
-              // 5. result.data contains the parsed CSV data
+              //result.data contains the parsed CSV data
               const data = result.data;
               handleRawData(data);
             },
             header: false, // Set to true if your CSV has a header row
           });
         } else {
-          console.log(file.type);
           toast.error(t("onlyAcceptCSV"));
         }
 
@@ -119,4 +110,4 @@ const CSVSelector = ({ onChange }: Props) => {
   );
 };
 
-export default CSVSelector;
+export default StudentListSelector;

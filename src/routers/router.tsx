@@ -13,8 +13,8 @@ import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
 import ClassDetailsPage from "../pages/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
-import ImportCSVFile from "../pages/TestUpload/ImportCSVFile";
-
+import ImportStudentList from "../pages/TestUpload/ImportStudentList";
+import ImportGrades from "../pages/TestUpload/ImportGrades";
 
 const router = createBrowserRouter([
   {
@@ -28,8 +28,12 @@ const router = createBrowserRouter([
             element: <HomePage />,
           },
           {
+            path: "/import-grades",
+            element: <ImportGrades />,
+          },
+          {
             path: "/upload",
-            element: <ImportCSVFile />,
+            element: <ImportStudentList />,
           },
           {
             path: "/profile",
