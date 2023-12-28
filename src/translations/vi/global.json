@@ -152,5 +152,6 @@
     "undo": "Hoàn tác",
     "redo": "Quay lại",
     "delete": "Xóa",
-    "gradeScale": "thành phần điểm"
+    "gradeScale": "thành phần điểm",
+    "usersManagement": "Quản lý người dùng"
 }

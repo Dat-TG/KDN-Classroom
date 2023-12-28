@@ -13,6 +13,7 @@ import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
 import ClassDetailsPage from "../pages/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
+import UserManagementPage from "../pages/UserManagementPage";
 
 const router = createBrowserRouter([
   {
@@ -121,7 +122,7 @@ const router = createBrowserRouter([
           },
           {
             path: "users",
-            element: <div>Users management</div>,
+            element: <UserManagementPage />,
           },
           {
             path: "settings",
