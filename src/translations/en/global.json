@@ -151,5 +151,6 @@
     "undo": "Undo",
     "redo": "Redo",
     "delete": "Delete",
-    "gradeScale": "grade composition"
+    "gradeScale": "grade composition",
+    "usersManagement": "Users management"
 }
