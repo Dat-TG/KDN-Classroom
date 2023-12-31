@@ -79,7 +79,6 @@ export default function HomePage() {
                 </Grid>
               ))}
         </Grid>
-        <div style={{ height: "30px" }}></div>
       </>
       <>
         <Typography variant="h4">
@@ -105,7 +104,7 @@ export default function HomePage() {
                 </Grid>
               ))}
         </Grid>
-        <div style={{ height: "30px" }}></div>
+        {teachList.length > 0 && <div style={{ height: "30px" }}></div>}
       </>
       <>
         <Typography variant="h4">
@@ -131,7 +130,6 @@ export default function HomePage() {
                 </Grid>
               ))}
         </Grid>
-        <div style={{ height: "30px" }}></div>
       </>
     </div>
   );
