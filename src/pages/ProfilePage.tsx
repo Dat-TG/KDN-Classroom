@@ -8,11 +8,12 @@ import {
   CircularProgress,
 } from "@mui/material";
 import AvatarEditorComponent from "../components/AvatarEditor";
-import EditProfileDetailsForm from "../components/EditProfileDetailsForm";
+import EditProfileDetailsForm from "../components/profile/EditProfileDetailsForm";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../store/user/selector";
 import ChangePasswordForm from "../components/ChangePasswordForm";
+import MapStudentIdForm from "../components/profile/MapStudentIdForm";
 
 // import { AuthContext } from "../context/AuthContext";
 // import { useUser } from "../hooks/useUser";
@@ -72,6 +73,10 @@ function ProfilePage() {
 
       <Grid item xs={12} sx={{ mt: 5, display: "block" }}>
         <EditProfileDetailsForm />
+      </Grid>
+
+      <Grid item xs={12} sx={{ mt: 5, display: "block" }}>
+        <MapStudentIdForm />
       </Grid>
 
       <Grid item xs={12} sx={{ mt: 5, display: "block" }}>

@@ -153,5 +153,6 @@
     "redo": "Quay lại",
     "delete": "Xóa",
     "gradeScale": "thành phần điểm",
-    "usersManagement": "Quản lý người dùng"
+    "usersManagement": "Quản lý người dùng",
+    "studentId": "Mã số sinh viên"
 }

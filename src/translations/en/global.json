@@ -152,5 +152,6 @@
     "redo": "Redo",
     "delete": "Delete",
     "gradeScale": "grade composition",
-    "usersManagement": "Users management"
+    "usersManagement": "Users management",
+    "studentId": "Student ID"
 }
