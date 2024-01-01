@@ -159,5 +159,6 @@
     "importConfirmation": "Bạn có muốn nhập những dữ liệu này?",
     "import" : "Nhập",
     "importStudentsFromFile": "Thêm học sinh từ file",
-    "importGradesFromFile": "Nhập điểm từ file"
+    "importGradesFromFile": "Nhập điểm từ file",
+    "usersManagement": "Quản lý người dùng"
 }
