@@ -44,7 +44,7 @@ const StudentListSelector = ({ onChange }: Props) => {
         onChange(result);
       }
     }
-  }; 
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -56,10 +56,10 @@ const StudentListSelector = ({ onChange }: Props) => {
         if (
           file &&
           file.type ===
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ) {
           readXlsxFile(file).then((rows) => {
-            console.log("rows: ",rows);
+            console.log("rows: ", rows);
             const data: string[][] = [];
             rows.map((row) => {
               const rowArray: string[] = [];
@@ -69,9 +69,9 @@ const StudentListSelector = ({ onChange }: Props) => {
               data.push(rowArray);
             });
 
-            console.log("raw data: ",data);
+            console.log("raw data: ", data);
             handleRawData(data);
-       
+
           });
 
         } else if (file.type == "text/csv") {
@@ -87,7 +87,7 @@ const StudentListSelector = ({ onChange }: Props) => {
           toast.error(t("onlyAcceptCSV"));
         }
 
-        
+
       } catch (error) {
         console.error(error);
       }
@@ -97,7 +97,7 @@ const StudentListSelector = ({ onChange }: Props) => {
   return (
     <>
       <Button variant="contained" component="label">
-        Import CSV
+        {t("importStudentsFromFile")}
         <input
           id="CSVInput"
           hidden

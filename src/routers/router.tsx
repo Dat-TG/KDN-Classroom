@@ -32,7 +32,7 @@ const router = createBrowserRouter([
             element: <ImportGrades />,
           },
           {
-            path: "/upload",
+            path: "/import-students",
             element: <ImportStudentList />,
           },
           {

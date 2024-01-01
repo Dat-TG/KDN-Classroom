@@ -6,8 +6,9 @@ import {
     TabulatorFull as Tabulator,
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import GradesSelector from "./GradesSelector";
+import { useTranslation } from "react-i18next";
 
 type GradeScale = {
     [key: string]: number;
@@ -26,8 +27,10 @@ type GradeComponent = {
     scale: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function convertStudents(studentArray: Student[]): any[] {
     return studentArray.map(student => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const convertedStudent: any = {
             firstName: student.firstName,
             lastName: student.lastName,
@@ -45,32 +48,38 @@ function convertStudents(studentArray: Student[]): any[] {
     });
 }
 
+// type ImportGradesProps = {
+//     handleImport(students : Student[]): void;
+// };
+
+//const ImportGrades = ({handleImport} : ImportGradesProps) => {
+// const confirmImport = () =>{
+//     if (students && students.length > 0){
+//         handleImport(students);
+//     }
+//     HideDialog();
+// }
 const ImportGrades = () => {
-    const [gradeComponents, setGradeComponents] = useState<GradeComponent[]>([]);
-    const [students, setStudents] = useState<Student[]>([]);
+    const { t } = useTranslation("global");
+    const [gradeComponents, setGradeComponents] = useState<GradeComponent[] | null>(null);
+    const [students, setStudents] = useState<Student[] | null>(null);
 
-    const [gradeComponentsTable, setGradeScaleTable] = useState<Tabulator | null>(null);
-    const [gradesTable, setGradesTable] = useState<Tabulator | null>(null);
-
-    const [selectedGradeScales, setSelectedGradeScale] = useState<RowComponent[]>([]);
+    const [selectedGradeScales, setSelectedGradeScales] = useState<RowComponent[]>([]);
     const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
 
+    const [isDialogShowed, setIsDialogShowed] = useState<boolean>(false);
 
+    const ShowDialog = () => {
+        setIsDialogShowed(true);
+    };
 
-    //const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
-
-    //   const deleteSelectedRows = () =>{
-    //     const newData = [...data];
-
-    //     // Filter out selected rows
-    //     const updatedData = newData.filter(student  =>  !selectedStudent.some(selectedRow => selectedRow.getData().id === student.id));
-
-    //     // Update state with the new data
-    //     setData(updatedData);
-
-    //     // Clear selected rows
-    //     setSelectedStudent([]);
-    //   }
+    const HideDialog = () => {
+        setIsDialogShowed(false);
+        setGradeComponents(null);
+        setStudents(null);
+        setSelectedGradeScales([]);
+        setSelectedStudent([]);
+    };
 
     const gradeTableRef = useRef(null);
     const gradeScaleTableRef = useRef(null);
@@ -80,13 +89,25 @@ const ImportGrades = () => {
         setStudents(students);
     }
 
+    const ConfirmImport = () => {
+        if (students && students.length > 0) {
+            console.log(students);
+        }
+        HideDialog();
+    }
+
     useEffect(() => {
-        console.log("Hello", convertStudents(students));
-        let gradeTable: Tabulator;
-        let gradeScaleTable: Tabulator;
+        if (students != null && gradeComponents != null) {
+            ShowDialog();
+        }
+    }, [gradeComponents, students]);
+
+
+    useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-        if (gradeTableRef && gradeTableRef.current) {
+        if (gradeTableRef && gradeTableRef.current && gradeScaleTableRef && gradeScaleTableRef.current != null
+            && students != null && gradeComponents != null) {
             // Initialize Tabulator
             const columnDefinitions: ColumnDefinition[] = [
                 {
@@ -133,7 +154,7 @@ const ImportGrades = () => {
                 });
             }
 
-            gradeTable = new Tabulator(gradeTableRef.current, {
+            const gradeTable = new Tabulator(gradeTableRef.current, {
                 movableRows: true,
                 movableColumns: true,
                 data: convertStudents(students),
@@ -147,8 +168,6 @@ const ImportGrades = () => {
                 columns: columnDefinitions,
             });
 
-            setGradesTable(gradeTable);
-
             gradeTable.on("rowSelectionChanged", function (_data, rows) {
                 //rows - array of row components for the currently selected rows in order of selection
                 //data - array of data objects for the currently selected rows in order of selection
@@ -156,11 +175,11 @@ const ImportGrades = () => {
                 //deselected - array of row components that were deselected in the last action
                 setSelectedStudent(rows);
             });
-        }
 
-        if (gradeScaleTableRef && gradeScaleTableRef.current) {
+
+
             // Initialize Tabulator
-            gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
+            const gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
                 movableRows: true,
                 history: true,
                 movableColumns: true,
@@ -200,26 +219,24 @@ const ImportGrades = () => {
                     },
                 ],
             });
-            setGradeScaleTable(gradeScaleTable);
 
             gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
                 //rows - array of row components for the currently selected rows in order of selection
                 //data - array of data objects for the currently selected rows in order of selection
                 //selected - array of row components that were selected in the last action
                 //deselected - array of row components that were deselected in the last action
-                setSelectedGradeScale(rows);
+                setSelectedGradeScales(rows);
             });
 
+            //Cleanup when component unmounts
+            return () => {
+                gradeScaleTable.destroy();
+                gradeTable.destroy();
+            };
         }
 
-        // Cleanup when component unmounts
-        return () => {
-            gradeScaleTable.destroy();
-            gradeTable.destroy();
-        };
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gradeComponents, students]);
+    }, [isDialogShowed, gradeComponents, students]);
 
     const deleteSelectedGradeScales = () => {
 
@@ -227,16 +244,22 @@ const ImportGrades = () => {
             return;
         }
 
-        setGradeComponents((prevGradeComponents) =>
-            prevGradeComponents.filter((gradeScale) =>
+        setGradeComponents((prevGradeComponents) => {
+            if (!prevGradeComponents) {
+                return prevGradeComponents;
+            }
+
+            const newGradeComponents = prevGradeComponents.filter((gradeScale) =>
                 !selectedGradeScales.some((selected) => selected.getData().name === gradeScale.name)
-            )
+            );
+
+            return newGradeComponents;
+        }
+
         );
 
-
         // Clear selected rows
-        setSelectedStudent([]);
-
+        setSelectedGradeScales([]);
     }
 
     const deleteSelectedStudents = () => {
@@ -245,10 +268,16 @@ const ImportGrades = () => {
             return;
         }
 
-        setStudents((prevStudents) =>
-            prevStudents.filter((student) =>
+        setStudents((prevStudents) => {
+            if (!prevStudents) {
+                return prevStudents;
+            }
+            const newStudents = prevStudents.filter((student) =>
                 !selectedStudents.some((selected) => selected.getData().studentId === student.studentId)
-            )
+            );
+            return newStudents;
+        }
+
         );
 
 
@@ -261,21 +290,58 @@ const ImportGrades = () => {
         <div>
             <GradesSelector onChange={(gradeComponents, students) => handleDataFromSelector(gradeComponents, students)} />
 
-            <div>
-                <Box ref={gradeScaleTableRef} className="p-2" sx={{ height: 'auto', width: 'auto' }} >
-                </Box>
-            </div>
+            <Dialog
+                sx={{ display: isDialogShowed ? 'block' : 'none', Width: 'auto', height: 'auto' }}
+                open={true}
+                onClose={HideDialog}
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {t("importConfirmation")}
+                </DialogTitle>
+                <DialogContent sx={{ p: 0, ml: '24px', mr: '24px' }}>
 
-            <div>
-                <Box ref={gradeTableRef} className="p-2" sx={{ height: 'auto', width: 'auto' }} >
-                </Box>
-            </div>
+                    <Box sx={{ minHeight: '38px', display: 'flex', alignItems: 'flex-end' }} >
+                        <Typography variant="h6" sx={{ mr: 1, mb: 0 }} gutterBottom>
+                            {t("gradeComponents")}
+                        </Typography>
+                        {(selectedGradeScales.length > 0) && (
+                            <Button variant="outlined" onClick={deleteSelectedGradeScales} sx={{ pr: '3px', pl: '3px', pt: 0, pb: 0 }}>
+                                {selectedGradeScales.length >= 2
+                                    ? `Delete ${selectedGradeScales.length} records`
+                                    : `Delete ${selectedGradeScales.length} record`
+                                }
+                            </Button>)
+                        }
+                    </Box>
 
+                    <Box ref={gradeScaleTableRef} sx={{ mt: 1, height: 'auto', width: 'auto' }} >
+                    </Box>
 
-            {/* <button onClick={deleteSelectedRows}>Delete Selected Rows</button> */}
+                    <Box sx={{ minHeight: '38px', mt: 1, display: 'flex', alignItems: 'flex-end' }} >
+                        <Typography variant="h6" sx={{ mr: 1, mb: 0 }} gutterBottom>
+                            {t("grades")}
+                        </Typography>
+                        {(selectedStudents.length > 0) && (
+                            <Button variant="outlined" onClick={deleteSelectedStudents} sx={{ pr: '3px', pl: '3px', pt: 0, pb: 0 }}>
+                                {selectedStudents.length >= 2
+                                    ? `Delete ${selectedStudents.length} records`
+                                    : `Delete ${selectedStudents.length} record`
+                                }
+                            </Button>)
+                        }
+                    </Box>
 
-            <Button variant="contained" onClick={deleteSelectedGradeScales}>Delete grade scale</Button>
-            <Button variant="outlined" onClick={deleteSelectedStudents}>Delete Students</Button>
+                    <Box ref={gradeTableRef} sx={{ mt: 1, mb: 1, height: 'auto', width: 'auto' }} >
+                    </Box>
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={HideDialog}> {t("cancel")}</Button>
+                    <Button onClick={ConfirmImport}>
+                        {t("import")}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

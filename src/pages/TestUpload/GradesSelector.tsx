@@ -185,13 +185,12 @@ const GradesSelector = ({ onChange }: Props) => {
 
 
 
-
     };
 
     return (
         <>
             <Button variant="contained" component="label">
-                Import Grades
+                {t("importGradesFromFile")}
                 <input
                     id="CSVInput"
                     hidden

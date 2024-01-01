@@ -6,8 +6,9 @@ import {
   TabulatorFull as Tabulator,
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Box } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import StudentListSelector from "./StudentListSelector";
+import { useTranslation } from "react-i18next";
 
 type Student = {
   id: string;
@@ -16,40 +17,66 @@ type Student = {
 }
 
 const ImportStudentList = () => {
-  const [data, setData] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
+  const { t } = useTranslation("global");
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
 
-  const deleteSelectedRows = () =>{
-    const newData = [...data];
+  const [isDialogShowed, setIsDialogShowed] = useState<boolean>(false);
+
+  const previewTableRef = useRef(null);
+
+  const ShowDialog = () => {
+    setIsDialogShowed(true);
+  };
+
+  const HideDialog = () => {
+    setIsDialogShowed(false);
+    setStudents([]);
+    setSelectedStudent([]);
+  };
+
+  const deleteSelectedRows = () => {
+    const newData = [...students];
 
     // Filter out selected rows
-    const updatedData = newData.filter(student  =>  !selectedStudent.some(selectedRow => selectedRow.getData().id === student.id));
+    const updatedData = newData.filter(student => !selectedStudents.some(selectedRow => selectedRow.getData().id === student.id));
 
     // Update state with the new data
-    setData(updatedData);
+    setStudents(updatedData);
 
     // Clear selected rows
     setSelectedStudent([]);
   }
 
-  const previewTableRef = useRef(null);
+  const ConfirmImport = () => {
+    if (students && students.length > 0) {
+        console.log(students);
+    }
+    HideDialog();
+}
+
+
 
   useEffect(() => {
-    if (data.length > 0 && previewTableRef.current) {
+    if (students.length > 0 && previewTableRef.current) {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const columnDefinitions: ColumnDefinition[] = [
-        {title:"", formatter:"rowSelection", titleFormatter:"rowSelection", hozAlign: "center",  headerHozAlign: "center", headerSort:false, width: 40},
-        { title: "Id", field: "id", width: 120 },
-        { title: "First Name", field: "firstName", width: 180 },
-        { title: "Last Name", field: "lastName", width: 220 },
+        { title: "", formatter: "rowSelection", titleFormatter: "rowSelection", hozAlign: "center", headerHozAlign: "center", headerSort: false, width: 40 },
+        { title: "Id", field: "id", editable: true, editor: "input" },
+        { title: "First Name", field: "firstName", editable: true, editor: "input" },
+        { title: "Last Name", field: "lastName", editable: true, editor: "input" },
       ];
 
       const table = new Tabulator(previewTableRef.current, {
-        data: data,
+        data: students,
         layout: "fitDataTable",
-        selectable: true,
         columns: columnDefinitions,
+        cellEdited: (cell) => {
+          // This function will be called whenever a cell is edited
+          console.log("Cell edited:", cell);
+          // You can perform your logic here when a cell is edited
+        },
       });
 
       table.on("rowSelectionChanged", function (_data, rows) {
@@ -62,18 +89,53 @@ const ImportStudentList = () => {
       };
     }
 
-  }, [data])
+  }, [isDialogShowed, students])
+
+  useEffect(() => {
+    if (students.length > 0) {
+      ShowDialog();
+    }
+  }, [students]);
 
   return (
     <div>
-      <StudentListSelector onChange={(_data) => setData(_data)} />
+      <StudentListSelector onChange={(_data) => setStudents(_data)} />
 
-      {data.length > 0 &&
-        (<Box ref={previewTableRef} className="p-2" sx={{ height: 'auto', width: 'auto'}} >
-        </Box>)
-      }
+      <Dialog
+        sx={{ display: isDialogShowed ? 'block' : 'none', Width: 'auto', height: 'auto' }}
+        open={true}
+        onClose={HideDialog}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {t("importConfirmation")}
+        </DialogTitle>
+        <DialogContent sx={{ p: 0, ml: '24px', mr: '24px' }}>
 
-      <button onClick={deleteSelectedRows}>Delete Selected Rows</button>
+          <Box sx={{ minHeight: '38px', display: 'flex', alignItems: 'flex-end' }} >
+            <Typography variant="h6" sx={{ mr: 1, mb: 0 }} gutterBottom>
+              {t("students")}
+            </Typography>
+            {(selectedStudents.length > 0) && (
+              <Button variant="outlined" onClick={deleteSelectedRows} sx={{ pr: '3px', pl: '3px', pt: 0, pb: 0 }}>
+                {selectedStudents.length >= 2
+                  ? `Delete ${selectedStudents.length} records`
+                  : `Delete ${selectedStudents.length} record`
+                }
+              </Button>)
+            }
+          </Box>
+
+          <Box ref={previewTableRef} sx={{ mt: 1, mb: 1, height: 'auto', width: 'auto' }} >
+          </Box>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={HideDialog}> {t("cancel")}</Button>
+          <Button onClick={ConfirmImport}>
+            {t("import")}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
 
     </div>
