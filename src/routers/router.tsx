@@ -15,6 +15,7 @@ import ClassDetailsPage from "../pages/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import ImportStudentList from "../pages/TestUpload/ImportStudentList";
 import ImportGrades from "../pages/TestUpload/ImportGrades";
+import UserManagementPage from "../pages/UserManagementPage";
 
 const router = createBrowserRouter([
   {
@@ -130,7 +131,7 @@ const router = createBrowserRouter([
           },
           {
             path: "users",
-            element: <div>Users management</div>,
+            element: <UserManagementPage />,
           },
           {
             path: "settings",
