@@ -153,5 +153,6 @@
     "delete": "Delete",
     "gradeScale": "grade composition",
     "usersManagement": "Users management",
-    "studentId": "Student ID"
+    "studentId": "Student ID",
+    "requestGradeReviewForSelectedComposition": "Request grade review for selected composition"
 }

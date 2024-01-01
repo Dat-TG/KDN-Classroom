@@ -154,5 +154,6 @@
     "delete": "Xóa",
     "gradeScale": "thành phần điểm",
     "usersManagement": "Quản lý người dùng",
-    "studentId": "Mã số sinh viên"
+    "studentId": "Mã số sinh viên",
+    "requestGradeReviewForSelectedComposition": "Yêu cầu xem xét điểm cho thành phần đã chọn"
 }
