@@ -11,7 +11,7 @@ import RedirectRoute from "./RedirectRoute";
 import LandingPage from "../pages/LandingPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
-import ClassDetailsPage from "../pages/ClassDetailsPage";
+import ClassDetailsPage from "../pages/course/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import UserManagementPage from "../pages/UserManagementPage";
 

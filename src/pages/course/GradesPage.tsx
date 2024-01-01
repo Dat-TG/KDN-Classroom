@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
-import { IGetCoursesRes } from "../types/course";
+import { IGetCoursesRes } from "../../types/course";
 // import { IUserProfileRes } from "../types/user";
 // import { getUserById } from "../api/user/apiUser";
 
@@ -12,7 +12,8 @@ import {
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { sGetUserInfo } from "../store/user/selector";
+import { sGetUserInfo } from "../../store/user/selector";
+import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
 
 interface Props {
   colorTheme: string;
@@ -51,8 +52,11 @@ export default function GradesPage({ studentIds }: Props) {
   const [isStudent, setIsStudent] = useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-  const [_grades, setGrades] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [grades, setGrades] = useState<any[]>([]);
+
+  const [isOpenRequestDialog, setIsOpenRequestDialog] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const isStudent = studentIds.includes(user?.id || 0);
@@ -541,7 +545,13 @@ export default function GradesPage({ studentIds }: Props) {
           }}
         >
           {isStudent ? (
-            <Button variant="outlined" color="info" onClick={() => {}}>
+            <Button
+              variant="outlined"
+              color="info"
+              onClick={() => {
+                setIsOpenRequestDialog(true);
+              }}
+            >
               {t("requestGradeReviewForSelectedComposition")}
             </Button>
           ) : (
@@ -658,6 +668,19 @@ export default function GradesPage({ studentIds }: Props) {
         </div>
       )}
       <div ref={gradeTableRef} />
+      <RequestReviewDialog
+        open={isOpenRequestDialog}
+        onClose={() => {
+          setIsOpenRequestDialog(false);
+        }}
+        gradeScale={selectedGradeScale.map((row) => {
+          return {
+            name: row.getData().name,
+            scale: row.getData().scale,
+          };
+        })}
+        grades={grades}
+      />
     </div>
   );
 }

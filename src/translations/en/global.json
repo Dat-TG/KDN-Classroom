@@ -154,5 +154,7 @@
     "gradeScale": "grade composition",
     "usersManagement": "Users management",
     "studentId": "Student ID",
-    "requestGradeReviewForSelectedComposition": "Request grade review for selected composition"
+    "requestGradeReviewForSelectedComposition": "Request grade review for selected composition",
+    "requestGradeReview": "Request grade review",
+    "submit": "Submit"
 }

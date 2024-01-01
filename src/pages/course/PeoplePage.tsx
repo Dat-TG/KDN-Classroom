@@ -8,14 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import InviteTeacherDialog from "../components/class_details/InviteTeacherDialog";
+import InviteTeacherDialog from "../../components/class_details/InviteTeacherDialog";
 import { useEffect, useState } from "react";
-import InviteStudentDialog from "../components/class_details/InviteStudentDialog";
-import { IGetCoursesRes } from "../types/course";
-import { IUserProfileRes } from "../types/user";
-import { getUserById } from "../api/user/apiUser";
+import InviteStudentDialog from "../../components/class_details/InviteStudentDialog";
+import { IGetCoursesRes } from "../../types/course";
+import { IUserProfileRes } from "../../types/user";
+import { getUserById } from "../../api/user/apiUser";
 import { useSelector } from "react-redux";
-import { sGetUserInfo } from "../store/user/selector";
+import { sGetUserInfo } from "../../store/user/selector";
 
 interface Props {
   colorTheme: string;

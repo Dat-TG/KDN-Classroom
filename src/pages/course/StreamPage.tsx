@@ -21,13 +21,13 @@ import {
   RotateLeft,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import ChangeClassThemeDialog from "../components/class_details/ChangeClassThemeDialog";
-import ClassCodeDialog from "../components/class_details/ClassCodeDialog";
+import ChangeClassThemeDialog from "../../components/class_details/ChangeClassThemeDialog";
+import ClassCodeDialog from "../../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
-import { sGetUserInfo } from "../store/user/selector";
-import { IGetCoursesRes, RoleCourseString } from "../types/course";
-import { createInviteLink } from "../api/course/apiCourse";
-import toast from "../utils/toast";
+import { sGetUserInfo } from "../../store/user/selector";
+import { IGetCoursesRes, RoleCourseString } from "../../types/course";
+import { createInviteLink } from "../../api/course/apiCourse";
+import toast from "../../utils/toast";
 
 interface Props {
   classEntity: IGetCoursesRes;
