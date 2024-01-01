@@ -156,5 +156,7 @@
     "studentId": "Student ID",
     "requestGradeReviewForSelectedComposition": "Request grade review for selected composition",
     "requestGradeReview": "Request grade review",
-    "submit": "Submit"
+    "submit": "Submit",
+    "yourRequest": "Your request",
+    "requestList": "Request list"
 }

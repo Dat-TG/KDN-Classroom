@@ -14,6 +14,7 @@ import AdminRoute from "./AdminRoute";
 import ClassDetailsPage from "../pages/course/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import UserManagementPage from "../pages/UserManagementPage";
+import RequestListPage from "../pages/course/RequestListPage";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
               {
                 path: "grades",
                 element: <ClassDetailsPage initTab={3} />,
+              },
+              {
+                path: "grades/requests",
+                element: <RequestListPage />,
               },
             ],
           },

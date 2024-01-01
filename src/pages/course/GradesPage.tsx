@@ -14,6 +14,8 @@ import { Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
+import { Reviews } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   colorTheme: string;
@@ -57,6 +59,8 @@ export default function GradesPage({ studentIds }: Props) {
 
   const [isOpenRequestDialog, setIsOpenRequestDialog] =
     useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const isStudent = studentIds.includes(user?.id || 0);
@@ -488,6 +492,19 @@ export default function GradesPage({ studentIds }: Props) {
         padding: "24px",
       }}
     >
+      <Button
+        component="label"
+        variant="contained"
+        sx={{
+          marginBottom: "16px",
+        }}
+        startIcon={<Reviews />}
+        onClick={() => {
+          navigate(window.location.pathname + "/requests");
+        }}
+      >
+        {t("yourRequest")}
+      </Button>
       <div
         style={{
           display: "flex",

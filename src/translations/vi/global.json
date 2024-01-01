@@ -157,5 +157,7 @@
     "studentId": "Mã số sinh viên",
     "requestGradeReviewForSelectedComposition": "Yêu cầu xem xét điểm cho thành phần đã chọn",
     "requestGradeReview": "Yêu cầu xem xét điểm",
-    "submit": "Gửi"
+    "submit": "Gửi",
+    "yourRequest": "Yêu cầu xem xét điểm của bạn",
+    "requestList": "Danh sách yêu cầu"
 }
