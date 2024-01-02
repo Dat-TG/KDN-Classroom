@@ -160,7 +160,7 @@
     "yourRequest": "Your request",
     "requestList": "Request list",
     "comment": "Comment",
-    "typeCommentHere": "Type comment here"
+    "typeCommentHere": "Type comment here",
     "wrongFormatImportFile": "Wrong format CSV/XLSX file!",
     "emptyFile" : "Empty file...",
     "gradeComponents": "Grade components",
