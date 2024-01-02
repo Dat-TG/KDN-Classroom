@@ -11,7 +11,7 @@ const theme = createTheme({
     },
     h6: {
       fontWeight: 400,
-    }
+    },
   },
   palette: {
     primary: {
@@ -36,7 +36,7 @@ const theme = createTheme({
     },
     background: {
       default: "#fff",
-    }
+    },
   },
 });
 
@@ -47,6 +47,17 @@ theme.typography.h1 = {
   },
   [theme.breakpoints.up("md")]: {
     fontSize: "2.4rem",
+  },
+};
+
+theme.typography.h4 = {
+  fontSize: "1.2rem",
+  "@media (min-width:600px)": {
+    fontSize: "1.3rem",
+  },
+  fontWeight: 400,
+  [theme.breakpoints.up("md")]: {
+    fontSize: "2rem",
   },
 };
 
@@ -61,6 +72,5 @@ theme.typography.subtitle1 = {
     fontSize: 14,
   },
 };
-
 
 export default theme;

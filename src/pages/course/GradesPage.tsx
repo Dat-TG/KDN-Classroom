@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
-import { IGetCoursesRes } from "../types/course";
+import { IGetCoursesRes } from "../../types/course";
 // import { IUserProfileRes } from "../types/user";
 // import { getUserById } from "../api/user/apiUser";
 
@@ -11,6 +11,11 @@ import {
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { Button, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
+import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
+import { Reviews } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   colorTheme: string;
@@ -21,13 +26,10 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function GradesPage(_props: Props) {
+export default function GradesPage({ studentIds }: Props) {
   const gradeTableRef = useRef(null);
   const gradeScaleTableRef = useRef(null);
   const { t } = useTranslation("global");
-  // const [teachers, setTeachers] = useState<IUserProfileRes[] | null>(null);
-  // const [students, setStudents] = useState<IUserProfileRes[] | null>(null);
-  // const [owner, setOwner] = useState<IUserProfileRes | null>(null);
   const [gradeScaleTable, setGradeScaleTable] = useState<Tabulator | null>(
     null
   );
@@ -49,91 +51,119 @@ export default function GradesPage(_props: Props) {
     },
   ]);
 
+  const [isStudent, setIsStudent] = useState<boolean>(false);
+  const user = useSelector(sGetUserInfo);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [grades, setGrades] = useState<any[]>([
-    {
-      studentId: "20120454",
-      firstName: "Đắt",
-      lastName: "Lê Công",
-      Midterm: 10,
-      Final: 10,
-      average: 10,
-    },
-    {
-      studentId: "20120455",
-      firstName: "Hoa",
-      lastName: "Nguyễn Thị",
-      Midterm: 9,
-      Final: 8,
-      average: 8.3,
-    },
-    {
-      studentId: "20120456",
-      firstName: "Tuấn",
-      lastName: "Trần Văn",
-      Midterm: 7,
-      Final: 6,
-      average: 6.3,
-    },
-    {
-      studentId: "20120457",
-      firstName: "Hằng",
-      lastName: "Phạm Thị",
-      Midterm: 5,
-      Final: 4,
-      average: 4.3,
-    },
-    {
-      studentId: "20120458",
-      firstName: "Minh",
-      lastName: "Vũ Minh",
-      Midterm: 8,
-      Final: 9,
-      average: 8.7,
-    },
-    {
-      studentId: "20120459",
-      firstName: "Nam",
-      lastName: "Hoàng Văn",
-      Midterm: 6,
-      Final: 7,
-      average: 6.7,
-    },
-    {
-      studentId: "20120460",
-      firstName: "Thảo",
-      lastName: "Đặng Thị",
-      Midterm: 9,
-      Final: 9,
-      average: 9,
-    },
-    {
-      studentId: "20120461",
-      firstName: "Long",
-      lastName: "Nguyễn Văn",
-      Midterm: 7,
-      Final: 8,
-      average: 7.7,
-    },
-    {
-      studentId: "20120462",
-      firstName: "Linh",
-      lastName: "Trần Thị",
-      Midterm: 8,
-      Final: 6,
-      average: 6.6,
-    },
-    {
-      studentId: "20120463",
-      firstName: "Hoàng",
-      lastName: "Lê Văn",
-      Midterm: 9,
-      Final: 10,
-      average: 9.7,
-    },
-  ]);
+  const [grades, setGrades] = useState<any[]>([]);
+
+  const [isOpenRequestDialog, setIsOpenRequestDialog] =
+    useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const isStudent = studentIds.includes(user?.id || 0);
+    setIsStudent(isStudent);
+    console.log("isStudent", isStudent);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let grades: any[] = [];
+    if (isStudent) {
+      grades = [
+        {
+          studentId: "20120454",
+          firstName: user?.name,
+          lastName: user?.surname,
+          Midterm: 10,
+          Final: 10,
+          average: 10,
+        },
+      ];
+    } else {
+      grades = [
+        {
+          studentId: "20120454",
+          firstName: "Đắt",
+          lastName: "Lê Công",
+          Midterm: 10,
+          Final: 10,
+          average: 10,
+        },
+        {
+          studentId: "20120455",
+          firstName: "Hoa",
+          lastName: "Nguyễn Thị",
+          Midterm: 9,
+          Final: 8,
+          average: 8.3,
+        },
+        {
+          studentId: "20120456",
+          firstName: "Tuấn",
+          lastName: "Trần Văn",
+          Midterm: 7,
+          Final: 6,
+          average: 6.3,
+        },
+        {
+          studentId: "20120457",
+          firstName: "Hằng",
+          lastName: "Phạm Thị",
+          Midterm: 5,
+          Final: 4,
+          average: 4.3,
+        },
+        {
+          studentId: "20120458",
+          firstName: "Minh",
+          lastName: "Vũ Minh",
+          Midterm: 8,
+          Final: 9,
+          average: 8.7,
+        },
+        {
+          studentId: "20120459",
+          firstName: "Nam",
+          lastName: "Hoàng Văn",
+          Midterm: 6,
+          Final: 7,
+          average: 6.7,
+        },
+        {
+          studentId: "20120460",
+          firstName: "Thảo",
+          lastName: "Đặng Thị",
+          Midterm: 9,
+          Final: 9,
+          average: 9,
+        },
+        {
+          studentId: "20120461",
+          firstName: "Long",
+          lastName: "Nguyễn Văn",
+          Midterm: 7,
+          Final: 8,
+          average: 7.7,
+        },
+        {
+          studentId: "20120462",
+          firstName: "Linh",
+          lastName: "Trần Thị",
+          Midterm: 8,
+          Final: 6,
+          average: 6.6,
+        },
+        {
+          studentId: "20120463",
+          firstName: "Hoàng",
+          lastName: "Lê Văn",
+          Midterm: 9,
+          Final: 10,
+          average: 9.7,
+        },
+      ];
+    }
+    setGrades(grades);
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -154,41 +184,48 @@ export default function GradesPage(_props: Props) {
     };
     if (gradeTableRef && gradeTableRef.current) {
       // Initialize Tabulator
-      const columnDefinitions: ColumnDefinition[] = [
-        {
-          title: "",
-          rowHandle: true,
-          formatter: "handle",
-          headerSort: false,
-          frozen: true,
-        },
-        {
-          title: "",
-          formatter: "rowSelection",
-          titleFormatter: "rowSelection",
-          hozAlign: "center",
-          vertAlign: "middle",
-          headerHozAlign: "center",
-          headerSort: false,
-        },
-        {
-          title: "Student ID",
-          field: "studentId",
-          editable: true,
-          editor: "input",
-        },
-        {
-          title: "First name",
-          field: "firstName",
-          editable: true,
-          editor: "input",
-        },
-        {
-          title: "Last name",
-          field: "lastName",
-          editable: true,
-          editor: "input",
-        },
+      let columnDefinitions: ColumnDefinition[] = isStudent
+        ? []
+        : [
+            {
+              title: "",
+              rowHandle: true,
+              formatter: "handle",
+              headerSort: false,
+              frozen: true,
+            },
+            {
+              title: "",
+              formatter: "rowSelection",
+              titleFormatter: "rowSelection",
+              hozAlign: "center",
+              vertAlign: "middle",
+              headerHozAlign: "center",
+              headerSort: false,
+            },
+          ];
+      columnDefinitions = [
+        ...columnDefinitions,
+        ...([
+          {
+            title: "Student ID",
+            field: "studentId",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "First name",
+            field: "firstName",
+            editable: true,
+            editor: "input",
+          },
+          {
+            title: "Last name",
+            field: "lastName",
+            editable: true,
+            editor: "input",
+          },
+        ] as ColumnDefinition[]),
       ];
       for (let i = 0; i < gradeScale.length; i++) {
         columnDefinitions.push({
@@ -214,8 +251,8 @@ export default function GradesPage(_props: Props) {
         },
       });
       gradeTable = new Tabulator(gradeTableRef.current, {
-        movableRows: true,
-        movableColumns: true,
+        movableRows: !isStudent,
+        movableColumns: !isStudent,
         data: grades,
         layout: "fitDataTable",
         history: true,
@@ -408,8 +445,8 @@ export default function GradesPage(_props: Props) {
 
     // Cleanup when component unmounts
     return () => {
-      gradeScaleTable.destroy();
-      gradeTable.destroy();
+      gradeScaleTable?.destroy();
+      gradeTable?.destroy();
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -455,6 +492,19 @@ export default function GradesPage(_props: Props) {
         padding: "24px",
       }}
     >
+      <Button
+        component="label"
+        variant="contained"
+        sx={{
+          marginBottom: "16px",
+        }}
+        startIcon={<Reviews />}
+        onClick={() => {
+          navigate(window.location.pathname + "/requests");
+        }}
+      >
+        {t("yourRequest")}
+      </Button>
       <div
         style={{
           display: "flex",
@@ -470,6 +520,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            visibility: isStudent ? "hidden" : "visible",
           }}
           onClick={() => {
             gradeScaleTable?.addRow({});
@@ -482,6 +533,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            visibility: isStudent ? "hidden" : "visible",
           }}
           onClick={() => {
             gradeScaleTable?.undo();
@@ -494,6 +546,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            visibility: isStudent ? "hidden" : "visible",
           }}
           onClick={() => {
             gradeScaleTable?.redo();
@@ -508,35 +561,47 @@ export default function GradesPage(_props: Props) {
             marginBottom: "16px",
           }}
         >
-          <Button
-            variant="outlined"
-            color="warning"
-            onClick={() => {
-              if (
-                window.confirm(
-                  `${t("deleteRowAlert")} ${selectedGradeScale.length} ${t(
-                    "gradeScale"
-                  )}?`
-                )
-              ) {
-                setGradeScale((prev) => {
-                  const arr = prev.filter(
-                    (gradeScale) =>
-                      !selectedGradeScale
-                        .map((row) => row.getData().name)
-                        .includes(gradeScale.name)
-                  );
-                  return arr;
-                });
-                for (let i = 0; i < selectedGradeScale.length; i++) {
-                  selectedGradeScale[i].delete();
+          {isStudent ? (
+            <Button
+              variant="outlined"
+              color="info"
+              onClick={() => {
+                setIsOpenRequestDialog(true);
+              }}
+            >
+              {t("requestGradeReviewForSelectedComposition")}
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              color="warning"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `${t("deleteRowAlert")} ${selectedGradeScale.length} ${t(
+                      "gradeScale"
+                    )}?`
+                  )
+                ) {
+                  setGradeScale((prev) => {
+                    const arr = prev.filter(
+                      (gradeScale) =>
+                        !selectedGradeScale
+                          .map((row) => row.getData().name)
+                          .includes(gradeScale.name)
+                    );
+                    return arr;
+                  });
+                  for (let i = 0; i < selectedGradeScale.length; i++) {
+                    selectedGradeScale[i].delete();
+                  }
+                  setSelectedGradeScale([]);
                 }
-                setSelectedGradeScale([]);
-              }
-            }}
-          >
-            {`${t("delete")} ${selectedGradeScale.length} ${t("gradeScale")}`}
-          </Button>
+              }}
+            >
+              {`${t("delete")} ${selectedGradeScale.length} ${t("gradeScale")}`}
+            </Button>
+          )}
         </div>
       )}
       <div ref={gradeScaleTableRef} />
@@ -556,6 +621,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            display: isStudent ? "none" : "block",
           }}
           onClick={() => {
             gradesTable?.addRow({});
@@ -568,6 +634,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            display: isStudent ? "none" : "block",
           }}
           onClick={() => {
             gradesTable?.undo();
@@ -580,6 +647,7 @@ export default function GradesPage(_props: Props) {
           color="primary"
           sx={{
             padding: "8px",
+            display: isStudent ? "none" : "block",
           }}
           onClick={() => {
             gradesTable?.redo();
@@ -617,6 +685,19 @@ export default function GradesPage(_props: Props) {
         </div>
       )}
       <div ref={gradeTableRef} />
+      <RequestReviewDialog
+        open={isOpenRequestDialog}
+        onClose={() => {
+          setIsOpenRequestDialog(false);
+        }}
+        gradeScale={selectedGradeScale.map((row) => {
+          return {
+            name: row.getData().name,
+            scale: row.getData().scale,
+          };
+        })}
+        grades={grades}
+      />
     </div>
   );
 }
