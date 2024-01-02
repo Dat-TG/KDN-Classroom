@@ -161,4 +161,12 @@
     "requestList": "Request list",
     "comment": "Comment",
     "typeCommentHere": "Type comment here"
+    "wrongFormatImportFile": "Wrong format CSV/XLSX file!",
+    "emptyFile" : "Empty file...",
+    "gradeComponents": "Grade components",
+    "importConfirmation": "Do you want to import this information?",
+    "import" : "Import",
+    "importStudentsFromFile": "Import students from file",
+    "importGradesFromFile": "Import grades from file",
+    "usersManagement": "Users management"
 }
