@@ -15,6 +15,7 @@ import ClassDetailsPage from "../pages/course/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import UserManagementPage from "../pages/UserManagementPage";
 import RequestListPage from "../pages/course/RequestListPage";
+import RequestDetailsPage from "../pages/course/RequestDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
               {
                 path: "grades/requests",
                 element: <RequestListPage />,
+              },
+              {
+                path: "grades/requests/:requestId",
+                element: <RequestDetailsPage />,
               },
             ],
           },

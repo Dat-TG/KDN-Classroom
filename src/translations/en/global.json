@@ -158,5 +158,7 @@
     "requestGradeReview": "Request grade review",
     "submit": "Submit",
     "yourRequest": "Your request",
-    "requestList": "Request list"
+    "requestList": "Request list",
+    "comment": "Comment",
+    "typeCommentHere": "Type comment here"
 }

@@ -159,5 +159,7 @@
     "requestGradeReview": "Yêu cầu xem xét điểm",
     "submit": "Gửi",
     "yourRequest": "Yêu cầu xem xét điểm của bạn",
-    "requestList": "Danh sách yêu cầu"
+    "requestList": "Danh sách yêu cầu",
+    "comment": "Bình luận",
+    "typeCommentHere": "Nhập bình luận ở đây"
 }

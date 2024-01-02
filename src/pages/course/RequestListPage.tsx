@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const reviews = [
   { id: 1, studentName: "John Doe", time: "10:00 AM" },
@@ -17,8 +18,10 @@ const reviews = [
 ];
 
 const RequestListPage: React.FC = () => {
+  const navigate = useNavigate();
   const handleReviewClick = (reviewId: number) => {
     console.log(`review click ${reviewId}`);
+    navigate(window.location.pathname + "/" + reviewId);
   };
 
   const { t } = useTranslation("global");
