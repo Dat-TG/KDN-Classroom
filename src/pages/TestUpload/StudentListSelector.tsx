@@ -26,7 +26,7 @@ const StudentListSelector = ({ onChange }: Props) => {
         rawData[0][1] != "firstName" ||
         rawData[0][2] != "lastName"
       ) {
-        toast.error(t("wrongFormatCSV"));
+        toast.error(t("wrongFormatImportFile"));
       } else {
         const result: Student[] = [];
         rawData.map((item, index) => {
@@ -56,7 +56,7 @@ const StudentListSelector = ({ onChange }: Props) => {
         if (
           file &&
           file.type ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ) {
           readXlsxFile(file).then((rows) => {
             console.log("rows: ", rows);
@@ -71,9 +71,7 @@ const StudentListSelector = ({ onChange }: Props) => {
 
             console.log("raw data: ", data);
             handleRawData(data);
-
           });
-
         } else if (file.type == "text/csv") {
           Papa.parse(file, {
             complete: (result: Papa.ParseResult<string[]>) => {
@@ -86,8 +84,6 @@ const StudentListSelector = ({ onChange }: Props) => {
         } else {
           toast.error(t("onlyAcceptCSV"));
         }
-
-
       } catch (error) {
         console.error(error);
       }
