@@ -60,9 +60,7 @@ function parseRawData(csvData: string[][]): { gradeComponents: GradeComponent[],
             }
 
             // grades['Average'] = calculateAverage(grades, gradeComponents);
-
-
-
+            
             students.push({ studentId, email, firstName, lastName, grades });
         }
     }
