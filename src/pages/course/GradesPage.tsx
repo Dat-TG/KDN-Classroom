@@ -10,11 +10,11 @@ import {
   TabulatorFull as Tabulator,
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
-import { Reviews } from "@mui/icons-material";
+import { Reviews, Save } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
   getGradeBoard,
@@ -437,19 +437,33 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         padding: "24px",
       }}
     >
-      <Button
-        component="label"
-        variant="contained"
-        sx={{
-          marginBottom: "16px",
-        }}
-        startIcon={<Reviews />}
-        onClick={() => {
-          navigate(window.location.pathname + "/requests");
-        }}
-      >
-        {t("yourRequest")}
-      </Button>
+      <Box display={"flex"} gap={"16px"}>
+        <Button
+          component="label"
+          variant="contained"
+          sx={{
+            marginBottom: "16px",
+          }}
+          startIcon={<Reviews />}
+          onClick={() => {
+            navigate(window.location.pathname + "/requests");
+          }}
+        >
+          {t("yourRequest")}
+        </Button>
+        <Button
+          component="label"
+          variant="outlined"
+          sx={{
+            marginBottom: "16px",
+          }}
+          startIcon={<Save />}
+          onClick={() => {}}
+        >
+          {t("saveChanges")}
+        </Button>
+      </Box>
+
       <div
         style={{
           display: "flex",
