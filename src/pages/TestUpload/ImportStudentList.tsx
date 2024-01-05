@@ -67,7 +67,8 @@ const ImportStudentList = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const columnDefinitions: ColumnDefinition[] = [
         { title: "", formatter: "rowSelection", titleFormatter: "rowSelection", hozAlign: "center", headerHozAlign: "center", headerSort: false, width: 40 },
-        { title: "Id", field: "id", editable: true, editor: "input" },
+        { title: "Id", field: "studentId", editable: true, editor: "input" },
+        { title: "Email", field: "email", editable: true, editor: "input" },
         { title: "First Name", field: "firstName", editable: true, editor: "input" },
         { title: "Last Name", field: "lastName", editable: true, editor: "input" },
       ];

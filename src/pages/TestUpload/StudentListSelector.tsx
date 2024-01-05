@@ -42,6 +42,8 @@ const StudentListSelector = ({ onChange }: Props) => {
               lastName: item[3],
             };
 
+            console.log(`student ${index}`,student);
+
             result.push(student);
           }
         });
