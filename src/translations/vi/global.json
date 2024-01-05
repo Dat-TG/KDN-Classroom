@@ -169,5 +169,6 @@
     "import": "Nhập",
     "importStudentsFromFile": "Thêm học sinh từ file",
     "importGradesFromFile": "Nhập điểm từ file",
-    "saveChanges": "Lưu thay đổi"
+    "saveChanges": "Lưu thay đổi",
+    "updateStudentIdSuccessfully": "Cập nhật mã số sinh viên thành công"
 }

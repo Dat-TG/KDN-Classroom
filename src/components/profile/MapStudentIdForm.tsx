@@ -4,8 +4,6 @@ import { Box } from "@mui/system";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { getStudentId, setStudentId } from "../../api/user/apiUser";
-import { useSelector } from "react-redux";
-import { sGetUserInfo } from "../../store/user/selector";
 import toast from "../../utils/toast";
 
 export default function MapStudentIdForm() {
@@ -13,36 +11,40 @@ export default function MapStudentIdForm() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [studentId, setStudentIdState] = useState("");
-
-  useEffect(() => {
-    getStudentId().then((res) => {
-      if (res.length > 0) setStudentIdState(res[0].code);
-    });
-  }, []);
+  const [id, setId] = useState<number>(0);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<{
     studentId: string;
   }>();
 
-  const user = useSelector(sGetUserInfo);
+  useEffect(() => {
+    getStudentId().then((res) => {
+      if (res.length > 0) {
+        setValue("studentId", res[0].code);
+        setId(res[0].id);
+      }
+    });
+  }, [setValue]);
 
   const onSubmit: SubmitHandler<{
     studentId: string;
   }> = async (data) => {
     setIsLoading(true);
     console.log(data);
-    try {
-      await setStudentId({ id: user?.id, studentId: data.studentId });
-    } catch (error) {
-      toast.error(error as string);
-      console.log(error);
-    }
-    setIsLoading(false);
+    setStudentId({ id: id, studentId: data.studentId })
+      .then(() => {
+        setIsLoading(false);
+        toast.success(t("updateStudentIdSuccessfully"));
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error(err.detail.message);
+      });
   };
 
   return (
@@ -56,6 +58,7 @@ export default function MapStudentIdForm() {
         </Typography>
         <Controller
           name="studentId"
+          defaultValue=""
           control={control}
           rules={{
             required: true,
@@ -65,8 +68,6 @@ export default function MapStudentIdForm() {
             <TextField
               {...field}
               hiddenLabel
-              value={studentId}
-              onChange={(e) => setStudentIdState(e.target.value)}
               fullWidth
               variant="outlined"
               error={!!errors.studentId}
