@@ -1,10 +1,25 @@
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Box } from "@mui/system";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { getStudentId, setStudentId } from "../../api/user/apiUser";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
+import toast from "../../utils/toast";
 
 export default function MapStudentIdForm() {
   const { t } = useTranslation("global");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [studentId, setStudentIdState] = useState("");
+
+  useEffect(() => {
+    getStudentId().then((res) => {
+      if (res.length > 0) setStudentIdState(res[0].code);
+    });
+  }, []);
 
   const {
     control,
@@ -14,10 +29,20 @@ export default function MapStudentIdForm() {
     studentId: string;
   }>();
 
+  const user = useSelector(sGetUserInfo);
+
   const onSubmit: SubmitHandler<{
     studentId: string;
   }> = async (data) => {
+    setIsLoading(true);
     console.log(data);
+    try {
+      await setStudentId({ id: user?.id, studentId: data.studentId });
+    } catch (error) {
+      toast.error(error as string);
+      console.log(error);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -30,7 +55,6 @@ export default function MapStudentIdForm() {
           {t("studentId")}
         </Typography>
         <Controller
-          defaultValue={""}
           name="studentId"
           control={control}
           rules={{
@@ -41,6 +65,8 @@ export default function MapStudentIdForm() {
             <TextField
               {...field}
               hiddenLabel
+              value={studentId}
+              onChange={(e) => setStudentIdState(e.target.value)}
               fullWidth
               variant="outlined"
               error={!!errors.studentId}
@@ -56,7 +82,7 @@ export default function MapStudentIdForm() {
             width: "fit-content",
           }}
         >
-          {t("save")}
+          {isLoading ? <CircularProgress size={24} /> : t("save")}
         </Button>
       </Box>
     </form>

@@ -14,3 +14,12 @@ export const getGradeScale = async (courseId: number) => {
   const response = await AxiosClient.get(`/grade-scale/all/${courseId}`);
   return response.data;
 };
+
+export const downloadGradeBoard = async (courseId: number) => {
+  const response = await AxiosClient.get(`/grade-board/download-grade-board`, {
+    params: {
+      courseId,
+    },
+  });
+  return response.data;
+};
