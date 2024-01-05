@@ -17,13 +17,13 @@ import {
   bgGeneral,
   colorThemes,
   extension,
-} from "../utils/class_themes";
-import ClassSettingsDialog from "../components/class_details/ClassSettingsDialog";
-import { IGetCoursesRes, RoleCourseNumber } from "../types/course";
-import { getCourseByCode } from "../api/course/apiCourse";
+} from "../../utils/class_themes";
+import ClassSettingsDialog from "../../components/class_details/ClassSettingsDialog";
+import { IGetCoursesRes, RoleCourseNumber } from "../../types/course";
+import { getCourseByCode } from "../../api/course/apiCourse";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from "../utils/toast";
-import { IToastError } from "../types/common";
+import toast from "../../utils/toast";
+import { IToastError } from "../../types/common";
 import GradesPage from "./GradesPage";
 
 export default function ClassDetailsPage({ initTab }: { initTab: number }) {

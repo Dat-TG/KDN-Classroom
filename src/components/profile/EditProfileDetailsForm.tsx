@@ -10,9 +10,9 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { sGetUserInfo } from "../store/user/selector";
-import { AppDispatch } from "../store";
-import { updateInformationUser } from "../store/user/thunkApi";
+import { sGetUserInfo } from "../../store/user/selector";
+import { AppDispatch } from "../../store";
+import { updateInformationUser } from "../../store/user/thunkApi";
 
 type Inputs = {
   firstName: string;
@@ -128,7 +128,6 @@ function EditProfileDetailsForm() {
         type="submit"
         variant="contained"
         color="primary"
-        size="large"
         disabled={isLoading}
         sx={{
           textTransform: "none",
@@ -138,7 +137,7 @@ function EditProfileDetailsForm() {
         {isLoading ? (
           <CircularProgress size={30} style={{ color: "white" }} />
         ) : (
-          <Typography fontSize={"16px"}>{t("save")}</Typography>
+          t("save")
         )}
       </Button>
     </form>

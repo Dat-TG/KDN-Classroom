@@ -11,11 +11,13 @@ import RedirectRoute from "./RedirectRoute";
 import LandingPage from "../pages/LandingPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import AdminRoute from "./AdminRoute";
-import ClassDetailsPage from "../pages/ClassDetailsPage";
+import ClassDetailsPage from "../pages/course/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import ImportStudentList from "../pages/TestUpload/ImportStudentList";
 import ImportGrades from "../pages/TestUpload/ImportGrades";
 import UserManagementPage from "../pages/UserManagementPage";
+import RequestListPage from "../pages/course/RequestListPage";
+import RequestDetailsPage from "../pages/course/RequestDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +84,14 @@ const router = createBrowserRouter([
               {
                 path: "grades",
                 element: <ClassDetailsPage initTab={3} />,
+              },
+              {
+                path: "grades/requests",
+                element: <RequestListPage />,
+              },
+              {
+                path: "grades/requests/:requestId",
+                element: <RequestDetailsPage />,
               },
             ],
           },
