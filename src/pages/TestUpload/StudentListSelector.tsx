@@ -13,6 +13,7 @@ type Props = {
 
 type Student = {
   studentId: string;
+  email: string;
   firstName: string;
   lastName: string;
 };
@@ -22,21 +23,23 @@ const StudentListSelector = ({ onChange }: Props) => {
 
   const handleRawData = (rawData: string[][]): void => {
     if (rawData.length > 0) {
-      console.log("Hello");
+      console.log(rawData);
       if (
         rawData[0][0] != "studentId" ||
-        rawData[0][1] != "firstName" ||
-        rawData[0][2] != "lastName"
+        rawData[0][1] != "email" ||
+        rawData[0][2] != "firstName" ||
+        rawData[0][3] != "lastName"
       ) {
         toast.error(t("wrongFormatImportFile"));
       } else {
         const result: Student[] = [];
         rawData.map((item, index) => {
-          if (index > 0 && item.length === 3) {
+          if (index > 0 && item.length === 4) {
             const student: Student = {
               studentId: item[0],
-              firstName: item[1],
-              lastName: item[2],
+              email: item[1],
+              firstName: item[2],
+              lastName: item[3],
             };
 
             result.push(student);
