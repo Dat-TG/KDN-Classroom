@@ -22,6 +22,13 @@ import {
   getGradeScale,
 } from "../../api/grade/apiGrade";
 
+interface IGradeScale {
+  title: string;
+  scale: number;
+  id: number;
+  courseId: number;
+}
+
 interface Props {
   colorTheme: string;
   classEntity: IGetCoursesRes;
@@ -45,12 +52,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   );
   const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
-  const [gradeScale, setGradeScale] = useState<
-    {
-      name: string;
-      scale: number;
-    }[]
-  >([] as { name: string; scale: number }[]);
+  const [gradeScale, setGradeScale] = useState<IGradeScale[]>(
+    [] as IGradeScale[]
+  );
 
   const [isStudent, setIsStudent] = useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
@@ -66,8 +70,10 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   useEffect(() => {
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
+    let gradeScale: IGradeScale[] = [];
     getGradeScale(classEntity.courseId).then((res) => {
-      setGradeScale(res.gradeScales);
+      gradeScale = res.gradeScales as IGradeScale[];
+      setGradeScale(gradeScale);
       console.log("gradeScale", res.gradeScales);
       const isStudent = studentIds.includes(user?.id || 0);
       setIsStudent(isStudent);
@@ -116,8 +122,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         //component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
         let average = 0;
         for (let i = 0; i < gradeScale.length; i++) {
-          if (!isNaN(data[gradeScale[i].name]) && !isNaN(gradeScale[i].scale)) {
-            average += data[gradeScale[i].name] * gradeScale[i].scale;
+          if (
+            !isNaN(data[gradeScale[i].title]) &&
+            !isNaN(gradeScale[i].scale)
+          ) {
+            average += data[gradeScale[i].title] * gradeScale[i].scale;
           }
         }
         //set the average field value to the average of the other two fields
@@ -170,8 +179,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         ];
         for (let i = 0; i < gradeScale.length; i++) {
           columnDefinitions.push({
-            title: gradeScale[i].name,
-            field: gradeScale[i].name,
+            title: gradeScale[i].title,
+            field: gradeScale[i].title,
             editable: true,
             editor: "number",
             sorter: "number",
@@ -259,7 +268,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             },
             {
               title: "Name",
-              field: "name",
+              field: "title",
               editable: true,
               editor: "input",
             },
@@ -290,8 +299,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         });
         gradeScaleTable.on("rowDeleted", function (row) {
           //row - row component
-          console.log("Row: " + row.getData().name + " has been deleted");
-          gradeTable?.deleteColumn(row.getData().name).then(() => {
+          console.log("Row: " + row.getData().title + " has been deleted");
+          gradeTable?.deleteColumn(row.getData().title).then(() => {
             const rows = gradeTable?.getRows();
             for (let i = 0; i < rows.length; i++) {
               rows[i].update({
@@ -301,7 +310,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           });
           setGrades((prev) => {
             prev.forEach((grade) => {
-              delete grade[row.getData().name];
+              delete grade[row.getData().title];
             });
             return prev;
           });
@@ -315,7 +324,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             cell.getOldValue()
           );
           console.log("when edited", gradeScale);
-          if (cell.getField() === "name") {
+          if (cell.getField() === "title") {
             let isExist = false;
             gradeTable.setColumns(
               gradeTable.getColumnDefinitions().map((col) => {
@@ -346,8 +355,10 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               console.log("not exist", cell.getValue());
               setGradeScale((prev) => {
                 prev.push({
-                  name: cell.getValue(),
+                  title: cell.getValue(),
                   scale: cell.getRow().getData().scale || 0,
+                  id: 0,
+                  courseId: classEntity.courseId,
                 });
                 return prev;
               });
@@ -367,7 +378,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             setGradeScale((prev) => {
               let isExist = false;
               prev.forEach((grade) => {
-                if (grade.name === cell.getRow().getData().name) {
+                if (grade.title === cell.getRow().getData().title) {
                   grade.scale = cell.getValue();
                   isExist = true;
                   return true;
@@ -375,8 +386,10 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               });
               if (!isExist) {
                 prev.push({
-                  name: cell.getRow().getData().name,
+                  title: cell.getRow().getData().title,
                   scale: cell.getValue(),
+                  id: 0,
+                  courseId: classEntity.courseId,
                 });
               }
               return prev;
@@ -546,8 +559,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     const arr = prev.filter(
                       (gradeScale) =>
                         !selectedGradeScale
-                          .map((row) => row.getData().name)
-                          .includes(gradeScale.name)
+                          .map((row) => row.getData().title)
+                          .includes(gradeScale.title)
                     );
                     return arr;
                   });
@@ -651,7 +664,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         }}
         gradeScale={selectedGradeScale.map((row) => {
           return {
-            name: row.getData().name,
+            name: row.getData().title,
             scale: row.getData().scale,
           };
         })}
