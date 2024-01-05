@@ -53,17 +53,10 @@ function convertStudents(studentArray: Student[]): any[] {
 //     handleImport(students : Student[]): void;
 // };
 
-//const ImportGrades = ({handleImport} : ImportGradesProps) => {
-// const confirmImport = () =>{
-//     if (students && students.length > 0){
-//         handleImport(students);
-//     }
-//     HideDialog();
-// }
 const ImportGrades = () => {
     const { t } = useTranslation("global");
-    const [gradeComponents, setGradeComponents] = useState<GradeComponent[] | null>(null);
-    const [students, setStudents] = useState<Student[] | null>(null);
+    const [gradeComponents, setGradeComponents] = useState<GradeComponent[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
 
     const [selectedGradeScales, setSelectedGradeScales] = useState<RowComponent[]>([]);
     const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
@@ -76,8 +69,8 @@ const ImportGrades = () => {
 
     const HideDialog = () => {
         setIsDialogShowed(false);
-        setGradeComponents(null);
-        setStudents(null);
+        setGradeComponents([]);
+        setStudents([]);
         setSelectedGradeScales([]);
         setSelectedStudent([]);
     };
@@ -94,11 +87,13 @@ const ImportGrades = () => {
         if (students && students.length > 0) {
             console.log(students);
         }
-        HideDialog();
+
+        // Handle import data here
+        setIsDialogShowed(false);
     }
 
     useEffect(() => {
-        if (students != null && gradeComponents != null) {
+        if (students.length > 0 && gradeComponents.length > 0) {
             ShowDialog();
         }
     }, [gradeComponents, students]);
@@ -108,7 +103,7 @@ const ImportGrades = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
         if (gradeTableRef && gradeTableRef.current && gradeScaleTableRef && gradeScaleTableRef.current != null
-            && students != null && gradeComponents != null) {
+            && students.length > 0 && gradeComponents.length > 0) {
             // Initialize Tabulator
             const columnDefinitions: ColumnDefinition[] = [
                 {

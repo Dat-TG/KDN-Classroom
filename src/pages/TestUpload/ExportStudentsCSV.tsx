@@ -3,26 +3,14 @@ import { useState } from "react";
 import { CSVLink } from "react-csv";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-type GradeScale = {
-  [key: string]: number;
-};
-
 type Student = {
-  studentId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  grades: GradeScale;
-};
-
-type GradeComponent = {
-  name: string;
-  scale: number;
-};
+    studentId: string;
+    firstName: string;
+    lastName: string;
+  };
 
 type ImportGradesProps = {
   students: Student[] ;
-  gradeComponents: GradeComponent[] | null;
 };
 
 const ExportGrades = (props: ImportGradesProps) => {
@@ -30,18 +18,10 @@ const ExportGrades = (props: ImportGradesProps) => {
 
   const handleExportData = () => {
     const headers: { label: string; key: string }[] = [];
-    if (props.students && props.gradeComponents) {
+    if (props.students) {
       headers.push({ label: "Id", key: "studentId" });
-      headers.push({ label: "Email", key: "email" });
       headers.push({ label: "First Name", key: "firstName" });
       headers.push({ label: "Last Name", key: "lastName" });
-
-      props.gradeComponents.forEach((gradeComponent) => {
-        headers.push({
-          label: gradeComponent.name,
-          key: "grades." + gradeComponent.name,
-        });
-      });
     }
 
     setHeaders(headers);
@@ -52,7 +32,7 @@ const ExportGrades = (props: ImportGradesProps) => {
       <Button variant="contained">
         <ExitToAppIcon sx={{mr: 1}}></ExitToAppIcon>
         <CSVLink
-          filename={"grades.csv"}
+          filename={"students.csv"}
           className="btn btn-primary"
           data={props.students}
           headers={headers}

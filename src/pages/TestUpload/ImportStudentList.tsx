@@ -9,9 +9,10 @@ import "tabulator-tables/dist/css/tabulator.min.css";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import StudentListSelector from "./StudentListSelector";
 import { useTranslation } from "react-i18next";
+import ExportStudentsCSV from "./ExportStudentsCSV";
 
 type Student = {
-  id: string;
+  studentId: string;
   firstName: string;
   lastName: string;
 }
@@ -39,7 +40,7 @@ const ImportStudentList = () => {
     const newData = [...students];
 
     // Filter out selected rows
-    const updatedData = newData.filter(student => !selectedStudents.some(selectedRow => selectedRow.getData().id === student.id));
+    const updatedData = newData.filter(student => !selectedStudents.some(selectedRow => selectedRow.getData().id === student.studentId));
 
     // Update state with the new data
     setStudents(updatedData);
@@ -52,7 +53,9 @@ const ImportStudentList = () => {
     if (students && students.length > 0) {
         console.log(students);
     }
-    HideDialog();
+    
+    //hande import data
+    setIsDialogShowed(false);
 }
 
 
@@ -136,6 +139,8 @@ const ImportStudentList = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ExportStudentsCSV students={students}/>
 
 
     </div>
