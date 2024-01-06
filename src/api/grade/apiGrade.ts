@@ -1,3 +1,4 @@
+import { IGradeScale } from "../../types/grade";
 import AxiosClient from "../axios";
 
 export const getGradeBoard = async (courseId: number) => {
@@ -20,6 +21,13 @@ export const downloadGradeBoard = async (courseId: number) => {
     params: {
       courseId,
     },
+  });
+  return response.data;
+};
+
+export const updateGradeScales = async (gradeScales: IGradeScale[]) => {
+  const response = await AxiosClient.post("/grade-scale/multi-scales", {
+    gradeScalesDTO: gradeScales,
   });
   return response.data;
 };

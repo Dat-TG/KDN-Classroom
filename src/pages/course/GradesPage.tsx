@@ -20,14 +20,10 @@ import {
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
+  updateGradeScales,
 } from "../../api/grade/apiGrade";
-
-interface IGradeScale {
-  title: string;
-  scale: number;
-  id: number;
-  courseId: number;
-}
+import { IGradeScale } from "../../types/grade";
+import toast from "../../utils/toast";
 
 interface Props {
   colorTheme: string;
@@ -67,6 +63,27 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
   const navigate = useNavigate();
 
+  const onSave = async () => {
+    console.log("gradeScale", gradeScale);
+    const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
+      return {
+        title: grade.title,
+        scale: parseFloat(grade.scale.toString()),
+        id: grade.id,
+        courseId: classEntity.courseId,
+      };
+    });
+    updateGradeScales(gradeScaleTemp)
+      .then((res) => {
+        toast.success(res.message);
+        gradeScaleTable?.clearHistory();
+        gradesTable?.clearHistory();
+      })
+      .catch((err) => {
+        toast.error(err.detail.message);
+      });
+  };
+
   useEffect(() => {
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
@@ -74,7 +91,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     getGradeScale(classEntity.courseId).then((res) => {
       gradeScale = res.gradeScales as IGradeScale[];
       setGradeScale(gradeScale);
-      console.log("gradeScale", res.gradeScales);
+      console.log("gradeScale", typeof gradeScale[0].scale);
       const isStudent = studentIds.includes(user?.id || 0);
       setIsStudent(isStudent);
       console.log("isStudent", isStudent);
@@ -102,7 +119,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           grades = res.gradesBoard.map((grade: any) => {
             return {
-              studentId: grade.studentId,
+              studentId: grade.studentCode,
               firstName: grade.firstName,
               lastName: grade.lastName,
               ...grade.grades,
@@ -471,7 +488,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             marginBottom: "16px",
           }}
           startIcon={<Save />}
-          onClick={() => {}}
+          onClick={onSave}
         >
           {t("saveChanges")}
         </Button>
