@@ -66,11 +66,15 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const onSave = async () => {
     console.log("gradeScale", gradeScale);
     const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
+      const position = gradeScaleTable?.getRows().findIndex((row) => {
+        return row.getData().id === grade.id;
+      });
       return {
         title: grade.title,
         scale: parseFloat(grade.scale.toString()),
         id: grade.id,
         courseId: classEntity.courseId,
+        position: position != undefined ? position + 1 : 0,
       };
     });
     updateGradeScales(gradeScaleTemp)
@@ -90,6 +94,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     let gradeScale: IGradeScale[] = [];
     getGradeScale(classEntity.courseId).then((res) => {
       gradeScale = res.gradeScales as IGradeScale[];
+      gradeScale.sort((a, b) => {
+        return a.position - b.position;
+      });
       setGradeScale(gradeScale);
       console.log("gradeScale", typeof gradeScale[0].scale);
       const isStudent = studentIds.includes(user?.id || 0);
@@ -284,6 +291,22 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               headerSort: false,
             },
             {
+              title: "",
+              formatter: "rownum",
+              field: "position",
+              hozAlign: "center",
+              vertAlign: "middle",
+              headerHozAlign: "center",
+              headerSort: false,
+              visible: false,
+            },
+            {
+              title: "ID",
+              field: "id",
+              visible: false,
+              sorter: "number",
+            },
+            {
               title: "Name",
               field: "title",
               editable: true,
@@ -376,6 +399,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                   scale: cell.getRow().getData().scale || 0,
                   id: 0,
                   courseId: classEntity.courseId,
+                  position: cell.getRow().getData().position,
                 });
                 return prev;
               });
@@ -407,6 +431,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                   scale: cell.getValue(),
                   id: 0,
                   courseId: classEntity.courseId,
+                  position: cell.getRow().getData().position,
                 });
               }
               return prev;

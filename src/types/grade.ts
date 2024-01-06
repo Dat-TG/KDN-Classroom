@@ -3,4 +3,5 @@ export interface IGradeScale {
   scale: number;
   id: number;
   courseId: number;
+  position: number;
 }
