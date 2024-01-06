@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import { useTranslation } from "react-i18next";
 import readXlsxFile from "read-excel-file";
 import toast from "../../utils/toast";
+import IosShareIcon from '@mui/icons-material/IosShare';
 
 type GradeScale = {
     [key: string]: number;
@@ -60,8 +61,6 @@ function parseRawData(csvData: string[][]): { gradeComponents: GradeComponent[],
             }
 
             // grades['Average'] = calculateAverage(grades, gradeComponents);
-
-
 
             students.push({ studentId, email, firstName, lastName, grades });
         }
@@ -190,6 +189,7 @@ const GradesSelector = ({ onChange }: Props) => {
     return (
         <>
             <Button variant="contained" component="label">
+                <IosShareIcon sx={{mr: 1}}/>
                 {t("importGradesFromFile")}
                 <input
                     id="CSVInput"

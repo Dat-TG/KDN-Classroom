@@ -9,6 +9,7 @@ import "tabulator-tables/dist/css/tabulator.min.css";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import GradesSelector from "./GradesSelector";
 import { useTranslation } from "react-i18next";
+import ExportGrades from "./ExportGradesCSV";
 
 type GradeScale = {
     [key: string]: number;
@@ -52,17 +53,10 @@ function convertStudents(studentArray: Student[]): any[] {
 //     handleImport(students : Student[]): void;
 // };
 
-//const ImportGrades = ({handleImport} : ImportGradesProps) => {
-// const confirmImport = () =>{
-//     if (students && students.length > 0){
-//         handleImport(students);
-//     }
-//     HideDialog();
-// }
 const ImportGrades = () => {
     const { t } = useTranslation("global");
-    const [gradeComponents, setGradeComponents] = useState<GradeComponent[] | null>(null);
-    const [students, setStudents] = useState<Student[] | null>(null);
+    const [gradeComponents, setGradeComponents] = useState<GradeComponent[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
 
     const [selectedGradeScales, setSelectedGradeScales] = useState<RowComponent[]>([]);
     const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
@@ -75,8 +69,8 @@ const ImportGrades = () => {
 
     const HideDialog = () => {
         setIsDialogShowed(false);
-        setGradeComponents(null);
-        setStudents(null);
+        setGradeComponents([]);
+        setStudents([]);
         setSelectedGradeScales([]);
         setSelectedStudent([]);
     };
@@ -93,11 +87,13 @@ const ImportGrades = () => {
         if (students && students.length > 0) {
             console.log(students);
         }
-        HideDialog();
+
+        // Handle import data here
+        setIsDialogShowed(false);
     }
 
     useEffect(() => {
-        if (students != null && gradeComponents != null) {
+        if (students.length > 0 && gradeComponents.length > 0) {
             ShowDialog();
         }
     }, [gradeComponents, students]);
@@ -107,7 +103,7 @@ const ImportGrades = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
         if (gradeTableRef && gradeTableRef.current && gradeScaleTableRef && gradeScaleTableRef.current != null
-            && students != null && gradeComponents != null) {
+            && students.length > 0 && gradeComponents.length > 0) {
             // Initialize Tabulator
             const columnDefinitions: ColumnDefinition[] = [
                 {
@@ -182,7 +178,6 @@ const ImportGrades = () => {
             const gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
                 movableRows: true,
                 history: true,
-                movableColumns: true,
                 data: gradeComponents,
                 layout: "fitDataTable",
                 cellEdited: (cell) => {
@@ -291,9 +286,11 @@ const ImportGrades = () => {
             <GradesSelector onChange={(gradeComponents, students) => handleDataFromSelector(gradeComponents, students)} />
 
             <Dialog
-                sx={{ display: isDialogShowed ? 'block' : 'none', Width: 'auto', height: 'auto' }}
+                sx={{ display: isDialogShowed ? 'block' : 'none', width: '100%', height: 'auto' }}
                 open={true}
                 onClose={HideDialog}
+                maxWidth= "md"
+                fullWidth
             >
                 <DialogTitle id="alert-dialog-title">
                     {t("importConfirmation")}
@@ -342,6 +339,8 @@ const ImportGrades = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <ExportGrades students={students} gradeComponents={gradeComponents}/>
         </div>
     );
 };

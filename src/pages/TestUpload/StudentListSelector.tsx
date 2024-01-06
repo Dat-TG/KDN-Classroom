@@ -4,13 +4,16 @@ import Button from "@mui/material/Button";
 import toast from "../../utils/toast";
 import { useTranslation } from "react-i18next";
 import readXlsxFile from "read-excel-file";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import { Box} from "@mui/material";
 
 type Props = {
   onChange(data: Student[]): void;
 };
 
 type Student = {
-  id: string;
+  studentId: string;
+  email: string;
   firstName: string;
   lastName: string;
 };
@@ -20,22 +23,26 @@ const StudentListSelector = ({ onChange }: Props) => {
 
   const handleRawData = (rawData: string[][]): void => {
     if (rawData.length > 0) {
-      console.log("Hello");
+      console.log(rawData);
       if (
         rawData[0][0] != "studentId" ||
-        rawData[0][1] != "firstName" ||
-        rawData[0][2] != "lastName"
+        rawData[0][1] != "email" ||
+        rawData[0][2] != "firstName" ||
+        rawData[0][3] != "lastName"
       ) {
         toast.error(t("wrongFormatImportFile"));
       } else {
         const result: Student[] = [];
         rawData.map((item, index) => {
-          if (index > 0 && item.length === 3) {
+          if (index > 0 && item.length === 4) {
             const student: Student = {
-              id: item[0],
-              firstName: item[1],
-              lastName: item[2],
+              studentId: item[0],
+              email: item[1],
+              firstName: item[2],
+              lastName: item[3],
             };
+
+            console.log(`student ${index}`,student);
 
             result.push(student);
           }
@@ -92,15 +99,20 @@ const StudentListSelector = ({ onChange }: Props) => {
 
   return (
     <>
-      <Button variant="contained" component="label">
-        {t("importStudentsFromFile")}
-        <input
-          id="CSVInput"
-          hidden
-          type="file"
-          accept=".csv, .xlsx"
-          onChange={handleFileChange}
-        />
+      <Button variant="contained" component='label'>
+        <Box sx={{display: 'flex', alignContent: 'flex-end'}}>
+          <IosShareIcon sx={{ mr: 1 }} />
+          
+            {t("importStudentsFromFile")}
+
+          <input
+            id="CSVInput"
+            hidden
+            type="file"
+            accept=".csv, .xlsx"
+            onChange={handleFileChange}
+          />
+        </Box>
       </Button>
     </>
   );
