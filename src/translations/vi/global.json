@@ -163,11 +163,12 @@
     "comment": "Bình luận",
     "typeCommentHere": "Nhập bình luận ở đây",
     "wrongFormatImportFile": "Tệp Csv/Xlsx sai định dạng!",
-    "emptyFile" : "Tệp rỗng...",
+    "emptyFile": "Tệp rỗng...",
     "gradeComponents": "Thành phần điểm",
     "importConfirmation": "Bạn có muốn nhập những dữ liệu này?",
-    "import" : "Nhập",
+    "import": "Nhập",
     "importStudentsFromFile": "Thêm học sinh từ file",
     "importGradesFromFile": "Nhập điểm từ file",
-    "usersManagement": "Quản lý người dùng"
+    "saveChanges": "Lưu thay đổi",
+    "updateStudentIdSuccessfully": "Cập nhật mã số sinh viên thành công"
 }

@@ -1,23 +1,50 @@
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Box } from "@mui/system";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { getStudentId, setStudentId } from "../../api/user/apiUser";
+import toast from "../../utils/toast";
 
 export default function MapStudentIdForm() {
   const { t } = useTranslation("global");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [id, setId] = useState<number>(0);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<{
     studentId: string;
   }>();
 
+  useEffect(() => {
+    getStudentId().then((res) => {
+      if (res.length > 0) {
+        setValue("studentId", res[0].code);
+        setId(res[0].id);
+      }
+    });
+  }, [setValue]);
+
   const onSubmit: SubmitHandler<{
     studentId: string;
   }> = async (data) => {
+    setIsLoading(true);
     console.log(data);
+    setStudentId({ id: id, studentId: data.studentId })
+      .then(() => {
+        setIsLoading(false);
+        toast.success(t("updateStudentIdSuccessfully"));
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error(err.detail.message);
+      });
   };
 
   return (
@@ -30,8 +57,8 @@ export default function MapStudentIdForm() {
           {t("studentId")}
         </Typography>
         <Controller
-          defaultValue={""}
           name="studentId"
+          defaultValue=""
           control={control}
           rules={{
             required: true,
@@ -56,7 +83,7 @@ export default function MapStudentIdForm() {
             width: "fit-content",
           }}
         >
-          {t("save")}
+          {isLoading ? <CircularProgress size={24} /> : t("save")}
         </Button>
       </Box>
     </form>

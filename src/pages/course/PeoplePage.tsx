@@ -135,9 +135,8 @@ export default function PeoplePage(props: Props) {
           <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
             {props.teacherIds.map((item, index) => {
               return (
-                <div>
+                <div key={`st ${item}`}>
                   <SinglePerson
-                    key={`st ${item}`}
                     user={index < teachers!.length ? teachers![index] : null}
                   />
                   {index < props.teacherIds.length - 1 && (
@@ -201,9 +200,8 @@ export default function PeoplePage(props: Props) {
           <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
             {props.studentIds.map((item, index) => {
               return (
-                <div>
+                <div key={`st ${item}`}>
                   <SinglePerson
-                    key={`st ${item}`}
                     user={index < students!.length ? students![index] : null}
                   />
                   {index < props.studentIds.length - 1 && (

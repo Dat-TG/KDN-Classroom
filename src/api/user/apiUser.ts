@@ -132,3 +132,22 @@ export const resetPassword = async (data: IResetPassword) => {
   const res = await AxiosClient.post("/auth/forget-password", data);
   return res.data;
 };
+
+export const setStudentId = async ({
+  id,
+  studentId,
+}: {
+  id?: number;
+  studentId: string;
+}) => {
+  const res = await AxiosClient.post("/code-user", {
+    id: id ?? 0,
+    code: studentId,
+  });
+  return res.data;
+};
+
+export const getStudentId = async () => {
+  const res = await AxiosClient.get("/code-user");
+  return res.data;
+};
