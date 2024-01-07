@@ -170,5 +170,7 @@
     "importGradesFromFile": "Import grades from file",
     "saveChanges": "Save changes",
     "updateStudentIdSuccessfully": "Update student ID successfully",
-    "userInformation": "User information"
+    "userInformation": "User information",
+    "updateCourseColorSuccessfully": "Update course color successfully",
+    "updateCourseBackgroundSuccessfully": "Update course background successfully"
 }

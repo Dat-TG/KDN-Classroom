@@ -541,6 +541,15 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           variant="contained"
           sx={{
             marginBottom: "16px",
+            background: classEntity.course.courseColor,
+            ":focus": {
+              background: classEntity.course.courseColor,
+              opacity: 0.8,
+            },
+            ":hover": {
+              background: classEntity.course.courseColor,
+              opacity: 0.8,
+            },
           }}
           startIcon={<Reviews />}
           onClick={() => {
@@ -554,6 +563,14 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           variant="outlined"
           sx={{
             marginBottom: "16px",
+            color: classEntity.course.courseColor,
+            borderColor: classEntity.course.courseColor,
+            ":focus": {
+              borderColor: classEntity.course.courseColor,
+            },
+            ":hover": {
+              borderColor: classEntity.course.courseColor,
+            },
           }}
           startIcon={<Save />}
           onClick={onSave}
