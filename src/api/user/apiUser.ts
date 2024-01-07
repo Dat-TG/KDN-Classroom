@@ -151,3 +151,8 @@ export const getStudentId = async () => {
   const res = await AxiosClient.get("/code-user");
   return res.data;
 };
+
+export const getProfileByStudentId = async (studentId: string) => {
+  const res = await AxiosClient.get(`/user/details/code/${studentId}`);
+  return res.data;
+};

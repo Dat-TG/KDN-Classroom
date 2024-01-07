@@ -37,6 +37,11 @@ export default function PeoplePage(props: Props) {
   const user = useSelector(sGetUserInfo);
 
   useEffect(() => {
+    document.title = `${props.classEntity.course.nameCourse} - ${props.classEntity.course.topic}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     getUserById(props.ownerId)
       .then((res) => {
         setOwner(res);

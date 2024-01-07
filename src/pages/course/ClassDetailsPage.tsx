@@ -34,22 +34,9 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
   };
   const { t } = useTranslation("global");
   const { classCode } = useParams();
-  const [classEntity, setClassEntity] = useState<IGetCoursesRes>({
-    courseId: 0,
-    id: 0,
-    userId: 0,
-    userRoleCourse: 1,
-    course: {
-      userCourses: [],
-      code: "",
-      nameCourse: "",
-      description: "",
-      part: "",
-      id: 0,
-      room: "",
-      topic: "",
-    },
-  } as IGetCoursesRes);
+  const [classEntity, setClassEntity] = useState<IGetCoursesRes>(
+    {} as IGetCoursesRes
+  );
   const [bgImg, setBgImg] = useState<string>(
     `${baseUrlBackground}/${bgGeneral[0]}${extension}`
   );
@@ -79,6 +66,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
           return;
         }
         setClassEntity(res);
+        document.title = `${res.course.nameCourse} - ${res.course.topic}`;
         setIsLoading(false);
         const tIds = res.course.userCourses
           .filter((value) => value.userRoleCourse == RoleCourseNumber.Coteacher)
@@ -92,6 +80,11 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
         setOwnerId(oId);
         setTeacherIds(tIds);
         setStudentIds(sIds);
+        setColorTheme(res.course.courseColor ?? colorThemes[0].code);
+        setBgImg(
+          res.course.courseBackground! ??
+            `${baseUrlBackground}/${bgGeneral[0]}${extension}`
+        );
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);

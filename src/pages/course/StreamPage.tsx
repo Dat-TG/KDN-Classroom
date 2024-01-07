@@ -26,7 +26,11 @@ import ClassCodeDialog from "../../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import { IGetCoursesRes, RoleCourseString } from "../../types/course";
-import { createInviteLink } from "../../api/course/apiCourse";
+import {
+  createInviteLink,
+  updateCourseBackground,
+  updateCourseColor,
+} from "../../api/course/apiCourse";
 import toast from "../../utils/toast";
 
 interface Props {
@@ -52,6 +56,10 @@ export default function StreamPage({
   const [openClassCodeDialog, setOpenClassCodeDialog] =
     useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
+  useEffect(() => {
+    document.title = `${classEntity.course.nameCourse} - ${classEntity.course.topic}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box
@@ -283,11 +291,27 @@ export default function StreamPage({
           setOpenCustomizeDialog(false);
         }}
         classId={classEntity.course.code}
-        handleBackgroundImageChange={(image) => {
+        colorTheme={colorTheme}
+        backgroundImage={bgImg}
+        handleBackgroundImageChange={async (image) => {
           setBgImg(image);
+          updateCourseBackground(classEntity.courseId, image)
+            .then(() => {
+              toast.success(t("updateCourseBackgroundSuccessfully"));
+            })
+            .catch((err) => {
+              toast.error(err.detail.message);
+            });
         }}
         handleColorThemeChange={(color) => {
           setColorTheme(color);
+          updateCourseColor(classEntity.courseId, color)
+            .then(() => {
+              toast.success(t("updateCourseColorSuccessfully"));
+            })
+            .catch((err) => {
+              toast.error(err.detail.message);
+            });
         }}
       />
       <ClassCodeDialog

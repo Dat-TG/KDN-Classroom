@@ -170,5 +170,9 @@
     "importStudentsFromFile": "Thêm học sinh từ file",
     "importGradesFromFile": "Nhập điểm từ file",
     "saveChanges": "Lưu thay đổi",
-    "updateStudentIdSuccessfully": "Cập nhật mã số sinh viên thành công"
+    "updateStudentIdSuccessfully": "Cập nhật mã số sinh viên thành công",
+    "userInformation": "Thông tin người dùng",
+    "updateCourseColorSuccessfully": "Cập nhật màu sắc lớp học thành công",
+    "updateCourseBackgroundSuccessfully": "Cập nhật ảnh nền lớp học thành công",
+    "userNotFound": "Không tìm thấy người dùng"
 }

@@ -18,7 +18,7 @@ export const getCourseByCode = async (courseCode: string) => {
 
 export const getCoursesByRole = async (role: RoleCourseString) => {
   const res = await AxiosClient.get(`/course/all-course?roleCourse=${role}`);
-  return res.data;
+  return res.data.data;
 };
 
 export const joinCourse = async (courseCode: string) => {
@@ -42,5 +42,27 @@ export const acceptInviteLink = async (token: string) => {
 
 export const sendInviteLink = async (params: ISendInviteLinkReq) => {
   const res = await AxiosClient.post("/course/send-invitation", params);
+  return res.data;
+};
+
+export const updateCourseColor = async (
+  courseId: number,
+  courseColor: string
+) => {
+  const res = await AxiosClient.post("/course/color", {
+    id: courseId,
+    courseColor,
+  });
+  return res.data;
+};
+
+export const updateCourseBackground = async (
+  courseId: number,
+  courseBackground: string
+) => {
+  const res = await AxiosClient.post("/course/background", {
+    id: courseId,
+    courseBackground,
+  });
   return res.data;
 };

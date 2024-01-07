@@ -32,27 +32,20 @@ interface Props {
   open: boolean;
   onClose: () => void;
   classId: string;
+  colorTheme?: string;
+  backgroundImage?: string;
   handleBackgroundImageChange: (image: string) => void;
   handleColorThemeChange: (color: string) => void;
 }
 export default function ChangeClassThemeDialog(props: Props) {
   const { t } = useTranslation("global");
-  const classEntity = {
-    id: props.classId,
-    name: "2309-PTUDWNC-20_3",
-    section: "Phát triển ứng dụng web nâng cao",
-    subject: "Phát triển ứng dụng web nâng cao",
-    room: "E402",
-    backgroundImage: `${baseUrlBackground}/${bgGeneral[1]}${extension}`,
-    colorTheme: colorThemes[0].code,
-    creater: {
-      id: 1,
-      name: "Teacher 1",
-      email: "teacher@email.com",
-    },
-  };
-  const [bgImg, setBgImg] = useState<string>(`${classEntity.backgroundImage}`);
-  const [colorTheme, setColorTheme] = useState<string>(classEntity.colorTheme);
+
+  const [bgImg, setBgImg] = useState<string>(
+    props.backgroundImage ?? `${baseUrlBackground}/${bgGeneral[0]}${extension}`
+  );
+  const [colorTheme, setColorTheme] = useState<string>(
+    props.colorTheme ?? colorThemes[0].code
+  );
   const [openBackgroundImageDialog, setOpenBackgroundImageDialog] =
     useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -62,7 +55,7 @@ export default function ChangeClassThemeDialog(props: Props) {
       open={props.open}
       onClose={() => {
         props.onClose();
-        setColorTheme(classEntity.colorTheme);
+        setColorTheme(props.colorTheme ?? colorThemes[0].code);
       }}
       maxWidth={"md"}
     >
@@ -156,8 +149,7 @@ export default function ChangeClassThemeDialog(props: Props) {
             props.onClose();
           }}
           disabled={
-            colorTheme == classEntity.colorTheme &&
-            bgImg == classEntity.backgroundImage
+            colorTheme == props.colorTheme && bgImg == props.backgroundImage
           }
           sx={{
             color: colorTheme,
@@ -170,7 +162,10 @@ export default function ChangeClassThemeDialog(props: Props) {
         open={openBackgroundImageDialog}
         onClose={() => {
           setOpenBackgroundImageDialog(false);
-          setBgImg(classEntity.backgroundImage);
+          setBgImg(
+            props.backgroundImage ??
+              `${baseUrlBackground}/${bgGeneral[0]}${extension}`
+          );
         }}
         maxWidth={"md"}
         sx={{
@@ -240,7 +235,10 @@ export default function ChangeClassThemeDialog(props: Props) {
           <Button
             onClick={() => {
               setOpenBackgroundImageDialog(false);
-              setBgImg(classEntity.backgroundImage);
+              setBgImg(
+                props.backgroundImage ??
+                  `${baseUrlBackground}/${bgGeneral[0]}${extension}`
+              );
             }}
           >
             {t("cancel")}

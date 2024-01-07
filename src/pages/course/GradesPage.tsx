@@ -10,7 +10,7 @@ import {
   TabulatorFull as Tabulator,
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
@@ -24,6 +24,8 @@ import {
 } from "../../api/grade/apiGrade";
 import { IGradeScale } from "../../types/grade";
 import toast from "../../utils/toast";
+import UserInfoDialog from "../../components/profile/UserInfoDialog";
+import { getProfileByStudentId } from "../../api/user/apiUser";
 
 interface Props {
   colorTheme: string;
@@ -63,6 +65,10 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
   const navigate = useNavigate();
 
+  const [openUserDialog, setOpenUserDialog] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedUser, setSelectedUser] = useState({} as any);
+
   const onSave = async () => {
     console.log("gradeScale", gradeScale);
     const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
@@ -89,6 +95,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   };
 
   useEffect(() => {
+    document.title = `${classEntity.course.nameCourse} - ${classEntity.course.topic}`;
+
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
     let gradeScale: IGradeScale[] = [];
@@ -104,63 +112,251 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       console.log("isStudent", isStudent);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let grades: any[] = [];
-      if (isStudent) {
-        getGradeOfStudent(classEntity.courseId).then((res) => {
-          console.log("res", res);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grades = res.grades.map((grade: any) => {
-            return {
-              studentId: grade.studentId,
-              firstName: grade.firstName,
-              lastName: grade.lastName,
-              ...grade.grades,
-              average: 0,
-            };
+      const processGrades = () => {
+        if (isStudent) {
+          return getGradeOfStudent(classEntity.courseId).then((res) => {
+            console.log("res", res);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            grades = res.grades.map((grade: any) => {
+              return {
+                studentId: grade.studentId,
+                firstName: grade.firstName,
+                lastName: grade.lastName,
+                ...grade.grades,
+                average: 0,
+              };
+            });
+            setGrades(grades);
+            console.log("grades", grades);
           });
-          setGrades(grades);
-          console.log("grades", grades);
-        });
-      } else {
-        getGradeBoard(classEntity.courseId).then((res) => {
-          console.log("res", res);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grades = res.gradesBoard.map((grade: any) => {
-            return {
-              studentId: grade.studentCode,
-              firstName: grade.firstName,
-              lastName: grade.lastName,
-              ...grade.grades,
-              average: 0,
-            };
+        } else {
+          return getGradeBoard(classEntity.courseId).then((res) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            grades = res.gradesBoard.data.map((e: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const temp: any = {
+                studentId: e.codeUser,
+                firstName: e.name,
+                lastName: e.surname,
+                average: 0,
+                position: e.gradeData[0].gradeData.position,
+              };
+              for (let i = 0; i < e.gradeData.length; i++) {
+                temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
+                  e.gradeData[i].gradeData.grade;
+              }
+              for (let i = 0; i < gradeScale.length; i++) {
+                if (temp[gradeScale[i].id.toString()] == undefined) {
+                  temp[gradeScale[i].id.toString()] = 0;
+                }
+              }
+              return temp;
+            });
+            const groupedByStudentCode =
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              res.gradesBoard.gradesBoardDesist.reduce((acc: any, obj: any) => {
+                const studentCode = obj.studentCode;
+                if (!acc[studentCode]) {
+                  acc[studentCode] = [];
+                }
+                acc[studentCode].push(obj);
+                return acc;
+              }, {});
+            const groupedArray = Object.entries(groupedByStudentCode).map(
+              ([key, value]) => ({
+                studentCode: key,
+                data: value,
+              })
+            );
+            console.log("groupedArray", groupedArray);
+
+            grades = [
+              ...grades,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ...groupedArray.map((e: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const temp: any = {
+                  studentId: e.studentCode,
+                  firstName: e.data[0].name,
+                  lastName: e.data[0].surname,
+                  position: e.data[0].position,
+                  average: 0,
+                };
+                for (let i = 0; i < e.data.length; i++) {
+                  temp[e.data[i].gradeScaleId.toString()] = e.data[i].grade;
+                }
+                for (let i = 0; i < gradeScale.length; i++) {
+                  if (temp[gradeScale[i].id.toString()] == undefined) {
+                    temp[gradeScale[i].id.toString()] = 0;
+                  }
+                }
+                return temp;
+              }),
+            ];
+            grades.sort((a, b) => {
+              return a.position - b.position;
+            });
+            setGrades(grades);
+            console.log("grades", grades);
           });
-          setGrades(grades);
-          console.log("grades", grades);
-        });
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const avgMutator = function (_value: any, data: any) {
-        //value - original value of the cell
-        //data - the data for the row
-        //type - the type of mutation occurring  (data|edit)
-        //params - the mutatorParams object from the column definition
-        //component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
-        let average = 0;
-        for (let i = 0; i < gradeScale.length; i++) {
-          if (
-            !isNaN(data[gradeScale[i].title]) &&
-            !isNaN(gradeScale[i].scale)
-          ) {
-            average += data[gradeScale[i].title] * gradeScale[i].scale;
-          }
         }
-        //set the average field value to the average of the other two fields
-        return average; //return the new value for the cell data.
       };
-      if (gradeTableRef && gradeTableRef.current) {
-        // Initialize Tabulator
-        let columnDefinitions: ColumnDefinition[] = isStudent
-          ? []
-          : [
+      processGrades().then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const avgMutator = function (_value: any, data: any) {
+          //value - original value of the cell
+          //data - the data for the row
+          //type - the type of mutation occurring  (data|edit)
+          //params - the mutatorParams object from the column definition
+          //component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
+          let average = 0;
+          for (let i = 0; i < gradeScale.length; i++) {
+            if (
+              !isNaN(data[gradeScale[i].id.toString()]) &&
+              !isNaN(gradeScale[i].scale)
+            ) {
+              average +=
+                data[gradeScale[i].id.toString()] * gradeScale[i].scale;
+            }
+          }
+          //set the average field value to the average of the other two fields
+          return average; //return the new value for the cell data.
+        };
+        if (gradeTableRef && gradeTableRef.current) {
+          // Initialize Tabulator
+          let columnDefinitions: ColumnDefinition[] = isStudent
+            ? []
+            : [
+                {
+                  title: "",
+                  rowHandle: true,
+                  formatter: "handle",
+                  headerSort: false,
+                  frozen: true,
+                },
+                {
+                  title: "",
+                  formatter: "rowSelection",
+                  titleFormatter: "rowSelection",
+                  hozAlign: "center",
+                  vertAlign: "middle",
+                  headerHozAlign: "center",
+                  headerSort: false,
+                },
+              ];
+          columnDefinitions = [
+            ...columnDefinitions,
+            ...([
+              {
+                title: "Student ID",
+                field: "studentId",
+                editable: true,
+                editor: "input",
+                cellDblClick: function (_e, cell) {
+                  setOpenUserDialog(true);
+                  getProfileByStudentId(cell.getValue())
+                    .then((res) => {
+                      setSelectedUser({
+                        name: res.user.name + " " + res.user.surname,
+                        avatar: res.user.avatar,
+                        email: res.user.userName,
+                        studentId: cell.getValue(),
+                      });
+                    })
+                    .catch((err) => {
+                      toast.error(err.detail.message);
+                      setSelectedUser({ notFound: true });
+                    });
+                },
+              },
+              {
+                title: "First name",
+                field: "firstName",
+                editable: true,
+                editor: "input",
+              },
+              {
+                title: "Last name",
+                field: "lastName",
+                editable: true,
+                editor: "input",
+              },
+            ] as ColumnDefinition[]),
+          ];
+          for (let i = 0; i < gradeScale.length; i++) {
+            columnDefinitions.push({
+              title: gradeScale[i].title,
+              field: gradeScale[i].id.toString(),
+              editable: true,
+              editor: "number",
+              sorter: "number",
+            });
+          }
+          columnDefinitions.push({
+            title: "Average",
+            field: "average",
+            editable: true,
+            editor: "number",
+            sorter: "number",
+            mutator: avgMutator,
+            formatter(cell) {
+              //cell - the cell component
+              //formatterParams - parameters set for the column
+              //onRendered - function to call when the formatter has been rendered
+              return cell.getValue().toFixed(1);
+            },
+          });
+          console.log("grades add table", grades);
+          gradeTable = new Tabulator(gradeTableRef.current, {
+            movableRows: !isStudent,
+            movableColumns: !isStudent,
+            data: grades,
+            layout: "fitDataTable",
+            history: true,
+            cellEdited: (cell) => {
+              // This function will be called whenever a cell is edited
+              console.log("Cell edited:", cell);
+              // You can perform your logic here when a cell is edited
+            },
+            columns: columnDefinitions,
+          });
+
+          setGradesTable(gradeTable);
+
+          //listen for row move
+          gradeTable.on("rowMoved", function (row) {
+            console.log("Row: " + row.getData().studentId + " has been moved");
+          });
+          gradeTable.on("rowSelectionChanged", function (_data, rows) {
+            //rows - array of row components for the currently selected rows in order of selection
+            //data - array of data objects for the currently selected rows in order of selection
+            //selected - array of row components that were selected in the last action
+            //deselected - array of row components that were deselected in the last action
+            setSelectedStudent(rows);
+          });
+          gradeTable.on("cellEdited", function (cell) {
+            if (!isNaN(cell.getValue())) {
+              cell.getRow().update({
+                average: avgMutator(null, cell.getRow().getData()),
+              });
+            }
+          });
+        }
+
+        if (gradeScaleTableRef && gradeScaleTableRef.current) {
+          // Initialize Tabulator
+          gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
+            movableRows: true,
+            history: true,
+            movableColumns: true,
+            data: gradeScale,
+            layout: "fitDataTable",
+            cellEdited: (cell) => {
+              // This function will be called whenever a cell is edited
+              console.log("Cell edited:", cell);
+              // You can perform your logic here when a cell is edited
+            },
+            columns: [
               {
                 title: "",
                 rowHandle: true,
@@ -177,270 +373,158 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 headerHozAlign: "center",
                 headerSort: false,
               },
-            ];
-        columnDefinitions = [
-          ...columnDefinitions,
-          ...([
-            {
-              title: "Student ID",
-              field: "studentId",
-              editable: true,
-              editor: "input",
-            },
-            {
-              title: "First name",
-              field: "firstName",
-              editable: true,
-              editor: "input",
-            },
-            {
-              title: "Last name",
-              field: "lastName",
-              editable: true,
-              editor: "input",
-            },
-          ] as ColumnDefinition[]),
-        ];
-        for (let i = 0; i < gradeScale.length; i++) {
-          columnDefinitions.push({
-            title: gradeScale[i].title,
-            field: gradeScale[i].title,
-            editable: true,
-            editor: "number",
-            sorter: "number",
-          });
-        }
-        columnDefinitions.push({
-          title: "Average",
-          field: "average",
-          editable: true,
-          editor: "number",
-          sorter: "number",
-          mutator: avgMutator,
-          formatter(cell) {
-            //cell - the cell component
-            //formatterParams - parameters set for the column
-            //onRendered - function to call when the formatter has been rendered
-            return cell.getValue().toFixed(1);
-          },
-        });
-        gradeTable = new Tabulator(gradeTableRef.current, {
-          movableRows: !isStudent,
-          movableColumns: !isStudent,
-          data: grades,
-          layout: "fitDataTable",
-          history: true,
-          cellEdited: (cell) => {
-            // This function will be called whenever a cell is edited
-            console.log("Cell edited:", cell);
-            // You can perform your logic here when a cell is edited
-          },
-          columns: columnDefinitions,
-        });
-
-        setGradesTable(gradeTable);
-
-        //listen for row move
-        gradeTable.on("rowMoved", function (row) {
-          console.log("Row: " + row.getData().studentId + " has been moved");
-        });
-        gradeTable.on("rowSelectionChanged", function (_data, rows) {
-          //rows - array of row components for the currently selected rows in order of selection
-          //data - array of data objects for the currently selected rows in order of selection
-          //selected - array of row components that were selected in the last action
-          //deselected - array of row components that were deselected in the last action
-          setSelectedStudent(rows);
-        });
-        gradeTable.on("cellEdited", function (cell) {
-          if (!isNaN(cell.getValue())) {
-            cell.getRow().update({
-              average: avgMutator(null, cell.getRow().getData()),
-            });
-          }
-        });
-      }
-
-      if (gradeScaleTableRef && gradeScaleTableRef.current) {
-        // Initialize Tabulator
-        gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
-          movableRows: true,
-          history: true,
-          movableColumns: true,
-          data: gradeScale,
-          layout: "fitDataTable",
-          cellEdited: (cell) => {
-            // This function will be called whenever a cell is edited
-            console.log("Cell edited:", cell);
-            // You can perform your logic here when a cell is edited
-          },
-          columns: [
-            {
-              title: "",
-              rowHandle: true,
-              formatter: "handle",
-              headerSort: false,
-              frozen: true,
-            },
-            {
-              title: "",
-              formatter: "rowSelection",
-              titleFormatter: "rowSelection",
-              hozAlign: "center",
-              vertAlign: "middle",
-              headerHozAlign: "center",
-              headerSort: false,
-            },
-            {
-              title: "",
-              formatter: "rownum",
-              field: "position",
-              hozAlign: "center",
-              vertAlign: "middle",
-              headerHozAlign: "center",
-              headerSort: false,
-              visible: false,
-            },
-            {
-              title: "ID",
-              field: "id",
-              visible: false,
-              sorter: "number",
-            },
-            {
-              title: "Name",
-              field: "title",
-              editable: true,
-              editor: "input",
-            },
-            {
-              title: "Scale",
-              field: "scale",
-              editable: true,
-              editor: "number",
-              editorParams: {
-                min: 0,
-                step: 0.1,
+              {
+                title: "",
+                formatter: "rownum",
+                field: "position",
+                hozAlign: "center",
+                vertAlign: "middle",
+                headerHozAlign: "center",
+                headerSort: false,
+                visible: false,
               },
-              sorter: "number",
-            },
-          ],
-        });
-        setGradeScaleTable(gradeScaleTable);
-        //listen for row move
-        gradeScaleTable.on("rowMoved", function (row) {
-          console.log("Row: " + row.getData().name + " has been moved");
-        });
-        gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
-          //rows - array of row components for the currently selected rows in order of selection
-          //data - array of data objects for the currently selected rows in order of selection
-          //selected - array of row components that were selected in the last action
-          //deselected - array of row components that were deselected in the last action
-          setSelectedGradeScale(rows);
-        });
-        gradeScaleTable.on("rowDeleted", function (row) {
-          //row - row component
-          console.log("Row: " + row.getData().title + " has been deleted");
-          gradeTable?.deleteColumn(row.getData().title).then(() => {
-            const rows = gradeTable?.getRows();
-            for (let i = 0; i < rows.length; i++) {
-              rows[i].update({
-                average: avgMutator(null, rows[i].getData()),
-              });
-            }
-          });
-          setGrades((prev) => {
-            prev.forEach((grade) => {
-              delete grade[row.getData().title];
-            });
-            return prev;
-          });
-        });
-        gradeScaleTable.on("cellEdited", function (cell) {
-          //cell - cell component
-          console.log(
-            "Cell edited:",
-            cell.getField(),
-            cell.getValue(),
-            cell.getOldValue()
-          );
-          console.log("when edited", gradeScale);
-          if (cell.getField() === "title") {
-            let isExist = false;
-            gradeTable.setColumns(
-              gradeTable.getColumnDefinitions().map((col) => {
-                if (
-                  col.field === cell.getOldValue() &&
-                  col.field != undefined
-                ) {
-                  col.title = cell.getValue();
-                  col.field = cell.getValue();
-                  isExist = true;
-                }
-                return col;
-              })
-            );
-
-            if (!isExist) {
-              gradeTable.addColumn(
-                {
-                  title: cell.getValue(),
-                  field: cell.getValue(),
-                  editable: true,
-                  editor: "number",
-                  sorter: "number",
+              {
+                title: "ID",
+                field: "id",
+                visible: false,
+                sorter: "number",
+              },
+              {
+                title: "Name",
+                field: "title",
+                editable: true,
+                editor: "input",
+              },
+              {
+                title: "Scale",
+                field: "scale",
+                editable: true,
+                editor: "number",
+                editorParams: {
+                  min: 0,
+                  step: 0.1,
                 },
-                true,
-                "average"
-              );
-              console.log("not exist", cell.getValue());
-              setGradeScale((prev) => {
-                prev.push({
-                  title: cell.getValue(),
-                  scale: cell.getRow().getData().scale || 0,
-                  id: 0,
-                  courseId: classEntity.courseId,
-                  position: cell.getRow().getData().position,
-                });
-                return prev;
-              });
-              gradeTable.setData(grades);
-            } else {
-              setGrades((prev) => {
-                prev.forEach((grade) => {
-                  grade[cell.getValue()] = grade[cell.getOldValue()];
-                  delete grade[cell.getOldValue()];
-                });
-                gradeTable.setData(prev);
-                return prev;
-              });
-            }
-          }
-          if (cell.getField() === "scale") {
-            setGradeScale((prev) => {
-              let isExist = false;
-              prev.forEach((grade) => {
-                if (grade.title === cell.getRow().getData().title) {
-                  grade.scale = cell.getValue();
-                  isExist = true;
-                  return true;
-                }
-              });
-              if (!isExist) {
-                prev.push({
-                  title: cell.getRow().getData().title,
-                  scale: cell.getValue(),
-                  id: 0,
-                  courseId: classEntity.courseId,
-                  position: cell.getRow().getData().position,
+                sorter: "number",
+              },
+            ],
+          });
+          setGradeScaleTable(gradeScaleTable);
+          //listen for row move
+          gradeScaleTable.on("rowMoved", function (row) {
+            console.log("Row: " + row.getData().name + " has been moved");
+          });
+          gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
+            //rows - array of row components for the currently selected rows in order of selection
+            //data - array of data objects for the currently selected rows in order of selection
+            //selected - array of row components that were selected in the last action
+            //deselected - array of row components that were deselected in the last action
+            setSelectedGradeScale(rows);
+          });
+          gradeScaleTable.on("rowDeleted", function (row) {
+            //row - row component
+            console.log("Row: " + row.getData().title + " has been deleted");
+            gradeTable?.deleteColumn(row.getData().title).then(() => {
+              const rows = gradeTable?.getRows();
+              for (let i = 0; i < rows.length; i++) {
+                rows[i].update({
+                  average: avgMutator(null, rows[i].getData()),
                 });
               }
+            });
+            setGrades((prev) => {
+              prev.forEach((grade) => {
+                delete grade[row.getData().title];
+              });
               return prev;
             });
+          });
+          gradeScaleTable.on("cellEdited", function (cell) {
+            //cell - cell component
+            console.log(
+              "Cell edited:",
+              cell.getField(),
+              cell.getValue(),
+              cell.getOldValue()
+            );
+            console.log("when edited", gradeScale);
+            if (cell.getField() === "title") {
+              let isExist = false;
+              gradeTable.setColumns(
+                gradeTable.getColumnDefinitions().map((col) => {
+                  if (
+                    col.field === cell.getOldValue() &&
+                    col.field != undefined
+                  ) {
+                    col.title = cell.getValue();
+                    col.field = cell.getValue();
+                    isExist = true;
+                  }
+                  return col;
+                })
+              );
 
-            gradeTable.setData(grades);
-          }
-        });
-      }
+              if (!isExist) {
+                gradeTable.addColumn(
+                  {
+                    title: cell.getValue(),
+                    field: cell.getValue(),
+                    editable: true,
+                    editor: "number",
+                    sorter: "number",
+                  },
+                  true,
+                  "average"
+                );
+                console.log("not exist", cell.getValue());
+                setGradeScale((prev) => {
+                  prev.push({
+                    title: cell.getValue(),
+                    scale: cell.getRow().getData().scale || 0,
+                    id: 0,
+                    courseId: classEntity.courseId,
+                    position: cell.getRow().getData().position,
+                  });
+                  return prev;
+                });
+                gradeTable.setData(grades);
+              } else {
+                setGrades((prev) => {
+                  prev.forEach((grade) => {
+                    grade[cell.getValue()] = grade[cell.getOldValue()];
+                    delete grade[cell.getOldValue()];
+                  });
+                  gradeTable.setData(prev);
+                  return prev;
+                });
+              }
+            }
+            if (cell.getField() === "scale") {
+              setGradeScale((prev) => {
+                let isExist = false;
+                prev.forEach((grade) => {
+                  if (grade.title === cell.getRow().getData().title) {
+                    grade.scale = cell.getValue();
+                    isExist = true;
+                    return true;
+                  }
+                });
+                if (!isExist) {
+                  prev.push({
+                    title: cell.getRow().getData().title,
+                    scale: cell.getValue(),
+                    id: 0,
+                    courseId: classEntity.courseId,
+                    position: cell.getRow().getData().position,
+                  });
+                }
+                return prev;
+              });
+
+              gradeTable.setData(grades);
+            }
+          });
+        }
+      });
     });
 
     // Cleanup when component unmounts
@@ -451,40 +535,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   getUserById(props.ownerId)
-  //     .then((res) => {
-  //       setOwner(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   for (let i = 0; i < props.teacherIds.length; i++) {
-  //     getUserById(props.teacherIds[i])
-  //       .then((res) => {
-  //         setTeachers((prev) => {
-  //           if (prev == null) return [res];
-  //           return [...prev, res];
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  //   for (let i = 0; i < props.studentIds.length; i++) {
-  //     getUserById(props.studentIds[i])
-  //       .then((res) => {
-  //         setStudents((prev) => {
-  //           if (prev == null) return [res];
-  //           return [...prev, res];
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [props.ownerId, props.studentIds, props.teacherIds]);
 
   return (
     <div
@@ -498,6 +548,15 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           variant="contained"
           sx={{
             marginBottom: "16px",
+            background: classEntity.course.courseColor,
+            ":focus": {
+              background: classEntity.course.courseColor,
+              opacity: 0.8,
+            },
+            ":hover": {
+              background: classEntity.course.courseColor,
+              opacity: 0.8,
+            },
           }}
           startIcon={<Reviews />}
           onClick={() => {
@@ -511,6 +570,14 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           variant="outlined"
           sx={{
             marginBottom: "16px",
+            color: classEntity.course.courseColor,
+            borderColor: classEntity.course.courseColor,
+            ":focus": {
+              borderColor: classEntity.course.courseColor,
+            },
+            ":hover": {
+              borderColor: classEntity.course.courseColor,
+            },
           }}
           startIcon={<Save />}
           onClick={onSave}
@@ -619,6 +686,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         </div>
       )}
       <div ref={gradeScaleTableRef} />
+      {gradeScaleTable == null && <CircularProgress />}
       <div
         style={{
           display: "flex",
@@ -699,6 +767,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         </div>
       )}
       <div ref={gradeTableRef} />
+      {gradesTable == null && <CircularProgress />}
       <RequestReviewDialog
         open={isOpenRequestDialog}
         onClose={() => {
@@ -711,6 +780,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           };
         })}
         grades={grades}
+      />
+      <UserInfoDialog
+        open={openUserDialog}
+        handleClose={() => setOpenUserDialog(false)}
+        user={selectedUser}
       />
     </div>
   );

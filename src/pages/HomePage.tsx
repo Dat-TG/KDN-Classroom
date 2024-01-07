@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import CourseCard from "../components/homepage/CourseCard";
-import { IGetCoursesRes, RoleCourseString } from "../types/course";
+import {
+  IGetCoursesRes,
+  IGetCoursesResList,
+  RoleCourseString,
+} from "../types/course";
 import { getCoursesByRole } from "../api/course/apiCourse";
 import toast from "../utils/toast";
 import { IToastError } from "../types/common";
@@ -18,8 +22,8 @@ export default function HomePage() {
   useEffect(() => {
     document.title = t("homePage");
     getCoursesByRole(RoleCourseString.Student)
-      .then((res) => {
-        setClassList(res);
+      .then((res: IGetCoursesResList) => {
+        setClassList(res.listCourse);
         setIsLoadingClass(false);
         console.log(res);
       })
@@ -27,8 +31,8 @@ export default function HomePage() {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Coteacher)
-      .then((res) => {
-        setTeachList(res);
+      .then((res: IGetCoursesResList) => {
+        setTeachList(res.listCourse);
         setIsLoadingTeach(false);
         console.log(res);
       })
@@ -36,8 +40,8 @@ export default function HomePage() {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Teacher)
-      .then((res) => {
-        setOwnList(res);
+      .then((res: IGetCoursesResList) => {
+        setOwnList(res.listCourse);
         setIsLoadingOwn(false);
         console.log(res);
       })

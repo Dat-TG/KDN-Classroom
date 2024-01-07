@@ -26,6 +26,12 @@ export interface ICourse {
   topic: string;
   code: string;
   userCourses: IUserCourse[];
+  courseColor?: string;
+  courseBackground?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gradeBoard: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  requestReview: any[];
 }
 
 export interface IGetCoursesRes {
@@ -34,6 +40,11 @@ export interface IGetCoursesRes {
   courseId: number;
   userRoleCourse: RoleCourseNumber;
   course: ICourse;
+}
+
+export interface IGetCoursesResList {
+  listCourse: IGetCoursesRes[];
+  listCourseBan: IGetCoursesRes[];
 }
 
 export interface ICreateCoursesReq {
