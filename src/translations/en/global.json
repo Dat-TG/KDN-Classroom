@@ -169,5 +169,6 @@
     "importStudentsFromFile": "Import students from file",
     "importGradesFromFile": "Import grades from file",
     "saveChanges": "Save changes",
-    "updateStudentIdSuccessfully": "Update student ID successfully"
+    "updateStudentIdSuccessfully": "Update student ID successfully",
+    "userInformation": "User information"
 }

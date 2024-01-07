@@ -24,6 +24,7 @@ import {
 } from "../../api/grade/apiGrade";
 import { IGradeScale } from "../../types/grade";
 import toast from "../../utils/toast";
+import UserInfoDialog from "../../components/profile/UserInfoDialog";
 
 interface Props {
   colorTheme: string;
@@ -62,6 +63,10 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const [openUserDialog, setOpenUserDialog] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedUser, setSelectedUser] = useState({} as any);
 
   const onSave = async () => {
     console.log("gradeScale", gradeScale);
@@ -244,6 +249,18 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 field: "studentId",
                 editable: true,
                 editor: "input",
+                cellDblClick: function (_e, cell) {
+                  setOpenUserDialog(true);
+                  setSelectedUser({
+                    name:
+                      cell.getRow().getData().firstName +
+                      " " +
+                      cell.getRow().getData().lastName,
+                    avatar: "",
+                    email: "dat@gmail.com",
+                    studentId: cell.getRow().getData().studentId,
+                  });
+                },
               },
               {
                 title: "First name",
@@ -512,40 +529,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   getUserById(props.ownerId)
-  //     .then((res) => {
-  //       setOwner(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   for (let i = 0; i < props.teacherIds.length; i++) {
-  //     getUserById(props.teacherIds[i])
-  //       .then((res) => {
-  //         setTeachers((prev) => {
-  //           if (prev == null) return [res];
-  //           return [...prev, res];
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  //   for (let i = 0; i < props.studentIds.length; i++) {
-  //     getUserById(props.studentIds[i])
-  //       .then((res) => {
-  //         setStudents((prev) => {
-  //           if (prev == null) return [res];
-  //           return [...prev, res];
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [props.ownerId, props.studentIds, props.teacherIds]);
-
   return (
     <div
       style={{
@@ -773,6 +756,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           };
         })}
         grades={grades}
+      />
+      <UserInfoDialog
+        open={openUserDialog}
+        handleClose={() => setOpenUserDialog(false)}
+        user={selectedUser}
       />
     </div>
   );
