@@ -10,7 +10,7 @@ import {
   TabulatorFull as Tabulator,
 } from "tabulator-tables";
 import "tabulator-tables/dist/css/tabulator.min.css";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
 import RequestReviewDialog from "../../components/class_details/RequestReviewDialog";
@@ -131,6 +131,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 firstName: e.name,
                 lastName: e.surname,
                 average: 0,
+                position: e.gradeData[0].gradeData.position,
               };
               for (let i = 0; i < e.gradeData.length; i++) {
                 temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
@@ -170,6 +171,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                   studentId: e.studentCode,
                   firstName: e.data[0].name,
                   lastName: e.data[0].surname,
+                  position: e.data[0].position,
                   average: 0,
                 };
                 for (let i = 0; i < e.data.length; i++) {
@@ -183,6 +185,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 return temp;
               }),
             ];
+            grades.sort((a, b) => {
+              return a.position - b.position;
+            });
             setGrades(grades);
             console.log("grades", grades);
           });
@@ -674,6 +679,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         </div>
       )}
       <div ref={gradeScaleTableRef} />
+      {gradeScaleTable == null && <CircularProgress />}
       <div
         style={{
           display: "flex",
@@ -754,6 +760,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         </div>
       )}
       <div ref={gradeTableRef} />
+      {gradesTable == null && <CircularProgress />}
       <RequestReviewDialog
         open={isOpenRequestDialog}
         onClose={() => {
