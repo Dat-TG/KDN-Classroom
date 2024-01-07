@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { getCoursesByRole } from "../../api/course/apiCourse";
 import {
   IGetCoursesRes,
+  IGetCoursesResList,
   RoleCourseNumber,
   RoleCourseString,
 } from "../../types/course";
@@ -105,9 +106,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     document.title = t("homePage");
 
     getCoursesByRole(RoleCourseString.Student)
-      .then(async (res: IGetCoursesRes[]) => {
+      .then(async (res: IGetCoursesResList) => {
         const classPreviews = await Promise.all(
-          res.map(async (course) => {
+          res.listCourse.map(async (course) => {
             const teacherId = course.course.userCourses.find(
               (item) => item.userRoleCourse == RoleCourseNumber.Teacher
             )?.userId;
@@ -125,9 +126,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Coteacher)
-      .then(async (res: IGetCoursesRes[]) => {
+      .then(async (res: IGetCoursesResList) => {
         const classPreviews = await Promise.all(
-          res.map(async (course) => {
+          res.listCourse.map(async (course) => {
             const teacherId = course.course.userCourses.find(
               (item) => item.userRoleCourse == RoleCourseNumber.Teacher
             )?.userId;
@@ -145,9 +146,9 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
         toast.error((err as IToastError).detail.message);
       });
     getCoursesByRole(RoleCourseString.Teacher)
-      .then(async (res: IGetCoursesRes[]) => {
+      .then(async (res: IGetCoursesResList) => {
         const classPreviews = await Promise.all(
-          res.map(async (course) => {
+          res.listCourse.map(async (course) => {
             const user = await getUserInfoById(course.userId);
             return {
               class: course,

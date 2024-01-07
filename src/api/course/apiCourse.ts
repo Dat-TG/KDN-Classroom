@@ -18,7 +18,7 @@ export const getCourseByCode = async (courseCode: string) => {
 
 export const getCoursesByRole = async (role: RoleCourseString) => {
   const res = await AxiosClient.get(`/course/all-course?roleCourse=${role}`);
-  return res.data;
+  return res.data.data;
 };
 
 export const joinCourse = async (courseCode: string) => {

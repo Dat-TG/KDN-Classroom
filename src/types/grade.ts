@@ -5,3 +5,14 @@ export interface IGradeScale {
   courseId: number;
   position: number;
 }
+
+export interface IGradeBoard {
+  id: number;
+  courseId: number;
+  studentCode: string;
+  name: string;
+  surname: string;
+  grade: number;
+  gradeScaleId: number;
+  position: number;
+}
