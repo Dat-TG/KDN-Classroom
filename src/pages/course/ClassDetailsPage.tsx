@@ -66,6 +66,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
           return;
         }
         setClassEntity(res);
+        document.title = `${res.course.nameCourse} - ${res.course.topic}`;
         setIsLoading(false);
         const tIds = res.course.userCourses
           .filter((value) => value.userRoleCourse == RoleCourseNumber.Coteacher)

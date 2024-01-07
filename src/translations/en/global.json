@@ -172,5 +172,6 @@
     "updateStudentIdSuccessfully": "Update student ID successfully",
     "userInformation": "User information",
     "updateCourseColorSuccessfully": "Update course color successfully",
-    "updateCourseBackgroundSuccessfully": "Update course background successfully"
+    "updateCourseBackgroundSuccessfully": "Update course background successfully",
+    "userNotFound": "User not found"
 }

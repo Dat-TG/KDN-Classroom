@@ -56,6 +56,10 @@ export default function StreamPage({
   const [openClassCodeDialog, setOpenClassCodeDialog] =
     useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
+  useEffect(() => {
+    document.title = `${classEntity.course.nameCourse} - ${classEntity.course.topic}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Box display={"flex"} flexDirection={"column"}>
       <Box

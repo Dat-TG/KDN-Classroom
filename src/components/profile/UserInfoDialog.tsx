@@ -7,6 +7,7 @@ interface IUserInfoDialogProps {
     avatar: string;
     email: string;
     studentId: string;
+    notFound?: boolean;
   };
   open: boolean;
   handleClose: () => void;
@@ -25,19 +26,25 @@ const UserInfoDialog = ({ user, open, handleClose }: IUserInfoDialogProps) => {
           gap: "10px",
         }}
       >
-        <Avatar
-          src={avatar}
-          alt={name}
-          sx={{
-            width: "80px",
-            height: "80px",
-          }}
-        />
-        <Typography variant="h6">{name}</Typography>
-        <Typography>Email: {email}</Typography>
-        <Typography>
-          {t("studentId")}: {studentId}
-        </Typography>
+        {user.notFound ? (
+          <Typography>{t("userNotFound")}</Typography>
+        ) : (
+          <>
+            <Avatar
+              src={avatar}
+              alt={name}
+              sx={{
+                width: "80px",
+                height: "80px",
+              }}
+            />
+            <Typography variant="h6">{name}</Typography>
+            <Typography>Email: {email}</Typography>
+            <Typography>
+              {t("studentId")}: {studentId}
+            </Typography>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

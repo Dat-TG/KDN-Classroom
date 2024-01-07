@@ -25,6 +25,7 @@ import {
 import { IGradeScale } from "../../types/grade";
 import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
+import { getProfileByStudentId } from "../../api/user/apiUser";
 
 interface Props {
   colorTheme: string;
@@ -94,6 +95,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   };
 
   useEffect(() => {
+    document.title = `${classEntity.course.nameCourse} - ${classEntity.course.topic}`;
+
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
     let gradeScale: IGradeScale[] = [];
@@ -251,15 +254,19 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 editor: "input",
                 cellDblClick: function (_e, cell) {
                   setOpenUserDialog(true);
-                  setSelectedUser({
-                    name:
-                      cell.getRow().getData().firstName +
-                      " " +
-                      cell.getRow().getData().lastName,
-                    avatar: "",
-                    email: "dat@gmail.com",
-                    studentId: cell.getRow().getData().studentId,
-                  });
+                  getProfileByStudentId(cell.getValue())
+                    .then((res) => {
+                      setSelectedUser({
+                        name: res.user.name + " " + res.user.surname,
+                        avatar: res.user.avatar,
+                        email: res.user.userName,
+                        studentId: cell.getValue(),
+                      });
+                    })
+                    .catch((err) => {
+                      toast.error(err.detail.message);
+                      setSelectedUser({ notFound: true });
+                    });
                 },
               },
               {
