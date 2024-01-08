@@ -177,5 +177,7 @@
     "confirmation": "Confirmation",
     "areYouSureYouWantTo": "Are you sure you want to ",
     "banUser": "Ban user",
-    "unbanUser": "Unban user"
+    "unbanUser": "Unban user",
+    "banUserSuccessfully": "Ban user successfully",
+    "unbanUserSuccessfully": "Unban user successfully"
 }

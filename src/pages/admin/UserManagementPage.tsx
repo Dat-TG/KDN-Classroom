@@ -6,6 +6,8 @@ import { Typography } from "@mui/material";
 import React from "react";
 import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
+import { banUser, unbanUser } from "../../api/admin/apiAdmin";
+import toast from "../../utils/toast";
 export default function UserManagementPage() {
   const [t] = useTranslation("global");
   const [openConfirm, setOpenConfirm] = React.useState(false);
@@ -13,6 +15,25 @@ export default function UserManagementPage() {
   const [currentCell, setCurrentCell] =
     React.useState<Tabulator.CellComponent>();
   const onConfirm = () => {
+    if (currentCell?.getValue() == true) {
+      banUser(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("banUserSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
+    } else {
+      unbanUser(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("unbanUserSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
+    }
     setOpenConfirm(false);
   };
   const onClose = () => {

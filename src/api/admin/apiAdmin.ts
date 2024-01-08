@@ -12,3 +12,13 @@ export const getUserList = async (params: IGetUsersReq) => {
   });
   return res.data;
 };
+
+export const banUser = async (userId: number) => {
+  const res = await AxiosClient.post(`/user/admin/ban`, { userId });
+  return res.data;
+};
+
+export const unbanUser = async (userId: number) => {
+  const res = await AxiosClient.post(`/user/admin/unban`, { userId });
+  return res.data;
+};
