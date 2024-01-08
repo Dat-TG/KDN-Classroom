@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { IGetCoursesRes } from "../../types/course";
-// import { IUserProfileRes } from "../types/user";
-// import { getUserById } from "../api/user/apiUser";
 
 import {
   ColumnDefinition,
@@ -186,8 +184,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const temp: any = {
               studentId: e.codeUser,
-              firstName: e.name,
-              lastName: e.surname,
+              firstName: e.gradeData[0].gradeData.name,
+              lastName: e.gradeData[0].gradeData.surname,
               average: 0,
               position: e.gradeData[0].gradeData.position,
             };

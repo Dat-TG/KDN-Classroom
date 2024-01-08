@@ -7,6 +7,7 @@ import React from "react";
 import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
 import { RoleCourseNumber } from "../../types/course";
+import FilterRow from "../../components/admin/FilterRow";
 export default function CourseManagementPage() {
   const [t] = useTranslation("global");
   const [openConfirm, setOpenConfirm] = React.useState(false);
@@ -53,6 +54,16 @@ export default function CourseManagementPage() {
       >
         {t("classManagement")}
       </Typography>
+      <FilterRow
+        isActive
+        onIsActiveChange={() => {}}
+        onOrderByChange={() => {}}
+        onOrderChange={() => {}}
+        onSearchTextChange={() => {}}
+        order="ASC"
+        orderBy=""
+        searchText=""
+      />
       <ReactTabulator
         options={{
           layout: "fitDataTable",
