@@ -20,9 +20,10 @@ import {
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
+  updateGradeBoard,
   updateGradeScales,
 } from "../../api/grade/apiGrade";
-import { IGradeScale } from "../../types/grade";
+import { IGradeBoard, IGradeScale } from "../../types/grade";
 import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
 import { getProfileByStudentId } from "../../api/user/apiUser";
@@ -70,7 +71,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const [selectedUser, setSelectedUser] = useState({} as any);
 
   const onSave = async () => {
-    console.log("gradeScale", gradeScale);
     const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
       const position = gradeScaleTable?.getRows().findIndex((row) => {
         return row.getData().id === grade.id;
@@ -83,11 +83,62 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         position: position != undefined ? position + 1 : 0,
       };
     });
+    console.log("gradeScaleTemp", gradeScaleTemp);
     updateGradeScales(gradeScaleTemp)
       .then((res) => {
         toast.success(res.message);
         gradeScaleTable?.clearHistory();
         gradesTable?.clearHistory();
+        const gradesTemp = grades.map((grade) => {
+          const position = gradesTable?.getRows().findIndex((row) => {
+            return row.getData().studentId === grade.studentId;
+          });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const temp: any = {
+            studentId: grade.studentId,
+            firstName: grade.firstName,
+            lastName: grade.lastName,
+            average: grade.average,
+            position: position != undefined ? position + 1 : 0,
+          };
+          for (let i = 0; i < gradeScaleTemp.length; i++) {
+            temp[gradeScaleTemp[i].id.toString()] =
+              grade[gradeScaleTemp[i].id.toString()];
+            temp[gradeScaleTemp[i].id.toString() + "grade"] =
+              grade[gradeScaleTemp[i].id.toString() + "grade"];
+            if (gradeScaleTemp[i].id == 0) {
+              delete temp[gradeScaleTemp[i].id.toString()];
+              temp[gradeScaleTemp[i].title] = grade[gradeScaleTemp[i].title];
+            }
+          }
+          return temp;
+        });
+        const gradeBoardTemp: IGradeBoard[] = [];
+        for (let i = 0; i < gradesTemp.length; i++) {
+          for (let j = 0; j < gradeScaleTemp.length; j++) {
+            if (gradeScaleTemp[j].id == 0) {
+              continue;
+            }
+            gradeBoardTemp.push({
+              id: gradesTemp[i][gradeScaleTemp[j].id.toString() + "grade"] || 0,
+              courseId: classEntity.courseId,
+              studentCode: gradesTemp[i].studentId,
+              name: gradesTemp[i].firstName ?? "",
+              surname: gradesTemp[i].lastName ?? "",
+              grade: parseFloat(gradesTemp[i][gradeScaleTemp[j].id.toString()]),
+              gradeScaleId: gradeScaleTemp[j].id,
+              position: gradesTemp[i].position,
+            });
+          }
+        }
+        console.log("gradesTemp", gradeBoardTemp);
+        updateGradeBoard(gradeBoardTemp)
+          .then((res) => {
+            toast.success(res.message);
+          })
+          .catch((err) => {
+            toast.error(err.detail.message);
+          });
       })
       .catch((err) => {
         toast.error(err.detail.message);
@@ -112,93 +163,95 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       console.log("isStudent", isStudent);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let grades: any[] = [];
-      const processGrades = () => {
+      const processGrades = async () => {
         if (isStudent) {
-          return getGradeOfStudent(classEntity.courseId).then((res) => {
-            console.log("res", res);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            grades = res.grades.map((grade: any) => {
-              return {
-                studentId: grade.studentId,
-                firstName: grade.firstName,
-                lastName: grade.lastName,
-                ...grade.grades,
-                average: 0,
-              };
-            });
-            setGrades(grades);
-            console.log("grades", grades);
+          const res = await getGradeOfStudent(classEntity.courseId);
+          console.log("res", res);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          grades = res.grades.map((grade: any) => {
+            return {
+              studentId: grade.studentId,
+              firstName: grade.firstName,
+              lastName: grade.lastName,
+              ...grade.grades,
+              average: 0,
+            };
           });
+          setGrades(grades);
+          console.log("grades", grades);
         } else {
-          return getGradeBoard(classEntity.courseId).then((res) => {
+          const res_1 = await getGradeBoard(classEntity.courseId);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          grades = res_1.gradesBoard.data.map((e: any) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            grades = res.gradesBoard.data.map((e: any) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const temp: any = {
-                studentId: e.codeUser,
-                firstName: e.name,
-                lastName: e.surname,
-                average: 0,
-                position: e.gradeData[0].gradeData.position,
-              };
-              for (let i = 0; i < e.gradeData.length; i++) {
-                temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
-                  e.gradeData[i].gradeData.grade;
+            const temp: any = {
+              studentId: e.codeUser,
+              firstName: e.name,
+              lastName: e.surname,
+              average: 0,
+              position: e.gradeData[0].gradeData.position,
+            };
+            for (let i = 0; i < e.gradeData.length; i++) {
+              temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
+                e.gradeData[i].gradeData.grade;
+              temp[e.gradeData[i].gradeData.gradeScaleId.toString() + "grade"] =
+                e.gradeData[i].gradeData.id;
+            }
+            for (let i_1 = 0; i_1 < gradeScale.length; i_1++) {
+              if (temp[gradeScale[i_1].id.toString()] == undefined) {
+                temp[gradeScale[i_1].id.toString()] = 0;
               }
-              for (let i = 0; i < gradeScale.length; i++) {
-                if (temp[gradeScale[i].id.toString()] == undefined) {
-                  temp[gradeScale[i].id.toString()] = 0;
-                }
-              }
-              return temp;
-            });
-            const groupedByStudentCode =
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              res.gradesBoard.gradesBoardDesist.reduce((acc: any, obj: any) => {
-                const studentCode = obj.studentCode;
-                if (!acc[studentCode]) {
-                  acc[studentCode] = [];
-                }
-                acc[studentCode].push(obj);
-                return acc;
-              }, {});
-            const groupedArray = Object.entries(groupedByStudentCode).map(
-              ([key, value]) => ({
-                studentCode: key,
-                data: value,
-              })
-            );
-            console.log("groupedArray", groupedArray);
-
-            grades = [
-              ...grades,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ...groupedArray.map((e: any) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const temp: any = {
-                  studentId: e.studentCode,
-                  firstName: e.data[0].name,
-                  lastName: e.data[0].surname,
-                  position: e.data[0].position,
-                  average: 0,
-                };
-                for (let i = 0; i < e.data.length; i++) {
-                  temp[e.data[i].gradeScaleId.toString()] = e.data[i].grade;
-                }
-                for (let i = 0; i < gradeScale.length; i++) {
-                  if (temp[gradeScale[i].id.toString()] == undefined) {
-                    temp[gradeScale[i].id.toString()] = 0;
-                  }
-                }
-                return temp;
-              }),
-            ];
-            grades.sort((a, b) => {
-              return a.position - b.position;
-            });
-            setGrades(grades);
-            console.log("grades", grades);
+            }
+            return temp;
           });
+          const groupedByStudentCode =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            res_1.gradesBoard.gradesBoardDesist.reduce((acc: any, obj: any) => {
+              const studentCode = obj.studentCode;
+              if (!acc[studentCode]) {
+                acc[studentCode] = [];
+              }
+              acc[studentCode].push(obj);
+              return acc;
+            }, {});
+          const groupedArray = Object.entries(groupedByStudentCode).map(
+            ([key, value_2]) => ({
+              studentCode: key,
+              data: value_2,
+            })
+          );
+          console.log("groupedArray", groupedArray);
+          grades = [
+            ...grades,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...groupedArray.map((e_1: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const temp_1: any = {
+                studentId: e_1.studentCode,
+                firstName: e_1.data[0].name,
+                lastName: e_1.data[0].surname,
+                position: e_1.data[0].position,
+                average: 0,
+              };
+              for (let i_2 = 0; i_2 < e_1.data.length; i_2++) {
+                temp_1[e_1.data[i_2].gradeScaleId.toString()] =
+                  e_1.data[i_2].grade;
+                temp_1[e_1.data[i_2].gradeScaleId.toString() + "grade"] =
+                  e_1.data[i_2].id;
+              }
+              for (let i_3 = 0; i_3 < gradeScale.length; i_3++) {
+                if (temp_1[gradeScale[i_3].id.toString()] == undefined) {
+                  temp_1[gradeScale[i_3].id.toString()] = 0;
+                }
+              }
+              return temp_1;
+            }),
+          ];
+          grades.sort((a, b) => {
+            return a.position - b.position;
+          });
+          setGrades(grades);
+          console.log("grades", grades);
         }
       };
       processGrades().then(() => {
@@ -217,6 +270,12 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             ) {
               average +=
                 data[gradeScale[i].id.toString()] * gradeScale[i].scale;
+            }
+            if (
+              !isNaN(data[gradeScale[i].title]) &&
+              !isNaN(gradeScale[i].scale)
+            ) {
+              average += data[gradeScale[i].title] * gradeScale[i].scale;
             }
           }
           //set the average field value to the average of the other two fields
@@ -451,12 +510,17 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               let isExist = false;
               gradeTable.setColumns(
                 gradeTable.getColumnDefinitions().map((col) => {
-                  if (
-                    col.field === cell.getOldValue() &&
-                    col.field != undefined
-                  ) {
+                  const oldId = gradeScale
+                    .find((grade) => {
+                      return grade.title === cell.getValue();
+                    })
+                    ?.id.toString();
+                  console.log("oldId", oldId);
+                  console.log("old value", cell.getOldValue());
+                  console.log("gradeScale", gradeScale);
+                  if (col.field === oldId && col.field != undefined) {
                     col.title = cell.getValue();
-                    col.field = cell.getValue();
+                    col.field = oldId;
                     isExist = true;
                   }
                   return col;
