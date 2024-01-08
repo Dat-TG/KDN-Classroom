@@ -180,5 +180,9 @@
     "banUser": "khóa người dùng",
     "unbanUser": "mở khóa người dùng",
     "banUserSuccessfully": "Khóa người dùng thành công",
-    "unbanUserSuccessfully": "Mở khóa người dùng thành công"
+    "unbanUserSuccessfully": "Mở khóa người dùng thành công",
+    "classManagement": "Quản lý lớp học",
+    "status": "Trạng thái",
+    "gradeReviewRequest": "Yêu cầu xem xét điểm",
+    "topic": "Chủ đề"
 }

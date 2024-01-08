@@ -18,6 +18,7 @@ import ImportGrades from "../pages/TestUpload/ImportGrades";
 import UserManagementPage from "../pages/admin/UserManagementPage";
 import RequestListPage from "../pages/course/RequestListPage";
 import RequestDetailsPage from "../pages/course/RequestDetailsPage";
+import CourseManagementPage from "../pages/admin/CourseManagementPage";
 
 const router = createBrowserRouter([
   {
@@ -137,7 +138,7 @@ const router = createBrowserRouter([
           },
           {
             path: "classes",
-            element: <div>Classes management</div>,
+            element: <CourseManagementPage />,
           },
           {
             path: "users",
