@@ -37,7 +37,7 @@ export default function UserManagementPage() {
               "Showing " +
               currentRow +
               "-" +
-              (currentRow + pageSize - 1) +
+              Math.min(currentRow + pageSize - 1, totalRows) +
               " of " +
               totalRows +
               " users total"
@@ -138,9 +138,11 @@ export default function UserManagementPage() {
             minWidth: 100,
             editable: true,
             title: "Status",
-            formatter: () => {
-              const isActive = Math.random() > 0.5;
-              return isActive ? "✔️" : "❌"; // Display tick or cross based on status
+            field: "isBan",
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            formatter(cell, _formatterParams, _onRendered) {
+              const isBan = cell.getValue();
+              return isBan ? "Ban ❌" : "Active ✔️";
             },
             editor: "select",
             editorParams: {
