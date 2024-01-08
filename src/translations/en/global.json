@@ -179,5 +179,9 @@
     "banUser": "Ban user",
     "unbanUser": "Unban user",
     "banUserSuccessfully": "Ban user successfully",
-    "unbanUserSuccessfully": "Unban user successfully"
+    "unbanUserSuccessfully": "Unban user successfully",
+    "classManagement": "Class management",
+    "status": "Status",
+    "gradeReviewRequest": "Grade review request",
+    "topic": "Topic"
 }
