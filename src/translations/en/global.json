@@ -173,5 +173,9 @@
     "userInformation": "User information",
     "updateCourseColorSuccessfully": "Update course color successfully",
     "updateCourseBackgroundSuccessfully": "Update course background successfully",
-    "userNotFound": "User not found"
+    "userNotFound": "User not found",
+    "confirmation": "Confirmation",
+    "areYouSureYouWantTo": "Are you sure you want to ",
+    "banUser": "Ban user",
+    "unbanUser": "Unban user"
 }

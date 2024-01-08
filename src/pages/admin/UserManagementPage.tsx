@@ -3,8 +3,22 @@ import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
+import React from "react";
+import ConfirmationDialog from "../../components/common/ConfirmDialog";
+import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
 export default function UserManagementPage() {
-  const { t } = useTranslation("global");
+  const [t] = useTranslation("global");
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [confirmContent, setConfirmContent] = React.useState("");
+  const [currentCell, setCurrentCell] =
+    React.useState<Tabulator.CellComponent>();
+  const onConfirm = () => {
+    setOpenConfirm(false);
+  };
+  const onClose = () => {
+    currentCell?.restoreOldValue();
+    setOpenConfirm(false);
+  };
   return (
     <div
       style={{
@@ -146,16 +160,39 @@ export default function UserManagementPage() {
             },
             editor: "select",
             editorParams: {
-              values: {
-                true: "Active ✔️",
-                false: "Ban ❌",
-              },
+              values: [
+                {
+                  label: "Ban ❌",
+                  value: true,
+                },
+                {
+                  label: "Active ✔️",
+                  value: false,
+                },
+              ],
+            },
+            cellEdited: function (cell) {
+              setCurrentCell(cell);
+              const isBan = cell.getValue();
+              const email = cell.getRow().getData().userName;
+              setConfirmContent(
+                `${t("areYouSureYouWantTo")} ${
+                  isBan ? t("banUser") : t("unbanUser")
+                } ${email}?`
+              );
+              setOpenConfirm(true);
             },
             width: 30,
             hozAlign: "center",
             vertAlign: "middle",
           },
         ]}
+      />
+      <ConfirmationDialog
+        open={openConfirm}
+        content={confirmContent}
+        onClose={() => onClose()}
+        onConfirm={() => onConfirm()}
       />
     </div>
   );

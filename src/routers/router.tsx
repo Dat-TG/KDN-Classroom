@@ -15,7 +15,7 @@ import ClassDetailsPage from "../pages/course/ClassDetailsPage";
 import AcceptInvite from "../pages/AcceptInvite";
 import ImportStudentList from "../pages/TestUpload/ImportStudentList";
 import ImportGrades from "../pages/TestUpload/ImportGrades";
-import UserManagementPage from "../pages/UserManagementPage";
+import UserManagementPage from "../pages/admin/UserManagementPage";
 import RequestListPage from "../pages/course/RequestListPage";
 import RequestDetailsPage from "../pages/course/RequestDetailsPage";
 
