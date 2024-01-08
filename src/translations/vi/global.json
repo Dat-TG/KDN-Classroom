@@ -174,5 +174,11 @@
     "userInformation": "Thông tin người dùng",
     "updateCourseColorSuccessfully": "Cập nhật màu sắc lớp học thành công",
     "updateCourseBackgroundSuccessfully": "Cập nhật ảnh nền lớp học thành công",
-    "userNotFound": "Không tìm thấy người dùng"
+    "userNotFound": "Không tìm thấy người dùng",
+    "confirmation": "Xác nhận",
+    "areYouSureYouWantTo": "Bạn có chắc chắn muốn",
+    "banUser": "khóa người dùng",
+    "unbanUser": "mở khóa người dùng",
+    "banUserSuccessfully": "Khóa người dùng thành công",
+    "unbanUserSuccessfully": "Mở khóa người dùng thành công"
 }

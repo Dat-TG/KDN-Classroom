@@ -3,8 +3,43 @@ import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
+import React from "react";
+import ConfirmationDialog from "../../components/common/ConfirmDialog";
+import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
+import { banUser, unbanUser } from "../../api/admin/apiAdmin";
+import toast from "../../utils/toast";
 export default function UserManagementPage() {
-  const { t } = useTranslation("global");
+  const [t] = useTranslation("global");
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [confirmContent, setConfirmContent] = React.useState("");
+  const [currentCell, setCurrentCell] =
+    React.useState<Tabulator.CellComponent>();
+  const onConfirm = () => {
+    if (currentCell?.getValue() == true) {
+      banUser(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("banUserSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
+    } else {
+      unbanUser(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("unbanUserSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
+    }
+    setOpenConfirm(false);
+  };
+  const onClose = () => {
+    currentCell?.restoreOldValue();
+    setOpenConfirm(false);
+  };
   return (
     <div
       style={{
@@ -37,7 +72,7 @@ export default function UserManagementPage() {
               "Showing " +
               currentRow +
               "-" +
-              (currentRow + pageSize - 1) +
+              Math.min(currentRow + pageSize - 1, totalRows) +
               " of " +
               totalRows +
               " users total"
@@ -138,22 +173,47 @@ export default function UserManagementPage() {
             minWidth: 100,
             editable: true,
             title: "Status",
-            formatter: () => {
-              const isActive = Math.random() > 0.5;
-              return isActive ? "✔️" : "❌"; // Display tick or cross based on status
+            field: "isBan",
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            formatter(cell, _formatterParams, _onRendered) {
+              const isBan = cell.getValue();
+              return isBan ? "Ban ❌" : "Active ✔️";
             },
             editor: "select",
             editorParams: {
-              values: {
-                true: "Active ✔️",
-                false: "Ban ❌",
-              },
+              values: [
+                {
+                  label: "Ban ❌",
+                  value: true,
+                },
+                {
+                  label: "Active ✔️",
+                  value: false,
+                },
+              ],
+            },
+            cellEdited: function (cell) {
+              setCurrentCell(cell);
+              const isBan = cell.getValue();
+              const email = cell.getRow().getData().userName;
+              setConfirmContent(
+                `${t("areYouSureYouWantTo")} ${
+                  isBan ? t("banUser") : t("unbanUser")
+                } ${email}?`
+              );
+              setOpenConfirm(true);
             },
             width: 30,
             hozAlign: "center",
             vertAlign: "middle",
           },
         ]}
+      />
+      <ConfirmationDialog
+        open={openConfirm}
+        content={confirmContent}
+        onClose={() => onClose()}
+        onConfirm={() => onConfirm()}
       />
     </div>
   );
