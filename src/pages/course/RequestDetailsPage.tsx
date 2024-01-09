@@ -24,6 +24,8 @@ import { useParams } from "react-router-dom";
 import { getUserById } from "../../api/user/apiUser";
 import { IUserProfileRes } from "../../types/user";
 import SingleComment from "../../components/class_details/SingleComment";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
 
 export default function RequestDetailsPage() {
   const [comment, setComment] = useState("");
@@ -62,8 +64,10 @@ export default function RequestDetailsPage() {
   const { requestId } = useParams();
 
   const [requestDetails, setRequestDetails] = useState<IGradeReviewRequest>();
-  const [user, setUser] = useState<IUserProfileRes | undefined>(undefined);
+  const [author, setAuthor] = useState<IUserProfileRes | undefined>(undefined);
   const [gradeComposition, setGradeComposition] = useState<IGradeScale>();
+
+  const user = useSelector(sGetUserInfo);
 
   useEffect(() => {
     getRequestDetails(parseInt(requestId!))
@@ -72,7 +76,7 @@ export default function RequestDetailsPage() {
         const review = res.data as IGradeReviewRequest;
         getUserById(review.userId)
           .then((res) => {
-            setUser(res);
+            setAuthor(res);
           })
           .catch((err) => {
             console.log(err);
@@ -112,8 +116,8 @@ export default function RequestDetailsPage() {
       >
         <ListItemAvatar>
           <Avatar
-            alt={user?.name + " " + user?.surname}
-            src={user?.avatar}
+            alt={author?.name + " " + author?.surname}
+            src={author?.avatar}
             sx={{
               width: 60,
               height: 60,
@@ -128,9 +132,9 @@ export default function RequestDetailsPage() {
             " " +
             requestDetails?.gradeBoard.surname +
             " (" +
-            user?.name +
+            author?.name +
             " " +
-            user?.surname +
+            author?.surname +
             ")"
           }
           primaryTypographyProps={{
