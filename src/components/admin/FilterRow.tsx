@@ -6,14 +6,14 @@ import InputLabel from "@mui/material/InputLabel";
 import { Box } from "@mui/material";
 
 interface IFilterProps {
-  searchText: string;
-  isActive: boolean;
-  order: "ASC" | "DESC";
-  orderBy: string;
-  onSearchTextChange: (value: string) => void;
-  onIsActiveChange: (value: boolean) => void;
-  onOrderChange: (value: "ASC" | "DESC") => void;
-  onOrderByChange: (value: string) => void;
+  searchText: string | null;
+  isActive: boolean | null;
+  order: "ASC" | "DESC" | null;
+  orderBy: string | null;
+  onSearchTextChange: (value: string | null) => void;
+  onIsActiveChange: (value: boolean | null) => void;
+  onOrderChange: (value: "ASC" | "DESC" | null) => void;
+  onOrderByChange: (value: string | null) => void;
 }
 
 const FilterRow = ({
@@ -40,7 +40,9 @@ const FilterRow = ({
           labelId="activeLabel"
           label="Active"
           value={isActive}
-          onChange={(e) => onIsActiveChange(Boolean(e.target.value))}
+          onChange={(e) =>
+            onIsActiveChange(Number(e.target.value) === 1 ? true : false)
+          }
         >
           <MenuItem value={1}>Active</MenuItem>
           <MenuItem value={0}>Inactive</MenuItem>
@@ -50,7 +52,9 @@ const FilterRow = ({
         <InputLabel id="orderLabel">Order</InputLabel>
         <Select
           value={order}
-          onChange={(e) => onOrderChange(e.target.value as "ASC" | "DESC")}
+          onChange={(e) =>
+            onOrderChange(e.target.value as "ASC" | "DESC" | null)
+          }
           labelId="orderLabel"
           label="Order"
         >

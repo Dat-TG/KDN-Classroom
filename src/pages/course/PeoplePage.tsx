@@ -16,6 +16,7 @@ import { IUserProfileRes } from "../../types/user";
 import { getUserById } from "../../api/user/apiUser";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
+import UserInfoDialog from "../../components/profile/UserInfoDialog";
 
 interface Props {
   colorTheme: string;
@@ -237,26 +238,54 @@ export default function PeoplePage(props: Props) {
 }
 
 function SinglePerson({ user }: { user: IUserProfileRes | null }) {
+  const [openUserDialog, setOpenUserDialog] = useState<boolean>(false);
   return (
     <>
-      <Box display={"flex"} gap={"16px"} alignItems={"center"} marginX={"24px"}>
-        {user != null ? (
-          <Avatar
-            src={user?.avatar}
-            sx={{
-              width: "40px",
-              height: "40px",
-            }}
-          />
-        ) : (
-          <Skeleton variant="circular" width={40} height={40} />
-        )}
-        {user != null ? (
-          <Typography variant="body1">{`${user?.name} ${user.surname}`}</Typography>
-        ) : (
-          <Skeleton variant="text" width={100} height={20} />
-        )}
-      </Box>
+      <div
+        onClick={() => {
+          setOpenUserDialog(true);
+        }}
+        key={`user box ${user?.id}`}
+        style={{
+          cursor: "pointer",
+        }}
+      >
+        <Box
+          display={"flex"}
+          gap={"16px"}
+          alignItems={"center"}
+          marginX={"24px"}
+        >
+          {user != null ? (
+            <Avatar
+              src={user?.avatar}
+              sx={{
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          ) : (
+            <Skeleton variant="circular" width={40} height={40} />
+          )}
+          {user != null ? (
+            <Typography variant="body1">{`${user?.name} ${user.surname}`}</Typography>
+          ) : (
+            <Skeleton variant="text" width={100} height={20} />
+          )}
+        </Box>
+      </div>
+      <UserInfoDialog
+        key={`user ${user?.id}`}
+        open={openUserDialog}
+        handleClose={() => setOpenUserDialog(false)}
+        user={{
+          name: user?.name ?? "" + " " + user?.surname ?? "",
+          email: user?.userName ?? "",
+          avatar: user?.avatar ?? "",
+          studentId: "",
+          notFound: user === null,
+        }}
+      />
     </>
   );
 }
