@@ -21,7 +21,11 @@ import {
   updateGradeBoard,
   updateGradeScales,
 } from "../../api/grade/apiGrade";
-import { IGradeBoard, IGradeScale } from "../../types/grade";
+import {
+  IGradeBoard,
+  IGradeScale,
+  IGradeScaleWithFinalized,
+} from "../../types/grade";
 import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
 import { getProfileByStudentId } from "../../api/user/apiUser";
@@ -49,8 +53,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   );
   const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
-  const [gradeScale, setGradeScale] = useState<IGradeScale[]>(
-    [] as IGradeScale[]
+  const [gradeScale, setGradeScale] = useState<IGradeScaleWithFinalized[]>(
+    [] as IGradeScaleWithFinalized[]
   );
 
   const [isStudent, setIsStudent] = useState<boolean>(false);
@@ -148,22 +152,20 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
-    let gradeScale: IGradeScale[] = [];
+    let gradeScale: IGradeScaleWithFinalized[] = [];
     const isStudent = studentIds.includes(user?.id || 0);
     setIsStudent(isStudent);
     console.log("isStudent", isStudent);
-    const processGradeScale = async () => {
-      if (isStudent) {
-        console.log("i am student");
-        return;
-      } else {
-        console.log("i am teacher");
-        return getGradeScale(classEntity.courseId);
-      }
-    };
-    processGradeScale().then((res) => {
+    getGradeScale(classEntity.courseId).then((res) => {
       if (!isStudent) {
-        gradeScale = res.gradeScales as IGradeScale[];
+        gradeScale = res.gradeScales as IGradeScaleWithFinalized[];
+        gradeScale.sort((a, b) => {
+          return a.position - b.position;
+        });
+        setGradeScale(gradeScale);
+        console.log("gradeScale", typeof gradeScale[0].scale);
+      } else {
+        gradeScale = res.gradeScalesStudent as IGradeScaleWithFinalized[];
         gradeScale.sort((a, b) => {
           return a.position - b.position;
         });
@@ -493,6 +495,12 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 },
                 sorter: "number",
               },
+              {
+                title: "Finalized",
+                field: "isFinalized",
+                editable: false,
+                formatter: "tickCross",
+              },
             ],
           });
           setGradeScaleTable(gradeScaleTable);
@@ -575,6 +583,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     id: 0,
                     courseId: classEntity.courseId,
                     position: cell.getRow().getData().position,
+                    isFinalized: cell.getRow().getData().isFinalized,
                   });
                   return prev;
                 });
@@ -607,6 +616,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     id: 0,
                     courseId: classEntity.courseId,
                     position: cell.getRow().getData().position,
+                    isFinalized: cell.getRow().getData().isFinalized,
                   });
                 }
                 return prev;

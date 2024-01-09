@@ -6,6 +6,15 @@ export interface IGradeScale {
   position: number;
 }
 
+export interface IGradeScaleWithFinalized {
+  title: string;
+  scale: number;
+  id: number;
+  courseId: number;
+  position: number;
+  isFinalized: boolean;
+}
+
 export interface IGradeBoard {
   id: number;
   courseId: number;
