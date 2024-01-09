@@ -14,6 +14,10 @@ export default function CourseManagementPage() {
   const [confirmContent, setConfirmContent] = React.useState("");
   const [currentCell, setCurrentCell] =
     React.useState<Tabulator.CellComponent>();
+  const [isActive, setIsActive] = React.useState<boolean | null>(null);
+  const [orderBy, setOrderBy] = React.useState<string | null>(null);
+  const [order, setOrder] = React.useState<"ASC" | "DESC" | null>(null);
+  const [searchText, setSearchText] = React.useState<string | null>(null);
   const onConfirm = () => {
     if (currentCell?.getValue() == true) {
       //   banUser(currentCell?.getRow().getData().id)
@@ -40,6 +44,7 @@ export default function CourseManagementPage() {
     currentCell?.restoreOldValue();
     setOpenConfirm(false);
   };
+
   return (
     <div
       style={{
@@ -55,16 +60,17 @@ export default function CourseManagementPage() {
         {t("classManagement")}
       </Typography>
       <FilterRow
-        isActive
-        onIsActiveChange={() => {}}
-        onOrderByChange={() => {}}
-        onOrderChange={() => {}}
-        onSearchTextChange={() => {}}
-        order="ASC"
-        orderBy=""
-        searchText=""
+        isActive={isActive}
+        onIsActiveChange={(newValue) => setIsActive(newValue)}
+        onOrderByChange={(newValue) => setOrderBy(newValue)}
+        onOrderChange={(newValue) => setOrder(newValue)}
+        onSearchTextChange={(newValue) => setSearchText(newValue)}
+        order={order}
+        orderBy={orderBy}
+        searchText={searchText}
       />
       <ReactTabulator
+        key={`${isActive}-${orderBy}-${order}-${searchText}`}
         options={{
           layout: "fitDataTable",
           pagination: true, //enable pagination
@@ -90,9 +96,14 @@ export default function CourseManagementPage() {
           },
           paginationSizeSelector: [5, 10, 25, 50, 100],
           paginationMode: "remote",
-          ajaxURL: `${
-            import.meta.env.VITE_REACT_APP_BASE_URL
-          }/course/admin/all`,
+          ajaxURL:
+            `${import.meta.env.VITE_REACT_APP_BASE_URL}/course/admin/all?` +
+            (isActive !== null ? `isActive=${isActive}&` : "") +
+            (orderBy !== null ? `orderBy=${orderBy}&` : "") +
+            (order !== null ? `order=${order}&` : "") +
+            (searchText !== null && searchText.length > 0
+              ? `search=${searchText}`
+              : ""),
           ajaxConfig: {
             method: "GET",
             headers: {
