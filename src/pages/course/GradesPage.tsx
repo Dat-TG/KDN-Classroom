@@ -149,34 +149,64 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
     let gradeScale: IGradeScale[] = [];
-    getGradeScale(classEntity.courseId).then((res) => {
-      gradeScale = res.gradeScales as IGradeScale[];
-      gradeScale.sort((a, b) => {
-        return a.position - b.position;
-      });
-      setGradeScale(gradeScale);
-      console.log("gradeScale", typeof gradeScale[0].scale);
-      const isStudent = studentIds.includes(user?.id || 0);
-      setIsStudent(isStudent);
-      console.log("isStudent", isStudent);
+    const isStudent = studentIds.includes(user?.id || 0);
+    setIsStudent(isStudent);
+    console.log("isStudent", isStudent);
+    const processGradeScale = async () => {
+      if (isStudent) {
+        console.log("i am student");
+        return;
+      } else {
+        console.log("i am teacher");
+        return getGradeScale(classEntity.courseId);
+      }
+    };
+    processGradeScale().then((res) => {
+      if (!isStudent) {
+        gradeScale = res.gradeScales as IGradeScale[];
+        gradeScale.sort((a, b) => {
+          return a.position - b.position;
+        });
+        setGradeScale(gradeScale);
+        console.log("gradeScale", typeof gradeScale[0].scale);
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let grades: any[] = [];
       const processGrades = async () => {
         if (isStudent) {
-          const res = await getGradeOfStudent(classEntity.courseId);
-          console.log("res", res);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grades = res.grades.map((grade: any) => {
-            return {
-              studentId: grade.studentId,
-              firstName: grade.firstName,
-              lastName: grade.lastName,
-              ...grade.grades,
+          try {
+            const res = await getGradeOfStudent(classEntity.courseId);
+
+            console.log("res", res);
+            if (res.gradesBoard.length == 0) {
+              return;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const temp: any = {
+              studentId: res.gradesBoard[0].studentCode,
+              firstName: res.gradesBoard[0].name,
+              lastName: res.gradesBoard[0].surname,
               average: 0,
             };
-          });
-          setGrades(grades);
-          console.log("grades", grades);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            for (let i = 0; i < res.gradesBoard.length; i++) {
+              temp[res.gradesBoard[i].gradeScaleId.toString()] =
+                res.gradesBoard[i].grade;
+            }
+            for (let i = 0; i < gradeScale.length; i++) {
+              if (temp[gradeScale[i].id.toString()] == undefined) {
+                temp[gradeScale[i].id.toString()] = 0;
+              }
+            }
+            grades.push(temp);
+            setGrades(grades);
+            console.log("grades", grades);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (err: any) {
+            console.log("err", err);
+            toast.error(err.detail.message);
+          }
         } else {
           const res_1 = await getGradeBoard(classEntity.courseId);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
