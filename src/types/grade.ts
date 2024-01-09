@@ -26,6 +26,18 @@ export interface IGradeBoard {
   position: number;
 }
 
+export interface IGradeBoardWithFinalized {
+  id: number;
+  courseId: number;
+  studentCode: string;
+  name: string;
+  surname: string;
+  grade: number;
+  gradeScaleId: number;
+  position: number;
+  isFinalized: boolean;
+}
+
 export interface IRequestReviewReq {
   id: number;
   courseId: number;
@@ -35,3 +47,21 @@ export interface IRequestReviewReq {
   expectGrade: number;
   explanation: string;
 }
+
+export interface IGradeReviewRequest {
+  id: number;
+  userId: number;
+  courseId: number;
+  gradeId: number;
+  currentGrade: number;
+  expectGrade: number;
+  explanation: string;
+  status: string;
+  studentCode: string;
+  gradeBoard: IGradeBoardWithFinalized;
+  createdTime: string;
+  updatedTime: string;
+  commentRequest: IComment[];
+}
+
+export interface IComment {}

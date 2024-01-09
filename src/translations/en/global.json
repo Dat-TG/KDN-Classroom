@@ -185,5 +185,6 @@
     "gradeReviewRequest": "Grade review request",
     "topic": "Topic",
     "confirmMakeFinalized": "Are you sure you want to make this grade finalized?",
-    "requestGradeReviewSuccessfully": "Request grade review successfully"
+    "requestGradeReviewSuccessfully": "Request grade review successfully",
+    "noRequest": "No request"
 }

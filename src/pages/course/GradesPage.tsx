@@ -680,7 +680,19 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           }}
           startIcon={<Reviews />}
           onClick={() => {
-            navigate(window.location.pathname + "/requests");
+            let pathname = window.location.pathname;
+            while (pathname.endsWith("/")) {
+              pathname = pathname.substring(0, pathname.length - 1);
+            }
+            if (isStudent) {
+              navigate(
+                pathname + `/student-requests?courseId=${classEntity.courseId}`
+              );
+            } else {
+              navigate(
+                pathname + `/teacher-requests?courseId=${classEntity.courseId}`
+              );
+            }
           }}
         >
           {t("yourRequest")}

@@ -87,8 +87,12 @@ const router = createBrowserRouter([
                 element: <ClassDetailsPage initTab={3} />,
               },
               {
-                path: "grades/requests",
-                element: <RequestListPage />,
+                path: "grades/student-requests",
+                element: <RequestListPage isStudent={true} />,
+              },
+              {
+                path: "grades/teacher-requests",
+                element: <RequestListPage isStudent={false} />,
               },
               {
                 path: "grades/requests/:requestId",

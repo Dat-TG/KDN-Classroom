@@ -56,3 +56,20 @@ export const requestGradeReview = async (data: IRequestReviewReq[]) => {
   });
   return response.data;
 };
+
+export const getGradeReviewRequestListStudent = async (courseId: number) => {
+  const response = await AxiosClient.get(
+    `/request-review/student/course/${courseId}`
+  );
+  return response.data;
+};
+
+export const getGradeReviewRequestListTeacher = async (courseId: number) => {
+  const response = await AxiosClient.get(`/request-review/course/${courseId}`);
+  return response.data;
+};
+
+export const getGradeCompositionById = async (id: number) => {
+  const response = await AxiosClient.get(`/grade-scale/${id}`);
+  return response.data;
+};
