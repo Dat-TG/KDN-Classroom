@@ -14,25 +14,19 @@ import "react-tabulator/lib/styles.css"; // required styles
 import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
-import { IGradeReviewRequest, IGradeScale } from "../../types/grade";
+import { IComment, IGradeReviewRequest, IGradeScale } from "../../types/grade";
 import {
   getGradeCompositionById,
   getRequestDetails,
+  postComment,
 } from "../../api/grade/apiGrade";
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../api/user/apiUser";
 import { IUserProfileRes } from "../../types/user";
 
-interface Comment {
-  id: number;
-  avatar: string;
-  time: string;
-  content: string;
-}
-
 export default function RequestDetailsPage() {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<IComment[]>([]);
   const { t } = useTranslation("global");
 
   const handleCommentChange = (
@@ -41,15 +35,26 @@ export default function RequestDetailsPage() {
     setComment(event.target.value);
   };
 
-  const handleCommentSubmit = () => {
-    const newComment: Comment = {
-      id: comments.length + 1,
-      avatar: "https://example.com/avatar.png",
-      time: new Date().toLocaleString(),
-      content: comment,
-    };
+  const handleCommentSubmit = async () => {
+    postComment(parseInt(requestId!), comment)
+      .then((res) => {
+        console.log(res);
+        setComments([
+          ...comments,
+          {
+            id: res.id,
+            comment: comment,
+            createdTime: new Date().toLocaleString(),
+            updatedTime: new Date().toLocaleString(),
+            userId: user!.id,
+            requestReviewId: parseInt(requestId!),
+          },
+        ]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-    setComments([...comments, newComment]);
     setComment("");
   };
 
@@ -199,15 +204,15 @@ export default function RequestDetailsPage() {
       <Box mt={4}>
         {comments.map((comment) => (
           <Box key={comment.id} display="flex" mb={2}>
-            <Avatar src={comment.avatar} alt="Avatar" />
+            <Avatar src={""} alt="Avatar" />
             <Box ml={2}>
-              <Typography variant="subtitle2">{comment.time}</Typography>
+              <Typography variant="subtitle2">{comment.createdTime}</Typography>
               <p
                 style={{
                   whiteSpace: "pre-line",
                 }}
               >
-                {comment.content}
+                {comment.comment}
               </p>
             </Box>
           </Box>

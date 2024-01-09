@@ -64,4 +64,11 @@ export interface IGradeReviewRequest {
   commentRequest: IComment[];
 }
 
-export interface IComment {}
+export interface IComment {
+  id: number;
+  comment: string;
+  requestReviewId: number;
+  createdTime: string;
+  updatedTime: string;
+  userId: number;
+}

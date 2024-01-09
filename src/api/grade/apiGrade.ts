@@ -78,3 +78,12 @@ export const getRequestDetails = async (id: number) => {
   const response = await AxiosClient.get(`/request-review/${id}`);
   return response.data;
 };
+
+export const postComment = async (requestReviewId: number, comment: string) => {
+  const response = await AxiosClient.post("/comment-request", {
+    id: 0,
+    comment,
+    requestReviewId,
+  });
+  return response.data;
+};
