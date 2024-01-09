@@ -185,5 +185,6 @@
     "status": "Trạng thái",
     "gradeReviewRequest": "Yêu cầu xem xét điểm",
     "topic": "Chủ đề",
-    "confirmMakeFinalized": "Bạn có chắc chắn muốn đánh dấu thành phần điểm này là cuối cùng?"
+    "confirmMakeFinalized": "Bạn có chắc chắn muốn đánh dấu thành phần điểm này là cuối cùng?",
+    "requestGradeReviewSuccessfully": "Tạo yêu cầu xem xét điểm thành công"
 }

@@ -201,6 +201,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             for (let i = 0; i < res.gradesBoard.length; i++) {
               temp[res.gradesBoard[i].gradeScaleId.toString()] =
                 res.gradesBoard[i].grade;
+              temp[res.gradesBoard[i].gradeScaleId.toString() + "grade"] =
+                res.gradesBoard[i].id;
             }
             for (let i = 0; i < gradeScale.length; i++) {
               if (temp[gradeScale[i].id.toString()] == undefined) {
@@ -512,6 +514,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                   if (cell.getValue()) {
                     setOpenConfirmationDialog(true);
                     setSelectedCell(cell);
+                  } else {
+                    cell.restoreOldValue();
                   }
                 },
               },
@@ -685,6 +689,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           component="label"
           variant="outlined"
           sx={{
+            display: isStudent ? "none" : "inline-flex",
             marginBottom: "16px",
             color: classEntity.course.courseColor,
             borderColor: classEntity.course.courseColor,
@@ -886,11 +891,13 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       {gradesTable == null && <CircularProgress />}
       <RequestReviewDialog
         open={isOpenRequestDialog}
+        courseId={classEntity.courseId}
         onClose={() => {
           setIsOpenRequestDialog(false);
         }}
         gradeScale={selectedGradeScale.map((row) => {
           return {
+            id: row.getData().id,
             name: row.getData().title,
             scale: row.getData().scale,
           };

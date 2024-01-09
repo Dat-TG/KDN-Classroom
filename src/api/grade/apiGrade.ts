@@ -1,4 +1,4 @@
-import { IGradeBoard, IGradeScale } from "../../types/grade";
+import { IGradeBoard, IGradeScale, IRequestReviewReq } from "../../types/grade";
 import AxiosClient from "../axios";
 
 export const getGradeBoard = async (courseId: number) => {
@@ -46,6 +46,13 @@ export const markGradeScaleAsFinalized = async (
   const response = await AxiosClient.post("/grade-board/update-finalized", {
     courseId,
     gradeScaleId,
+  });
+  return response.data;
+};
+
+export const requestGradeReview = async (data: IRequestReviewReq[]) => {
+  const response = await AxiosClient.post("/request-review/multi", {
+    requestReviewsDTO: data,
   });
   return response.data;
 };

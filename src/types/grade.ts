@@ -25,3 +25,13 @@ export interface IGradeBoard {
   gradeScaleId: number;
   position: number;
 }
+
+export interface IRequestReviewReq {
+  id: number;
+  courseId: number;
+  studentCode: string;
+  gradeId: number;
+  currentGrade: number;
+  expectGrade: number;
+  explanation: string;
+}
