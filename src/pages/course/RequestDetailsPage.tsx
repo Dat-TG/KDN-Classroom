@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Skeleton,
 } from "@mui/material";
 
 import "react-tabulator/lib/styles.css"; // required styles
@@ -63,8 +64,9 @@ export default function RequestDetailsPage() {
 
   const { requestId } = useParams();
 
-  const [requestDetails, setRequestDetails] = useState<IGradeReviewRequest>();
-  const [author, setAuthor] = useState<IUserProfileRes | undefined>(undefined);
+  const [requestDetails, setRequestDetails] =
+    useState<IGradeReviewRequest | null>(null);
+  const [author, setAuthor] = useState<IUserProfileRes | null>(null);
   const [gradeComposition, setGradeComposition] = useState<IGradeScale>();
 
   const user = useSelector(sGetUserInfo);
@@ -108,46 +110,56 @@ export default function RequestDetailsPage() {
         padding: "32px",
       }}
     >
-      <ListItem
-        sx={{
-          marginBottom: "16px",
-          gap: "16px",
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar
-            alt={author?.name + " " + author?.surname}
-            src={author?.avatar}
-            sx={{
-              width: 60,
-              height: 60,
-            }}
-          />
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            requestDetails?.gradeBoard.studentCode +
-            " - " +
-            requestDetails?.gradeBoard.name +
-            " " +
-            requestDetails?.gradeBoard.surname +
-            " (" +
-            author?.name +
-            " " +
-            author?.surname +
-            ")"
-          }
-          primaryTypographyProps={{
-            fontWeight: "500",
-            fontSize: "1.2rem",
+      {requestDetails == null || user == null ? (
+        <Box display="flex" alignItems="center" mb={1}>
+          <Skeleton variant="circular" width={40} height={40} />
+          <Box ml={2} width="100%">
+            <Skeleton variant="text" width="80%" />
+            <Skeleton variant="text" width="60%" />
+          </Box>
+        </Box>
+      ) : (
+        <ListItem
+          sx={{
+            marginBottom: "16px",
+            gap: "16px",
           }}
-          secondary={
-            requestDetails?.createdTime
-              ? new Date(requestDetails.createdTime).toLocaleString()
-              : ""
-          }
-        />
-      </ListItem>
+        >
+          <ListItemAvatar>
+            <Avatar
+              alt={author?.name + " " + author?.surname}
+              src={author?.avatar}
+              sx={{
+                width: 60,
+                height: 60,
+              }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              requestDetails?.gradeBoard.studentCode +
+              " - " +
+              requestDetails?.gradeBoard.name +
+              " " +
+              requestDetails?.gradeBoard.surname +
+              " (" +
+              author?.name +
+              " " +
+              author?.surname +
+              ")"
+            }
+            primaryTypographyProps={{
+              fontWeight: "500",
+              fontSize: "1.2rem",
+            }}
+            secondary={
+              requestDetails?.createdTime
+                ? new Date(requestDetails.createdTime).toLocaleString()
+                : ""
+            }
+          />
+        </ListItem>
+      )}
 
       <ReactTabulator
         data={[
