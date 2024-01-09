@@ -1,30 +1,48 @@
-import React from "react";
-import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { useEffect, useState } from "react";
+import { List, Skeleton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { IGradeReviewRequest } from "../../types/grade";
+import {
+  getGradeReviewRequestListStudent,
+  getGradeReviewRequestListTeacher,
+} from "../../api/grade/apiGrade";
+import toast from "../../utils/toast";
+import RequestItem from "../../components/class_details/RequestItem";
 
-const reviews = [
-  { id: 1, studentName: "John Doe", time: "10:00 AM" },
-  { id: 2, studentName: "Jane Smith", time: "11:30 AM" },
-  { id: 3, studentName: "Bob Johnson", time: "2:45 PM" },
-];
+interface IRequestListPageProps {
+  isStudent: boolean;
+}
 
-const RequestListPage: React.FC = () => {
-  const navigate = useNavigate();
-  const handleReviewClick = (reviewId: number) => {
-    console.log(`review click ${reviewId}`);
-    navigate(window.location.pathname + "/" + reviewId);
-  };
-
+export default function RequestListPage({ isStudent }: IRequestListPageProps) {
   const { t } = useTranslation("global");
+
+  const [reviews, setReviews] = useState<IGradeReviewRequest[]>([]);
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    if (isStudent) {
+      getGradeReviewRequestListStudent(parseInt(searchParams.get("courseId")!))
+        .then((res) => {
+          console.log(res);
+          setReviews(res.requestReviews);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(err.detail.message);
+        });
+    } else {
+      getGradeReviewRequestListTeacher(parseInt(searchParams.get("courseId")!))
+        .then((res) => {
+          console.log(res);
+          setReviews(res.requestReviews);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(err.detail.message);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -33,26 +51,25 @@ const RequestListPage: React.FC = () => {
       }}
     >
       <Typography variant="h5">{t("requestList")}</Typography>
-      <List>
-        {reviews.map((review) => (
-          <ListItem
-            key={review.id}
-            onClick={() => handleReviewClick(review.id)}
-          >
-            <ListItemButton>
-              <ListItemAvatar>
-                <Avatar>{review.studentName.charAt(0)}</Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={review.studentName}
-                secondary={review.time}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      {reviews != null ? (
+        <List>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <RequestItem key={review.id} review={review} />
+            ))
+          ) : (
+            <Typography variant="body1">{t("noRequest")}</Typography>
+          )}
+        </List>
+      ) : (
+        <Skeleton
+          variant="rectangular"
+          height={200}
+          sx={{
+            margin: "16px",
+          }}
+        />
+      )}
     </div>
   );
-};
-
-export default RequestListPage;
+}

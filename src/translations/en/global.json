@@ -183,5 +183,8 @@
     "classManagement": "Class management",
     "status": "Status",
     "gradeReviewRequest": "Grade review request",
-    "topic": "Topic"
+    "topic": "Topic",
+    "confirmMakeFinalized": "Are you sure you want to make this grade finalized?",
+    "requestGradeReviewSuccessfully": "Request grade review successfully",
+    "noRequest": "No request"
 }

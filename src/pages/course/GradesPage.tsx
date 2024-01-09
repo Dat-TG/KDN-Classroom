@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { IGetCoursesRes } from "../../types/course";
 
 import {
+  CellComponent,
   ColumnDefinition,
   RowComponent,
   TabulatorFull as Tabulator,
@@ -18,13 +19,19 @@ import {
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
+  markGradeScaleAsFinalized,
   updateGradeBoard,
   updateGradeScales,
 } from "../../api/grade/apiGrade";
-import { IGradeBoard, IGradeScale } from "../../types/grade";
+import {
+  IGradeBoard,
+  IGradeScale,
+  IGradeScaleWithFinalized,
+} from "../../types/grade";
 import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
 import { getProfileByStudentId } from "../../api/user/apiUser";
+import ConfirmationDialog from "../../components/common/ConfirmDialog";
 
 interface Props {
   colorTheme: string;
@@ -49,8 +56,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   );
   const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
-  const [gradeScale, setGradeScale] = useState<IGradeScale[]>(
-    [] as IGradeScale[]
+  const [gradeScale, setGradeScale] = useState<IGradeScaleWithFinalized[]>(
+    [] as IGradeScaleWithFinalized[]
   );
 
   const [isStudent, setIsStudent] = useState<boolean>(false);
@@ -67,6 +74,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const [openUserDialog, setOpenUserDialog] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedUser, setSelectedUser] = useState({} as any);
+
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<CellComponent>();
 
   const onSave = async () => {
     const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
@@ -148,22 +158,20 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
     let gradeTable: Tabulator;
     let gradeScaleTable: Tabulator;
-    let gradeScale: IGradeScale[] = [];
+    let gradeScale: IGradeScaleWithFinalized[] = [];
     const isStudent = studentIds.includes(user?.id || 0);
     setIsStudent(isStudent);
     console.log("isStudent", isStudent);
-    const processGradeScale = async () => {
-      if (isStudent) {
-        console.log("i am student");
-        return;
-      } else {
-        console.log("i am teacher");
-        return getGradeScale(classEntity.courseId);
-      }
-    };
-    processGradeScale().then((res) => {
+    getGradeScale(classEntity.courseId).then((res) => {
       if (!isStudent) {
-        gradeScale = res.gradeScales as IGradeScale[];
+        gradeScale = res.gradeScales as IGradeScaleWithFinalized[];
+        gradeScale.sort((a, b) => {
+          return a.position - b.position;
+        });
+        setGradeScale(gradeScale);
+        console.log("gradeScale", typeof gradeScale[0].scale);
+      } else {
+        gradeScale = res.gradeScalesStudent as IGradeScaleWithFinalized[];
         gradeScale.sort((a, b) => {
           return a.position - b.position;
         });
@@ -193,6 +201,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             for (let i = 0; i < res.gradesBoard.length; i++) {
               temp[res.gradesBoard[i].gradeScaleId.toString()] =
                 res.gradesBoard[i].grade;
+              temp[res.gradesBoard[i].gradeScaleId.toString() + "grade"] =
+                res.gradesBoard[i].id;
             }
             for (let i = 0; i < gradeScale.length; i++) {
               if (temp[gradeScale[i].id.toString()] == undefined) {
@@ -493,6 +503,22 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 },
                 sorter: "number",
               },
+              {
+                title: "Finalized",
+                field: "isFinalized",
+                editable: !isStudent,
+                editor: "tickCross",
+                formatter: "tickCross",
+                cellEdited: function (cell) {
+                  console.log("cell", cell);
+                  if (cell.getValue()) {
+                    setOpenConfirmationDialog(true);
+                    setSelectedCell(cell);
+                  } else {
+                    cell.restoreOldValue();
+                  }
+                },
+              },
             ],
           });
           setGradeScaleTable(gradeScaleTable);
@@ -575,6 +601,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     id: 0,
                     courseId: classEntity.courseId,
                     position: cell.getRow().getData().position,
+                    isFinalized: cell.getRow().getData().isFinalized,
                   });
                   return prev;
                 });
@@ -607,6 +634,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     id: 0,
                     courseId: classEntity.courseId,
                     position: cell.getRow().getData().position,
+                    isFinalized: cell.getRow().getData().isFinalized,
                   });
                 }
                 return prev;
@@ -652,7 +680,19 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           }}
           startIcon={<Reviews />}
           onClick={() => {
-            navigate(window.location.pathname + "/requests");
+            let pathname = window.location.pathname;
+            while (pathname.endsWith("/")) {
+              pathname = pathname.substring(0, pathname.length - 1);
+            }
+            if (isStudent) {
+              navigate(
+                pathname + `/student-requests?courseId=${classEntity.courseId}`
+              );
+            } else {
+              navigate(
+                pathname + `/teacher-requests?courseId=${classEntity.courseId}`
+              );
+            }
           }}
         >
           {t("yourRequest")}
@@ -661,6 +701,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           component="label"
           variant="outlined"
           sx={{
+            display: isStudent ? "none" : "inline-flex",
             marginBottom: "16px",
             color: classEntity.course.courseColor,
             borderColor: classEntity.course.courseColor,
@@ -862,11 +903,13 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       {gradesTable == null && <CircularProgress />}
       <RequestReviewDialog
         open={isOpenRequestDialog}
+        courseId={classEntity.courseId}
         onClose={() => {
           setIsOpenRequestDialog(false);
         }}
         gradeScale={selectedGradeScale.map((row) => {
           return {
+            id: row.getData().id,
             name: row.getData().title,
             scale: row.getData().scale,
           };
@@ -877,6 +920,31 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         open={openUserDialog}
         handleClose={() => setOpenUserDialog(false)}
         user={selectedUser}
+      />
+      <ConfirmationDialog
+        key={"finalizedDialog"}
+        open={openConfirmationDialog}
+        onClose={() => {
+          selectedCell?.restoreOldValue();
+          setOpenConfirmationDialog(false);
+        }}
+        content={t("confirmMakeFinalized")}
+        onConfirm={async () => {
+          markGradeScaleAsFinalized(
+            classEntity.courseId,
+            selectedCell?.getRow().getData().id
+          )
+            .then((res) => {
+              toast.success(res.message);
+              gradeScaleTable?.clearHistory();
+              setOpenConfirmationDialog(false);
+            })
+            .catch((err) => {
+              toast.error(err.detail.message);
+              selectedCell?.restoreOldValue();
+              setOpenConfirmationDialog(false);
+            });
+        }}
       />
     </div>
   );
