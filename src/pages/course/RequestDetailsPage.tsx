@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -14,6 +14,14 @@ import "react-tabulator/lib/styles.css"; // required styles
 import "react-tabulator/lib/css/tabulator.min.css"; // theme
 import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
+import { IGradeReviewRequest, IGradeScale } from "../../types/grade";
+import {
+  getGradeCompositionById,
+  getRequestDetails,
+} from "../../api/grade/apiGrade";
+import { useParams } from "react-router-dom";
+import { getUserById } from "../../api/user/apiUser";
+import { IUserProfileRes } from "../../types/user";
 
 interface Comment {
   id: number;
@@ -45,29 +53,37 @@ export default function RequestDetailsPage() {
     setComment("");
   };
 
-  const requestDetails = {
-    id: 1,
-    studentAccountId: 12,
-    studentName: "John Doe",
-    time: "10:00 AM",
-    classCode: 123,
-    requestGradeCompositon: [
-      {
-        name: "Homework",
-        scale: 0.3,
-        currentGrade: 0,
-        expectedGrade: 10,
-        explain: "Em được 10 mà ở đây là 0",
-      },
-      {
-        name: "Final",
-        scale: 0.7,
-        currentGrade: 8,
-        expectedGrade: 10,
-        explain: "Em nhớ làm đúng hết mà",
-      },
-    ],
-  };
+  const { requestId } = useParams();
+
+  const [requestDetails, setRequestDetails] = useState<IGradeReviewRequest>();
+  const [user, setUser] = useState<IUserProfileRes | undefined>(undefined);
+  const [gradeComposition, setGradeComposition] = useState<IGradeScale>();
+
+  useEffect(() => {
+    getRequestDetails(parseInt(requestId!))
+      .then((res) => {
+        setRequestDetails(res.data);
+        const review = res.data as IGradeReviewRequest;
+        getUserById(review.userId)
+          .then((res) => {
+            setUser(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        getGradeCompositionById(review.gradeBoard.gradeScaleId)
+          .then((res) => {
+            setGradeComposition(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container
@@ -78,26 +94,56 @@ export default function RequestDetailsPage() {
       <ListItem
         sx={{
           marginBottom: "16px",
+          gap: "16px",
         }}
       >
         <ListItemAvatar>
-          <Avatar>{requestDetails.studentName[0]}</Avatar>
+          <Avatar
+            alt={user?.name + " " + user?.surname}
+            src={user?.avatar}
+            sx={{
+              width: 60,
+              height: 60,
+            }}
+          />
         </ListItemAvatar>
         <ListItemText
-          primary={requestDetails.studentName}
-          secondary={requestDetails.time}
+          primary={
+            requestDetails?.gradeBoard.studentCode +
+            " - " +
+            requestDetails?.gradeBoard.name +
+            " " +
+            requestDetails?.gradeBoard.surname
+          }
+          primaryTypographyProps={{
+            fontWeight: "500",
+            fontSize: "1.2rem",
+          }}
+          secondary={
+            requestDetails?.createdTime
+              ? new Date(requestDetails.createdTime).toLocaleString()
+              : ""
+          }
         />
       </ListItem>
 
       <ReactTabulator
-        data={requestDetails.requestGradeCompositon}
+        data={[
+          {
+            name: gradeComposition?.title,
+            scale: gradeComposition?.scale,
+            currentGrade: requestDetails?.currentGrade,
+            expectedGrade: requestDetails?.expectGrade,
+            explain: requestDetails?.explanation,
+          },
+        ]}
         options={{
           layout: "fitDataTable",
           height: "auto",
         }}
         columns={[
           {
-            title: "Name",
+            title: "Grade Composition",
             field: "name",
             sorter: "string",
           },
@@ -114,14 +160,12 @@ export default function RequestDetailsPage() {
           {
             title: "Expected grade",
             field: "expectedGrade",
-
             sorter: "number",
           },
           {
             title: "Explain",
             field: "explain",
             formatter: "textarea",
-
             sorter: "string",
           },
         ]}

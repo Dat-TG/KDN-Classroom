@@ -73,3 +73,8 @@ export const getGradeCompositionById = async (id: number) => {
   const response = await AxiosClient.get(`/grade-scale/${id}`);
   return response.data;
 };
+
+export const getRequestDetails = async (id: number) => {
+  const response = await AxiosClient.get(`/request-review/${id}`);
+  return response.data;
+};
