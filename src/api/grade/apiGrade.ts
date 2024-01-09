@@ -87,3 +87,10 @@ export const postComment = async (requestReviewId: number, comment: string) => {
   });
   return response.data;
 };
+
+export const getAllComments = async (requestReviewId: number) => {
+  const response = await AxiosClient.get(
+    `/comment-request/request/${requestReviewId}`
+  );
+  return response.data;
+};

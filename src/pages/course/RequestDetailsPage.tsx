@@ -7,7 +7,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography,
 } from "@mui/material";
 
 import "react-tabulator/lib/styles.css"; // required styles
@@ -16,6 +15,7 @@ import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
 import { IComment, IGradeReviewRequest, IGradeScale } from "../../types/grade";
 import {
+  getAllComments,
   getGradeCompositionById,
   getRequestDetails,
   postComment,
@@ -23,6 +23,7 @@ import {
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../api/user/apiUser";
 import { IUserProfileRes } from "../../types/user";
+import SingleComment from "../../components/class_details/SingleComment";
 
 export default function RequestDetailsPage() {
   const [comment, setComment] = useState("");
@@ -83,6 +84,13 @@ export default function RequestDetailsPage() {
           .catch((err) => {
             console.log(err);
           });
+        getAllComments(review.id)
+          .then((res) => {
+            setComments(res.commentRequests as IComment[]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -118,7 +126,12 @@ export default function RequestDetailsPage() {
             " - " +
             requestDetails?.gradeBoard.name +
             " " +
-            requestDetails?.gradeBoard.surname
+            requestDetails?.gradeBoard.surname +
+            " (" +
+            user?.name +
+            " " +
+            user?.surname +
+            ")"
           }
           primaryTypographyProps={{
             fontWeight: "500",
@@ -203,19 +216,7 @@ export default function RequestDetailsPage() {
 
       <Box mt={4}>
         {comments.map((comment) => (
-          <Box key={comment.id} display="flex" mb={2}>
-            <Avatar src={""} alt="Avatar" />
-            <Box ml={2}>
-              <Typography variant="subtitle2">{comment.createdTime}</Typography>
-              <p
-                style={{
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {comment.comment}
-              </p>
-            </Box>
-          </Box>
+          <SingleComment key={comment.id} commentData={comment} />
         ))}
       </Box>
     </Container>
