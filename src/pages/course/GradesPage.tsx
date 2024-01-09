@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { IGetCoursesRes } from "../../types/course";
 
 import {
+  CellComponent,
   ColumnDefinition,
   RowComponent,
   TabulatorFull as Tabulator,
@@ -18,6 +19,7 @@ import {
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
+  markGradeScaleAsFinalized,
   updateGradeBoard,
   updateGradeScales,
 } from "../../api/grade/apiGrade";
@@ -29,6 +31,7 @@ import {
 import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
 import { getProfileByStudentId } from "../../api/user/apiUser";
+import ConfirmationDialog from "../../components/common/ConfirmDialog";
 
 interface Props {
   colorTheme: string;
@@ -71,6 +74,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const [openUserDialog, setOpenUserDialog] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedUser, setSelectedUser] = useState({} as any);
+
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<CellComponent>();
 
   const onSave = async () => {
     const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
@@ -498,8 +504,16 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               {
                 title: "Finalized",
                 field: "isFinalized",
-                editable: false,
+                editable: !isStudent,
+                editor: "tickCross",
                 formatter: "tickCross",
+                cellEdited: function (cell) {
+                  console.log("cell", cell);
+                  if (cell.getValue()) {
+                    setOpenConfirmationDialog(true);
+                    setSelectedCell(cell);
+                  }
+                },
               },
             ],
           });
@@ -887,6 +901,31 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         open={openUserDialog}
         handleClose={() => setOpenUserDialog(false)}
         user={selectedUser}
+      />
+      <ConfirmationDialog
+        key={"finalizedDialog"}
+        open={openConfirmationDialog}
+        onClose={() => {
+          selectedCell?.restoreOldValue();
+          setOpenConfirmationDialog(false);
+        }}
+        content={t("confirmMakeFinalized")}
+        onConfirm={async () => {
+          markGradeScaleAsFinalized(
+            classEntity.courseId,
+            selectedCell?.getRow().getData().id
+          )
+            .then((res) => {
+              toast.success(res.message);
+              gradeScaleTable?.clearHistory();
+              setOpenConfirmationDialog(false);
+            })
+            .catch((err) => {
+              toast.error(err.detail.message);
+              selectedCell?.restoreOldValue();
+              setOpenConfirmationDialog(false);
+            });
+        }}
       />
     </div>
   );

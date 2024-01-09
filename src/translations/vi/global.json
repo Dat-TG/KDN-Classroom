@@ -184,5 +184,6 @@
     "classManagement": "Quản lý lớp học",
     "status": "Trạng thái",
     "gradeReviewRequest": "Yêu cầu xem xét điểm",
-    "topic": "Chủ đề"
+    "topic": "Chủ đề",
+    "confirmMakeFinalized": "Bạn có chắc chắn muốn đánh dấu thành phần điểm này là cuối cùng?"
 }

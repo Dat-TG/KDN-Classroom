@@ -38,3 +38,14 @@ export const updateGradeBoard = async (gradeStudent: IGradeBoard[]) => {
   });
   return response.data;
 };
+
+export const markGradeScaleAsFinalized = async (
+  courseId: number,
+  gradeScaleId: number
+) => {
+  const response = await AxiosClient.post("/grade-board/update-finalized", {
+    courseId,
+    gradeScaleId,
+  });
+  return response.data;
+};
