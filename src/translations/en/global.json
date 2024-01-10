@@ -196,5 +196,7 @@
     "requestRejected": "Request rejected",
     "notSuccessful": "Not successful",
     "updateGradeSuccessfully": "Update grade successfully",
-    "updateGradeUnsuccessfully": "Update grade unsuccessfully"
+    "updateGradeUnsuccessfully": "Update grade unsuccessfully",
+    "downloadTemplate": "Download template",
+    "download": "Download"
 }

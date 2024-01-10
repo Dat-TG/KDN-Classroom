@@ -196,5 +196,7 @@
     "requestRejected": "Yêu cầu đã bị từ chối",
     "notSuccessful": "Không thành công",
     "updateGradeSuccessfully": "Cập nhật điểm thành công",
-    "updateGradeUnsuccessfully": "Cập nhật điểm không thành công"
+    "updateGradeUnsuccessfully": "Cập nhật điểm không thành công",
+    "downloadTemplate": "Tải file mẫu",
+    "download": "Tải xuống"
 }
