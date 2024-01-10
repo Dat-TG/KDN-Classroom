@@ -75,29 +75,29 @@ export default function RequestDetailsPage() {
       .then((res) => {
         console.log(res);
         toast.success("Request approved");
-        // updateGradeBoard([
-        //   {
-        //     courseId: requestDetails!.courseId,
-        //     grade:
-        //       parseFloat(gradeRef.current!.value) ??
-        //       requestDetails?.currentGrade ??
-        //       0,
-        //     gradeScaleId: requestDetails!.gradeBoard.gradeScaleId,
-        //     id: requestDetails!.gradeBoard.id,
-        //     studentCode: requestDetails!.gradeBoard.studentCode,
-        //     name: requestDetails!.gradeBoard.name,
-        //     surname: requestDetails!.gradeBoard.surname,
-        //     position: requestDetails!.gradeBoard.position,
-        //   },
-        // ])
-        //   .then((res) => {
-        //     console.log(res);
-        //     toast.success(t("updateGradeSuccessfully"));
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //     toast.error(t("updateGradeUnsuccessfully"));
-        //   });
+        updateGradeBoard([
+          {
+            courseId: requestDetails!.courseId,
+            grade:
+              parseFloat(gradeRef.current!.value) ??
+              requestDetails?.currentGrade ??
+              0,
+            gradeScaleId: requestDetails!.gradeBoard.gradeScaleId,
+            id: requestDetails!.gradeBoard.id,
+            studentCode: requestDetails!.gradeBoard.studentCode,
+            name: requestDetails!.gradeBoard.name,
+            surname: requestDetails!.gradeBoard.surname,
+            position: requestDetails!.gradeBoard.position,
+          },
+        ])
+          .then((res) => {
+            console.log(res);
+            toast.success(t("updateGradeSuccessfully"));
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error(t("updateGradeUnsuccessfully"));
+          });
       })
       .catch((err) => {
         console.log(err);
