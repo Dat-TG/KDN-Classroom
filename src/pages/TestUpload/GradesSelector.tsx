@@ -66,53 +66,72 @@ function parseRawData(csvData: string[][]): { gradeComponents: GradeComponent[],
     return { gradeComponents, students };
 }
 
+function findEmptyRow(data: string[][]): (number | null) {
+    for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        if (row.every((cell) => cell === "")) {
+            return i;
+        }
+    }
+
+    return null;
+}
 
 function isValidData(data: string[][]): boolean {
-    console.log(data);
+
+    console.log("data: ", data);
     // grade scale table header
     if (data[0][0].toLowerCase() !== "name" && data[0][1].toLocaleLowerCase() !== "grade scale") {
         console.log("wrong grade scale header");
         return false;
     }
 
-    const numberOfGradeScale = data[0].length - 3;
+    const emptyRowIndex = findEmptyRow(data);
+
+    if (emptyRowIndex == null || emptyRowIndex == data.length - 1) return false;
+
+    // emptyRowIndex = header + numberOfGradeComponent + empty row -1
+    // => numberOfGradeColumn = 3 + emptyRowIndex -1  = emptyRowIndex + 2
+    if (data[emptyRowIndex + 1].length != emptyRowIndex + 2) return false;
+
+    const numberOfGradeScale = data[emptyRowIndex + 1].length - 3;
 
     // Min number of rows = rows of grade scale + 2 header + 1 empty 
-    if (data.length < numberOfGradeScale + 3){
+    if (data.length < numberOfGradeScale + 3) {
         console.log("lack of information");
         return false;
-    } 
+    }
     let i;
     // grade scale rows 
     for (i = 1; i < numberOfGradeScale + 1; i++) {
         if (data[i][0] === "") {
             console.log("empty name of grade scale");
             return false;
-        } 
-        if (isNaN(Number(data[i][1]))){
+        }
+        if (isNaN(Number(data[i][1]))) {
             console.log("scale is not a number");
             return false;
-        } 
+        }
     }
 
-    if (!data[i].every((element) => element === "")){
+    if (!data[i].every((element) => element === "")) {
         console.log("not exist empty row");
         return false;
-    } 
+    }
 
     // grades table header
     i++;
     if (data[i][0].toLowerCase() != "student id"
-        || data[i][1].toLowerCase() != "first name" || data[i][2].toLowerCase() != "last name"){
-            console.log("wrong grade header");
-            return false;
-        } 
-    
+        || data[i][1].toLowerCase() != "first name" || data[i][2].toLowerCase() != "last name") {
+        console.log("wrong grade header");
+        return false;
+    }
+
     for (let j = 3; j < numberOfGradeScale + 3; j++) {
-        if (data[i][j] != data[j - 3 + 1][0]){
+        if (data[i][j] != data[j - 3 + 1][0]) {
             console.log("wrong name of scale");
             return false;
-        } 
+        }
     }
 
     return true;
@@ -187,7 +206,7 @@ const GradesSelector = ({ onChange }: Props) => {
     return (
         <>
             <Button variant="contained" component="label">
-                <IosShareIcon sx={{mr: 1}}/>
+                <IosShareIcon sx={{ mr: 1 }} />
                 {t("importGradesFromFile")}
                 <input
                     id="CSVInput"
