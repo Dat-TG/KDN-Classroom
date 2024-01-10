@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
 import ExcelJS from "exceljs";
 import { useTranslation } from "react-i18next";
@@ -6,39 +6,50 @@ import { FileDownload } from "@mui/icons-material";
 
 interface IDownloadFileButtonProps {
   colorTheme?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gradeScaleData: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gradeData: any[];
 }
 
-//  Excel data
-const excelData = [
-  ["Name", "Grade scale"],
-  [
-    "Type grade composition name here in this column",
-    "Type grade scale here in this column",
-  ],
-  [""],
-  [
-    "Student ID",
-    "First Name",
-    "Last Name",
-    "Grade composition (type grade compositions name here in this row)",
-  ],
-  [
-    "Type student ID here in this column",
-    "Type first name here in this column",
-    "Type last name here in this column",
-    "Type grade here in this column",
-  ],
-];
-
-const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
+const DownloadDataButton = ({
+  colorTheme,
+  gradeData,
+  gradeScaleData,
+}: IDownloadFileButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation("global");
+  //  Excel data
+  const [excelData, setExcelData] = useState<string[][]>([]);
+
+  useEffect(() => {
+    const excelData = [["Name", "Grade scale"]];
+    const gradeRow = ["Student ID", "First Name", "Last Name"];
+    gradeScaleData.forEach((gradeScale) => {
+      excelData.push([gradeScale.title, gradeScale.scale]);
+      gradeRow.push(gradeScale.title);
+    });
+    excelData.push([]);
+    excelData.push(gradeRow);
+    gradeData.forEach((grade) => {
+      excelData.push([
+        grade.studentId,
+        grade.firstName,
+        grade.lastName,
+        ...gradeScaleData.map((gradeScale) => {
+          return parseFloat(grade[gradeScale.id.toString()]);
+        }),
+      ]);
+    });
+    console.log("excelData", excelData);
+    setExcelData(excelData);
+  }, [gradeData, gradeScaleData]);
   const downloadCSV = () => {
     // Convert data to CSV format
     const csvContent = excelData.map((row) => row.join(",")).join("\n");
 
     // Create a Blob object
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv" });
 
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
@@ -46,7 +57,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template.csv";
+    link.download = "grade_board_template_with_data.csv";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -81,7 +92,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template.xlsx";
+    link.download = "grade_board_template_with_data.xlsx";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -115,7 +126,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
           />
         }
       >
-        {t("downloadTemplate")}
+        {t("downloadTemplateWithData")}
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem
@@ -139,4 +150,4 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
   );
 };
 
-export default DownloadFileButton;
+export default DownloadDataButton;

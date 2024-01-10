@@ -198,5 +198,10 @@
     "updateGradeSuccessfully": "Update grade successfully",
     "updateGradeUnsuccessfully": "Update grade unsuccessfully",
     "downloadTemplate": "Download template",
-    "download": "Download"
+    "download": "Download",
+    "activeClass": "active class",
+    "inactiveClass": "inactive class",
+    "activeClassSuccessfully": "Active class successfully",
+    "inactiveClassSuccessfully": "Inactive class successfully",
+    "downloadTemplateWithData": "Download template with data"
 }

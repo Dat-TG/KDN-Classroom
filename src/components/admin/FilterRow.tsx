@@ -39,25 +39,37 @@ const FilterRow = ({
         <Select
           labelId="activeLabel"
           label="Active"
-          value={isActive}
+          value={isActive == null ? "null" : isActive ? "active" : "inactive"}
           onChange={(e) =>
-            onIsActiveChange(Number(e.target.value) === 1 ? true : false)
+            onIsActiveChange(
+              e.target.value == "active"
+                ? true
+                : e.target.value == "inactive"
+                ? false
+                : null
+            )
           }
         >
-          <MenuItem value={1}>Active</MenuItem>
-          <MenuItem value={0}>Inactive</MenuItem>
+          <MenuItem value={"null"}>None</MenuItem>
+          <MenuItem value={"active"}>Active</MenuItem>
+          <MenuItem value={"inactive"}>Inactive</MenuItem>
         </Select>
       </FormControl>
       <FormControl fullWidth>
         <InputLabel id="orderLabel">Order</InputLabel>
         <Select
-          value={order}
+          value={order == null ? "null" : order}
           onChange={(e) =>
-            onOrderChange(e.target.value as "ASC" | "DESC" | null)
+            onOrderChange(
+              e.target.value == "null"
+                ? null
+                : (e.target.value as "ASC" | "DESC" | null)
+            )
           }
           labelId="orderLabel"
           label="Order"
         >
+          <MenuItem value="null">None</MenuItem>
           <MenuItem value="ASC">Ascending</MenuItem>
           <MenuItem value="DESC">Descending</MenuItem>
         </Select>
@@ -67,9 +79,12 @@ const FilterRow = ({
         <Select
           labelId="orderByLabel"
           label="Order By"
-          value={orderBy}
-          onChange={(e) => onOrderByChange(e.target.value)}
+          value={orderBy == null ? "null" : orderBy}
+          onChange={(e) =>
+            onOrderByChange(e.target.value == "null" ? null : e.target.value)
+          }
         >
+          <MenuItem value="null">None</MenuItem>
           <MenuItem value="id">ID</MenuItem>
           <MenuItem value="nameCourse">Name</MenuItem>
           <MenuItem value="topic">Topic</MenuItem>
