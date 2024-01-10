@@ -34,6 +34,7 @@ import { getProfileByStudentId } from "../../api/user/apiUser";
 import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import DownloadFileButton from "../../components/class_details/DownloadFileButton";
 import DownloadTabulatorButton from "../../components/class_details/DownloadTabulatorButton";
+import DownloadDataButton from "../../components/class_details/DownloadDataButton";
 
 interface Props {
   colorTheme: string;
@@ -725,6 +726,17 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           }}
         >
           <DownloadFileButton colorTheme={classEntity.course.courseColor} />
+        </div>
+        <div
+          style={{
+            display: isStudent ? "none" : "inline-flex",
+          }}
+        >
+          <DownloadDataButton
+            colorTheme={classEntity.course.courseColor}
+            gradeData={grades}
+            gradeScaleData={gradeScale}
+          />
         </div>
       </Box>
 

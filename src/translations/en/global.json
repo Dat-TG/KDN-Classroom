@@ -202,5 +202,6 @@
     "activeClass": "active class",
     "inactiveClass": "inactive class",
     "activeClassSuccessfully": "Active class successfully",
-    "inactiveClassSuccessfully": "Inactive class successfully"
+    "inactiveClassSuccessfully": "Inactive class successfully",
+    "downloadTemplateWithData": "Download template with data"
 }

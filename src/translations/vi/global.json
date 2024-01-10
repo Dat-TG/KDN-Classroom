@@ -202,5 +202,6 @@
     "activeClass": "kích hoạt lớp học",
     "inactiveClass": "lưu trữ lớp học",
     "activeClassSuccessfully": "Kích hoạt lớp học thành công",
-    "inactiveClassSuccessfully": "Lưu trữ lớp học thành công"
+    "inactiveClassSuccessfully": "Lưu trữ lớp học thành công",
+    "downloadTemplateWithData": "Tải file mẫu với dữ liệu"
 }
