@@ -59,6 +59,8 @@
     "emailValidationMessage": "Please enter a valid email address.",
     "firstNameValidationMessage": "Please enter your first name.",
     "lastNameValidationMessage": "Please enter your last name.",
+    "passwordValidationMessage": "Please enter your password at least 6 characters.",
+    "confirmPasswordValidationMessage": "Please confirm your password.",
     "resetPassword": "Reset password",
     "pleaseCheckYourEmail": "Please check your email to continue to reset your password",
     "resetPasswordSuccessfully": "Reset password successfully",
@@ -186,5 +188,15 @@
     "topic": "Topic",
     "confirmMakeFinalized": "Are you sure you want to make this grade finalized?",
     "requestGradeReviewSuccessfully": "Request grade review successfully",
-    "noRequest": "No request"
+    "noRequest": "No request",
+    "approve": "Approve",
+    "reject": "Reject",
+    "updatedGrade": "Updated grade",
+    "requestApproved": "Request approved",
+    "requestRejected": "Request rejected",
+    "notSuccessful": "Not successful",
+    "updateGradeSuccessfully": "Update grade successfully",
+    "updateGradeUnsuccessfully": "Update grade unsuccessfully",
+    "downloadTemplate": "Download template",
+    "download": "Download"
 }
