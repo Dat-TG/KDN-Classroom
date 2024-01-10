@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,6 +8,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Skeleton,
+  TextField,
 } from "@mui/material";
 
 import "react-tabulator/lib/styles.css"; // required styles
@@ -16,10 +17,13 @@ import { ReactTabulator } from "react-tabulator";
 import { useTranslation } from "react-i18next";
 import { IComment, IGradeReviewRequest, IGradeScale } from "../../types/grade";
 import {
+  approveRequest,
   getAllComments,
   getGradeCompositionById,
   getRequestDetails,
   postComment,
+  rejectRequest,
+  updateGradeBoard,
 } from "../../api/grade/apiGrade";
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../api/user/apiUser";
@@ -27,6 +31,8 @@ import { IUserProfileRes } from "../../types/user";
 import SingleComment from "../../components/class_details/SingleComment";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
+import { Block, Cancel, CheckCircle } from "@mui/icons-material";
+import toast from "../../utils/toast";
 
 export default function RequestDetailsPage() {
   const [comment, setComment] = useState("");
@@ -62,6 +68,55 @@ export default function RequestDetailsPage() {
     setComment("");
   };
 
+  const onApprove = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(gradeRef.current?.value);
+    approveRequest(requestDetails!.id)
+      .then((res) => {
+        console.log(res);
+        toast.success("Request approved");
+        // updateGradeBoard([
+        //   {
+        //     courseId: requestDetails!.courseId,
+        //     grade:
+        //       parseFloat(gradeRef.current!.value) ??
+        //       requestDetails?.currentGrade ??
+        //       0,
+        //     gradeScaleId: requestDetails!.gradeBoard.gradeScaleId,
+        //     id: requestDetails!.gradeBoard.id,
+        //     studentCode: requestDetails!.gradeBoard.studentCode,
+        //     name: requestDetails!.gradeBoard.name,
+        //     surname: requestDetails!.gradeBoard.surname,
+        //     position: requestDetails!.gradeBoard.position,
+        //   },
+        // ])
+        //   .then((res) => {
+        //     console.log(res);
+        //     toast.success(t("updateGradeSuccessfully"));
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //     toast.error(t("updateGradeUnsuccessfully"));
+        //   });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(t("notSuccessful"));
+      });
+  };
+  const onCancel = () => {};
+  const onReject = (event: React.FormEvent) => {
+    event.preventDefault();
+    rejectRequest(requestDetails!.id, rejectRef.current!.value)
+      .then((res) => {
+        console.log(res);
+        toast.success(t("requestRejected"));
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(t("notSuccessful"));
+      });
+  };
   const { requestId } = useParams();
 
   const [requestDetails, setRequestDetails] =
@@ -70,6 +125,10 @@ export default function RequestDetailsPage() {
   const [gradeComposition, setGradeComposition] = useState<IGradeScale>();
 
   const user = useSelector(sGetUserInfo);
+
+  const gradeRef = useRef<HTMLInputElement>(null);
+
+  const rejectRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     getRequestDetails(parseInt(requestId!))
@@ -204,6 +263,104 @@ export default function RequestDetailsPage() {
           },
         ]}
       />
+
+      {user?.id !== author?.id && (
+        <Box display={"flex"} gap={"32px"} alignItems={"center"}>
+          <form
+            onSubmit={onApprove}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "space-between",
+              gap: "16px",
+              flex: 1,
+            }}
+          >
+            <TextField
+              inputRef={gradeRef}
+              sx={{
+                marginTop: "16px",
+              }}
+              type="number"
+              inputProps={{
+                step: "any",
+              }}
+              label={t("updatedGrade")}
+              variant="outlined"
+              required
+            />
+            <Box display={"flex"} gap={"16px"}>
+              <Button
+                component="button"
+                type="submit"
+                variant="contained"
+                startIcon={<CheckCircle />}
+              >
+                {t("approve")}
+              </Button>
+            </Box>
+          </form>
+          <Box
+            sx={{
+              width: "1px",
+              height: "150px",
+              backgroundColor: "#ccc",
+            }}
+          />
+          <form
+            onSubmit={onReject}
+            style={{
+              flex: 3,
+              alignItems: "space-between",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            <textarea
+              ref={rejectRef}
+              style={{
+                width: "100%",
+                height: "100px",
+                resize: "none",
+                padding: "8px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                boxSizing: "border-box",
+                marginTop: "16px",
+              }}
+              placeholder={t("typeCommentHere")}
+              required
+            />
+            <Box display={"flex"} gap={"16px"}>
+              <Button
+                component="button"
+                type="submit"
+                variant="outlined"
+                startIcon={<Block />}
+                onClick={onReject}
+              >
+                {t("reject")}
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      )}
+
+      {user?.id !== author?.id ? (
+        <></>
+      ) : (
+        <Box marginTop={"16px"}>
+          <Button
+            component="label"
+            variant="outlined"
+            startIcon={<Cancel />}
+            onClick={onCancel}
+          >
+            {t("cancel")}
+          </Button>
+        </Box>
+      )}
 
       <Box mt={4}>
         <textarea

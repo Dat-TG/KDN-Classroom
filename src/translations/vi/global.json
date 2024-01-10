@@ -142,6 +142,7 @@
     "classNotFound": "Không tìm thấy lớp học",
     "youAreNotMemberOfThisClass": "Bạn không phải là thành viên của lớp học này",
     "join": "Tham gia",
+    "joinClassGuide": "Hỏi giáo viên lớp học để được cấp mã lớp học",
     "joinClassSuccessfully": "Tham gia lớp học thành công",
     "sendInviteLinkSuccessfullyTo": "Gửi đường liên kết mời thành công đến ",
     "gradesTable": "Bảng điểm",
@@ -187,5 +188,13 @@
     "topic": "Chủ đề",
     "confirmMakeFinalized": "Bạn có chắc chắn muốn đánh dấu thành phần điểm này là cuối cùng?",
     "requestGradeReviewSuccessfully": "Tạo yêu cầu xem xét điểm thành công",
-    "noRequest": "Không có yêu cầu nào"
+    "noRequest": "Không có yêu cầu nào",
+    "approve": "Chấp nhận",
+    "reject": "Từ chối",
+    "updatedGrade": "Điểm đã cập nhật",
+    "requestApproved": "Yêu cầu đã được chấp nhận",
+    "requestRejected": "Yêu cầu đã bị từ chối",
+    "notSuccessful": "Không thành công",
+    "updateGradeSuccessfully": "Cập nhật điểm thành công",
+    "updateGradeUnsuccessfully": "Cập nhật điểm không thành công"
 }
