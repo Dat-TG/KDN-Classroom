@@ -17,7 +17,6 @@ type GradeScale = {
 
 type Student = {
     studentId: string;
-    email: string;
     firstName: string;
     lastName: string;
     grades: GradeScale;
@@ -36,7 +35,6 @@ function convertStudents(studentArray: Student[]): any[] {
             firstName: student.firstName,
             lastName: student.lastName,
             studentId: student.studentId,
-            email: student.email,
         };
 
         for (const gradeName in student.grades) {
@@ -118,12 +116,6 @@ const ImportGrades = () => {
                 {
                     title: "Student ID",
                     field: "studentId",
-                    editable: true,
-                    editor: "input",
-                },
-                {
-                    title: "Email",
-                    field: "email",
                     editable: true,
                     editor: "input",
                 },

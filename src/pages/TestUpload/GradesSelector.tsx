@@ -12,7 +12,6 @@ type GradeScale = {
 
 type Student = {
     studentId: string;
-    email : string;
     firstName: string;
     lastName: string;
     grades: GradeScale;
@@ -51,18 +50,17 @@ function parseRawData(csvData: string[][]): { gradeComponents: GradeComponent[],
             }
         } else if (isStudentDataSection && row[0] !== '' && row[0].toLowerCase() !== 'student id') {
             const studentId = row[0].trim();
-            const email = row[1].trim();
-            const firstName = row[2].trim();
-            const lastName = row[3].trim();
+            const firstName = row[1].trim();
+            const lastName = row[2].trim();
             const grades: GradeScale = {};
 
             for (let i = 0; i < gradeComponents.length; i++) {
-                grades[gradeComponents[i].name] = parseFloat(row[i + 4].trim());
+                grades[gradeComponents[i].name] = parseFloat(row[i + 3].trim());
             }
 
             // grades['Average'] = calculateAverage(grades, gradeComponents);
 
-            students.push({ studentId, email, firstName, lastName, grades });
+            students.push({ studentId, firstName, lastName, grades });
         }
     }
     return { gradeComponents, students };
@@ -77,7 +75,7 @@ function isValidData(data: string[][]): boolean {
         return false;
     }
 
-    const numberOfGradeScale = data[0].length - 4;
+    const numberOfGradeScale = data[0].length - 3;
 
     // Min number of rows = rows of grade scale + 2 header + 1 empty 
     if (data.length < numberOfGradeScale + 3){
@@ -104,14 +102,14 @@ function isValidData(data: string[][]): boolean {
 
     // grades table header
     i++;
-    if (data[i][0].toLowerCase() != "student id" || data[i][1].toLowerCase() != "email"
-        || data[i][2].toLowerCase() != "first name" || data[i][3].toLowerCase() != "last name"){
+    if (data[i][0].toLowerCase() != "student id"
+        || data[i][1].toLowerCase() != "first name" || data[i][2].toLowerCase() != "last name"){
             console.log("wrong grade header");
             return false;
         } 
     
-    for (let j = 4; j < numberOfGradeScale + 4; j++) {
-        if (data[i][j] != data[j - 4 + 1][0]){
+    for (let j = 3; j < numberOfGradeScale + 3; j++) {
+        if (data[i][j] != data[j - 3 + 1][0]){
             console.log("wrong name of scale");
             return false;
         } 
