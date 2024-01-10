@@ -8,6 +8,8 @@ import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
 import { RoleCourseNumber } from "../../types/course";
 import FilterRow from "../../components/admin/FilterRow";
+import { activeCourse, inactiveCourse } from "../../api/admin/apiAdmin";
+import toast from "../../utils/toast";
 export default function CourseManagementPage() {
   const [t] = useTranslation("global");
   const [openConfirm, setOpenConfirm] = React.useState(false);
@@ -20,23 +22,23 @@ export default function CourseManagementPage() {
   const [searchText, setSearchText] = React.useState<string | null>(null);
   const onConfirm = () => {
     if (currentCell?.getValue() == true) {
-      //   banUser(currentCell?.getRow().getData().id)
-      //     .then(() => {
-      //       toast.success(t("banUserSuccessfully"));
-      //     })
-      //     .catch((error) => {
-      //       toast.error(error.detail.message);
-      //       currentCell?.restoreOldValue();
-      //     });
+      activeCourse(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("activeClassSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
     } else {
-      //   unbanUser(currentCell?.getRow().getData().id)
-      //     .then(() => {
-      //       toast.success(t("unbanUserSuccessfully"));
-      //     })
-      //     .catch((error) => {
-      //       toast.error(error.detail.message);
-      //       currentCell?.restoreOldValue();
-      //     });
+      inactiveCourse(currentCell?.getRow().getData().id)
+        .then(() => {
+          toast.success(t("inactiveClassSuccessfully"));
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+          currentCell?.restoreOldValue();
+        });
     }
     setOpenConfirm(false);
   };
@@ -236,12 +238,12 @@ export default function CourseManagementPage() {
             },
             cellEdited: function (cell) {
               setCurrentCell(cell);
-              const isBan = cell.getValue();
-              const email = cell.getRow().getData().userName;
+              const isActive = cell.getValue();
+              const id = cell.getRow().getData().id;
               setConfirmContent(
                 `${t("areYouSureYouWantTo")} ${
-                  isBan ? t("banUser") : t("unbanUser")
-                } ${email}?`
+                  isActive ? t("activeClass") : t("inactiveClass")
+                } ${id}?`
               );
               setOpenConfirm(true);
             },

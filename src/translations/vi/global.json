@@ -198,5 +198,9 @@
     "updateGradeSuccessfully": "Cập nhật điểm thành công",
     "updateGradeUnsuccessfully": "Cập nhật điểm không thành công",
     "downloadTemplate": "Tải file mẫu",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "activeClass": "kích hoạt lớp học",
+    "inactiveClass": "lưu trữ lớp học",
+    "activeClassSuccessfully": "Kích hoạt lớp học thành công",
+    "inactiveClassSuccessfully": "Lưu trữ lớp học thành công"
 }
