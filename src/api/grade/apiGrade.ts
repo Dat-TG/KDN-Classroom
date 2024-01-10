@@ -73,3 +73,39 @@ export const getGradeCompositionById = async (id: number) => {
   const response = await AxiosClient.get(`/grade-scale/${id}`);
   return response.data;
 };
+
+export const getRequestDetails = async (id: number) => {
+  const response = await AxiosClient.get(`/request-review/${id}`);
+  return response.data;
+};
+
+export const postComment = async (requestReviewId: number, comment: string) => {
+  const response = await AxiosClient.post("/comment-request", {
+    id: 0,
+    comment,
+    requestReviewId,
+  });
+  return response.data;
+};
+
+export const getAllComments = async (requestReviewId: number) => {
+  const response = await AxiosClient.get(
+    `/comment-request/request/${requestReviewId}`
+  );
+  return response.data;
+};
+
+export const approveRequest = async (id: number) => {
+  const response = await AxiosClient.post("/request-review/approve", {
+    id,
+  });
+  return response.data;
+};
+
+export const rejectRequest = async (id: number, comment: string) => {
+  const response = await AxiosClient.post("/request-review/reject", {
+    id,
+    comment,
+  });
+  return response.data;
+};

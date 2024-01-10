@@ -17,7 +17,7 @@ interface IRequestListPageProps {
 export default function RequestListPage({ isStudent }: IRequestListPageProps) {
   const { t } = useTranslation("global");
 
-  const [reviews, setReviews] = useState<IGradeReviewRequest[]>([]);
+  const [reviews, setReviews] = useState<IGradeReviewRequest[] | null>(null);
   const [searchParams] = useSearchParams();
   useEffect(() => {
     if (isStudent) {
@@ -62,13 +62,26 @@ export default function RequestListPage({ isStudent }: IRequestListPageProps) {
           )}
         </List>
       ) : (
-        <Skeleton
-          variant="rectangular"
-          height={200}
-          sx={{
-            margin: "16px",
+        <div
+          style={{
+            gap: "16px",
           }}
-        />
+        >
+          <Skeleton
+            variant="rectangular"
+            height={150}
+            sx={{
+              margin: "16px",
+            }}
+          />
+          <Skeleton
+            variant="rectangular"
+            height={150}
+            sx={{
+              margin: "16px",
+            }}
+          />
+        </div>
       )}
     </div>
   );

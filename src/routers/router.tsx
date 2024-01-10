@@ -95,7 +95,7 @@ const router = createBrowserRouter([
                 element: <RequestListPage isStudent={false} />,
               },
               {
-                path: "grades/requests/:requestId",
+                path: "grades/request/:requestId",
                 element: <RequestDetailsPage />,
               },
             ],

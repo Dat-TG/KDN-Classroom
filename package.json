@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@refinedev/antd": "^5.37.0",
     "axios": "^1.6.2",
+    "exceljs": "^4.4.0",
     "i18next": "^23.7.6",
     "notistack": "^3.0.1",
     "react": "^17.0.0 || ^18.0.0",

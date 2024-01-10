@@ -32,6 +32,7 @@ import toast from "../../utils/toast";
 import UserInfoDialog from "../../components/profile/UserInfoDialog";
 import { getProfileByStudentId } from "../../api/user/apiUser";
 import ConfirmationDialog from "../../components/common/ConfirmDialog";
+import DownloadFileButton from "../../components/class_details/DownloadFileButton";
 
 interface Props {
   colorTheme: string;
@@ -717,6 +718,13 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         >
           {t("saveChanges")}
         </Button>
+        <div
+          style={{
+            display: isStudent ? "none" : "inline-flex",
+          }}
+        >
+          <DownloadFileButton colorTheme={classEntity.course.courseColor} />
+        </div>
       </Box>
 
       <div

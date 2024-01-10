@@ -13,6 +13,7 @@ import { IGradeReviewRequest, IGradeScale } from "../../types/grade";
 import { IUserProfileRes } from "../../types/user";
 import React from "react";
 import { getGradeCompositionById } from "../../api/grade/apiGrade";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   review: IGradeReviewRequest;
@@ -21,6 +22,7 @@ interface Props {
 export default function RequestItem({ review }: Props) {
   const [user, setUser] = useState<IUserProfileRes | undefined>(undefined);
   const [gradeComposition, setGradeComposition] = useState<IGradeScale>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserById(review.userId)
@@ -45,6 +47,16 @@ export default function RequestItem({ review }: Props) {
       <ListItemButton
         sx={{
           gap: "16px",
+        }}
+        onClick={() => {
+          let pathname = window.location.pathname;
+          while (pathname.endsWith("/")) {
+            pathname = pathname.slice(0, pathname.length - 1);
+          }
+          while (!pathname.endsWith("/")) {
+            pathname = pathname.slice(0, pathname.length - 1);
+          }
+          navigate(`${pathname}request/${review.id}`);
         }}
       >
         <ListItemAvatar>
