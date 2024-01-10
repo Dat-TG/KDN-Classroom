@@ -351,7 +351,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           }}
           onClick={() => {
             setSelectedIndex(index);
-            navigate(`/class/${item.class.course.code}`);
+            navigate(`/class/${item.class.course.code}/stream`);
           }}
         >
           <ListItemIcon

@@ -9,7 +9,6 @@ type GradeScale = {
 
 type Student = {
   studentId: string;
-  email: string;
   firstName: string;
   lastName: string;
   grades: GradeScale;
@@ -32,7 +31,6 @@ const ExportGrades = (props: ImportGradesProps) => {
     const headers: { label: string; key: string }[] = [];
     if (props.students && props.gradeComponents) {
       headers.push({ label: "Id", key: "studentId" });
-      headers.push({ label: "Email", key: "email" });
       headers.push({ label: "First Name", key: "firstName" });
       headers.push({ label: "Last Name", key: "lastName" });
 
