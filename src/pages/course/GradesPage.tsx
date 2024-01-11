@@ -46,6 +46,8 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function GradesPage({ classEntity, studentIds }: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [gradesData, setGradesData] = useState<any[]>([]);
   const gradeTableRef = useRef(null);
   const gradeScaleTableRef = useRef(null);
   const { t } = useTranslation("global");
@@ -65,9 +67,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
   const [isStudent, setIsStudent] = useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [grades, setGrades] = useState<any[]>([]);
 
   const [isOpenRequestDialog, setIsOpenRequestDialog] =
     useState<boolean>(false);
@@ -100,6 +99,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         toast.success(res.message);
         gradeScaleTable?.clearHistory();
         gradesTable?.clearHistory();
+        const grades = gradesTable?.getData() ?? [];
+        console.log("gradesTable", gradesTable?.getData());
         const gradesTemp = grades.map((grade) => {
           const position = gradesTable?.getRows().findIndex((row) => {
             return row.getData().studentId === grade.studentId;
@@ -213,7 +214,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               }
             }
             grades.push(temp);
-            setGrades(grades);
             console.log("grades", grades);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (err: any) {
@@ -291,7 +291,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           grades.sort((a, b) => {
             return a.position - b.position;
           });
-          setGrades(grades);
           console.log("grades", grades);
         }
       };
@@ -423,9 +422,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
           setGradesTable(gradeTable);
 
-          //listen for row move
-          gradeTable.on("rowMoved", function (row) {
-            console.log("Row: " + row.getData().studentId + " has been moved");
+          gradeTable.on("dataChanged", function (data) {
+            setGradesData(data);
           });
           gradeTable.on("rowSelectionChanged", function (_data, rows) {
             //rows - array of row components for the currently selected rows in order of selection
@@ -547,12 +545,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 });
               }
             });
-            setGrades((prev) => {
-              prev.forEach((grade) => {
-                delete grade[row.getData().title];
-              });
-              return prev;
-            });
           });
           gradeScaleTable.on("cellEdited", function (cell) {
             //cell - cell component
@@ -610,14 +602,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 });
                 gradeTable.setData(grades);
               } else {
-                setGrades((prev) => {
-                  prev.forEach((grade) => {
-                    grade[cell.getValue()] = grade[cell.getOldValue()];
-                    delete grade[cell.getOldValue()];
-                  });
-                  gradeTable.setData(prev);
-                  return prev;
+                grades.forEach((grade) => {
+                  grade[cell.getValue()] = grade[cell.getOldValue()];
+                  delete grade[cell.getOldValue()];
                 });
+                gradeTable.setData(grades);
               }
             }
             if (cell.getField() === "scale") {
@@ -734,7 +723,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         >
           <DownloadDataButton
             colorTheme={classEntity.course.courseColor}
-            gradeData={grades}
+            gradeData={gradesData}
             gradeScaleData={gradeScale}
           />
         </div>
@@ -953,7 +942,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             scale: row.getData().scale,
           };
         })}
-        grades={grades}
+        grades={gradesData}
       />
       <UserInfoDialog
         open={openUserDialog}
