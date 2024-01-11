@@ -200,5 +200,11 @@
     "downloadTemplate": "Tải file mẫu",
     "download": "Tải xuống",
     "markAllAsRead": "Đánh dấu đã đọc tất cả",
-    "seeAll" : "Xem tất cả"
+    "seeAll" : "Xem tất cả",
+    "approveReviewRequesNotification" : "đã đồng ý yêu cầu xem xét điểm của bạn.",
+    "rejectReviewRequesNotification" : "đã từ chối yêu cầu xem xét điểm của bạn.",
+    "finalizedCompositionNotification" : "đã hoàn thành một cột điểm.",
+    "reviewRequestNotification": "đã tạo một yêu cầu xem xét điểm.",
+    "teacherCommentNotification": "đã trả lời yêu cầu xem xét điểm của bạn.",
+    "studentCommentNotification": "đã bình luận ở yêu cầu xem xét điểm của anh ấy."
 }

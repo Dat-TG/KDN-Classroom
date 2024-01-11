@@ -72,8 +72,12 @@ const NotificationsList: React.FC = () => {
           vertical: "top",
           horizontal: "center",
         }}
-        sx={{ maxHeight: "600px" }}
+
       >
+        <Box>
+          <Typography variant="h6" sx={{ml: 2}}> Thông báo</Typography>
+        </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -88,22 +92,22 @@ const NotificationsList: React.FC = () => {
             {t("seeAll")}
           </Button>
         </Box>
-        <Box>
+        <Box sx={{ maxHeight: "500px", overflowY: 'scroll' }}>
           {notificationText.map((text, index) => (
             <MenuItem
               key={index}
               sx={{
                 width: "300px",
                 display: "flex",
+                borderBottom: 'solid 1px darkGray'
               }}
               onClick={viewNotification}
             >
-              <Box sx={{ display: "flex" }}>
+              <Box sx={{ display: "flex"}}>
                 <Typography
                   variant="body2"
                   sx={{
                     whiteSpace: "normal",
-
                     overflow: "hidden",
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
