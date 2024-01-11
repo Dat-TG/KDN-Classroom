@@ -61,9 +61,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   );
   const [selectedStudent, setSelectedStudent] = useState<RowComponent[]>([]);
 
-  const [gradeScale, setGradeScale] = useState<IGradeScaleWithFinalized[]>(
-    [] as IGradeScaleWithFinalized[]
-  );
+  const [gradeScaleData, setGradeScaleData] = useState<
+    IGradeScaleWithFinalized[]
+  >([] as IGradeScaleWithFinalized[]);
 
   const [isStudent, setIsStudent] = useState<boolean>(false);
   const user = useSelector(sGetUserInfo);
@@ -81,7 +81,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const [selectedCell, setSelectedCell] = useState<CellComponent>();
 
   const onSave = async () => {
-    const gradeScaleTemp: IGradeScale[] = gradeScale.map((grade) => {
+    const gradeScaleTemp: IGradeScale[] = gradeScaleData.map((grade) => {
       const position = gradeScaleTable?.getRows().findIndex((row) => {
         return row.getData().id === grade.id;
       });
@@ -172,14 +172,12 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         gradeScale.sort((a, b) => {
           return a.position - b.position;
         });
-        setGradeScale(gradeScale);
         console.log("gradeScale", typeof gradeScale[0].scale);
       } else {
         gradeScale = res.gradeScalesStudent as IGradeScaleWithFinalized[];
         gradeScale.sort((a, b) => {
           return a.position - b.position;
         });
-        setGradeScale(gradeScale);
         console.log("gradeScale", typeof gradeScale[0].scale);
       }
 
@@ -523,9 +521,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             ],
           });
           setGradeScaleTable(gradeScaleTable);
-          //listen for row move
-          gradeScaleTable.on("rowMoved", function (row) {
-            console.log("Row: " + row.getData().name + " has been moved");
+          gradeScaleTable.on("dataChanged", function (data) {
+            setGradeScaleData(data);
           });
           gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
             //rows - array of row components for the currently selected rows in order of selection
@@ -536,8 +533,14 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           });
           gradeScaleTable.on("rowDeleted", function (row) {
             //row - row component
-            console.log("Row: " + row.getData().title + " has been deleted");
-            gradeTable?.deleteColumn(row.getData().title).then(() => {
+            console.log(
+              "Row: " +
+                row.getData().title +
+                " " +
+                row.getData().id +
+                " has been deleted"
+            );
+            gradeTable?.deleteColumn(row.getData().id.toString()).then(() => {
               const rows = gradeTable?.getRows();
               for (let i = 0; i < rows.length; i++) {
                 rows[i].update({
@@ -589,17 +592,15 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                   "average"
                 );
                 console.log("not exist", cell.getValue());
-                setGradeScale((prev) => {
-                  prev.push({
-                    title: cell.getValue(),
-                    scale: cell.getRow().getData().scale || 0,
-                    id: 0,
-                    courseId: classEntity.courseId,
-                    position: cell.getRow().getData().position,
-                    isFinalized: cell.getRow().getData().isFinalized,
-                  });
-                  return prev;
+                gradeScale.push({
+                  title: cell.getValue(),
+                  scale: cell.getRow().getData().scale || 0,
+                  id: 0,
+                  courseId: classEntity.courseId,
+                  position: cell.getRow().getData().position,
+                  isFinalized: cell.getRow().getData().isFinalized,
                 });
+
                 gradeTable.setData(grades);
               } else {
                 grades.forEach((grade) => {
@@ -610,27 +611,24 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               }
             }
             if (cell.getField() === "scale") {
-              setGradeScale((prev) => {
-                let isExist = false;
-                prev.forEach((grade) => {
-                  if (grade.title === cell.getRow().getData().title) {
-                    grade.scale = cell.getValue();
-                    isExist = true;
-                    return true;
-                  }
-                });
-                if (!isExist) {
-                  prev.push({
-                    title: cell.getRow().getData().title,
-                    scale: cell.getValue(),
-                    id: 0,
-                    courseId: classEntity.courseId,
-                    position: cell.getRow().getData().position,
-                    isFinalized: cell.getRow().getData().isFinalized,
-                  });
+              let isExist = false;
+              gradeScale.forEach((grade) => {
+                if (grade.title === cell.getRow().getData().title) {
+                  grade.scale = cell.getValue();
+                  isExist = true;
+                  return true;
                 }
-                return prev;
               });
+              if (!isExist) {
+                gradeScale.push({
+                  title: cell.getRow().getData().title,
+                  scale: cell.getValue(),
+                  id: 0,
+                  courseId: classEntity.courseId,
+                  position: cell.getRow().getData().position,
+                  isFinalized: cell.getRow().getData().isFinalized,
+                });
+              }
 
               gradeTable.setData(grades);
             }
@@ -724,7 +722,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           <DownloadDataButton
             colorTheme={classEntity.course.courseColor}
             gradeData={gradesData}
-            gradeScaleData={gradeScale}
+            gradeScaleData={gradeScaleData}
           />
         </div>
       </Box>
@@ -816,15 +814,6 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                     )}?`
                   )
                 ) {
-                  setGradeScale((prev) => {
-                    const arr = prev.filter(
-                      (gradeScale) =>
-                        !selectedGradeScale
-                          .map((row) => row.getData().title)
-                          .includes(gradeScale.title)
-                    );
-                    return arr;
-                  });
                   for (let i = 0; i < selectedGradeScale.length; i++) {
                     selectedGradeScale[i].delete();
                   }
@@ -929,21 +918,23 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       )}
       <div ref={gradeTableRef} />
       {gradesTable == null && <CircularProgress />}
-      <RequestReviewDialog
-        open={isOpenRequestDialog}
-        courseId={classEntity.courseId}
-        onClose={() => {
-          setIsOpenRequestDialog(false);
-        }}
-        gradeScale={selectedGradeScale.map((row) => {
-          return {
-            id: row.getData().id,
-            name: row.getData().title,
-            scale: row.getData().scale,
-          };
-        })}
-        grades={gradesData}
-      />
+      {isStudent && (
+        <RequestReviewDialog
+          open={isOpenRequestDialog}
+          courseId={classEntity.courseId}
+          onClose={() => {
+            setIsOpenRequestDialog(false);
+          }}
+          gradeScale={selectedGradeScale.map((row) => {
+            return {
+              id: row.getData().id,
+              name: row.getData().title,
+              scale: row.getData().scale,
+            };
+          })}
+          grades={gradesData}
+        />
+      )}
       <UserInfoDialog
         open={openUserDialog}
         handleClose={() => setOpenUserDialog(false)}
