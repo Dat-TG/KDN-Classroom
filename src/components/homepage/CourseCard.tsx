@@ -34,7 +34,8 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [props.classEntity.course.userCourses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isMenuOpen = Boolean(anchorEl);
 

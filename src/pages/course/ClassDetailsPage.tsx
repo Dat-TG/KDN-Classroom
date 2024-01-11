@@ -19,8 +19,12 @@ import {
   extension,
 } from "../../utils/class_themes";
 import ClassSettingsDialog from "../../components/class_details/ClassSettingsDialog";
-import { IGetCoursesRes, RoleCourseNumber } from "../../types/course";
-import { getCourseByCode } from "../../api/course/apiCourse";
+import {
+  IGetCoursesRes,
+  RoleCourseNumber,
+  RoleCourseString,
+} from "../../types/course";
+import { createInviteLink, getCourseByCode } from "../../api/course/apiCourse";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "../../utils/toast";
 import { IToastError } from "../../types/common";
@@ -55,6 +59,8 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
 
   const [noPermission, setNoPermission] = useState<boolean>(false);
 
+  const [inviteLink, setInviteLink] = useState<string>("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,6 +91,16 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
           res.course.courseBackground! ??
             `${baseUrlBackground}/${bgGeneral[0]}${extension}`
         );
+        createInviteLink({
+          courseCode: res.course.code,
+          roleCourse: RoleCourseString.Student,
+        })
+          .then((res) => {
+            setInviteLink(res.url);
+          })
+          .catch((err) => {
+            toast.error(err.detail.message);
+          });
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
@@ -92,7 +108,8 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
           setClassNotFound(true);
         }
       });
-  }, [classCode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -224,6 +241,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
             <>
               <div hidden={value != 0}>
                 <StreamPage
+                  inviteLink={inviteLink}
                   bgImg={bgImg}
                   classEntity={classEntity}
                   colorTheme={colorTheme}
@@ -238,6 +256,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
                   ownerId={ownerId}
                   teacherIds={teacherIds}
                   studentIds={studentIds}
+                  inviteLink={inviteLink}
                 />
               </div>
               <div hidden={value != 3}>

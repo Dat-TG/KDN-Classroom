@@ -25,9 +25,8 @@ import ChangeClassThemeDialog from "../../components/class_details/ChangeClassTh
 import ClassCodeDialog from "../../components/class_details/ClassCodeDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
-import { IGetCoursesRes, RoleCourseString } from "../../types/course";
+import { IGetCoursesRes } from "../../types/course";
 import {
-  createInviteLink,
   updateCourseBackground,
   updateCourseColor,
 } from "../../api/course/apiCourse";
@@ -39,6 +38,7 @@ interface Props {
   setBgImg: React.Dispatch<React.SetStateAction<string>>;
   colorTheme: string;
   setColorTheme: React.Dispatch<React.SetStateAction<string>>;
+  inviteLink: string;
 }
 
 export default function StreamPage({
@@ -47,6 +47,7 @@ export default function StreamPage({
   colorTheme,
   setBgImg,
   setColorTheme,
+  inviteLink,
 }: Props) {
   const { t } = useTranslation("global");
   const [showInfo, setShowInfo] = useState<boolean>(false);
@@ -217,7 +218,10 @@ export default function StreamPage({
               right: "0px",
             }}
           >
-            <MenuClassCode courseCode={classEntity.course.code} />
+            <MenuClassCode
+              courseCode={classEntity.course.code}
+              inviteLink={inviteLink}
+            />
           </div>
           <Typography fontWeight={"600"} fontSize={"16px"}>
             {t("classCode")}
@@ -323,6 +327,7 @@ export default function StreamPage({
         onClose={() => {
           setOpenClassCodeDialog(false);
         }}
+        inviteLink={inviteLink}
       />
     </Box>
   );
@@ -330,9 +335,10 @@ export default function StreamPage({
 
 interface MenuClassCodeProps {
   courseCode: string;
+  inviteLink: string;
 }
 
-function MenuClassCode({ courseCode }: MenuClassCodeProps) {
+function MenuClassCode({ courseCode, inviteLink }: MenuClassCodeProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -341,20 +347,7 @@ function MenuClassCode({ courseCode }: MenuClassCodeProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const [inviteLink, setInviteLink] = useState<string>("");
   const { t } = useTranslation("global");
-  useEffect(() => {
-    createInviteLink({
-      courseCode: courseCode,
-      roleCourse: RoleCourseString.Student,
-    })
-      .then((res) => {
-        setInviteLink(res.url);
-      })
-      .catch((err) => {
-        toast.error(err.detail.message);
-      });
-  }, [courseCode]);
   return (
     <>
       <IconButton onClick={handleClick}>
@@ -371,7 +364,7 @@ function MenuClassCode({ courseCode }: MenuClassCodeProps) {
       >
         <MenuItem
           onClick={() => {
-            navigator.clipboard.writeText(inviteLink!);
+            navigator.clipboard.writeText(inviteLink);
             toast.simple(t("copiedToClipboard"));
             handleClose();
           }}
@@ -379,7 +372,13 @@ function MenuClassCode({ courseCode }: MenuClassCodeProps) {
           <LinkOutlined />
           <Typography marginLeft={"8px"}>{t("copyClassInviteLink")}</Typography>
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            navigator.clipboard.writeText(courseCode);
+            toast.simple(t("copiedToClipboard"));
+            handleClose();
+          }}
+        >
           <ContentCopy />
           <Typography marginLeft={"8px"}>{t("copyClassCode")}</Typography>
         </MenuItem>
