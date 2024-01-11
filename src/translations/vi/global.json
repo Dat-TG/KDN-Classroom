@@ -203,5 +203,7 @@
     "inactiveClass": "lưu trữ lớp học",
     "activeClassSuccessfully": "Kích hoạt lớp học thành công",
     "inactiveClassSuccessfully": "Lưu trữ lớp học thành công",
-    "downloadTemplateWithData": "Tải file mẫu với dữ liệu"
+    "downloadTemplateWithData": "Tải file mẫu với dữ liệu",
+    "changeStudentId": "Thay đổi mã số sinh viên",
+    "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên"
 }

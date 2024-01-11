@@ -32,3 +32,16 @@ export const activeCourse = async (courseId: number) => {
   const res = await AxiosClient.post(`/course/admin/unban`, { courseId });
   return res.data;
 };
+
+export const adminMapStudentId = async (
+  userId: number,
+  code: string,
+  adminId: number
+) => {
+  const res = await AxiosClient.post("/code-user/admin", {
+    userId,
+    code: code.length === 0 ? null : code,
+    adminId,
+  });
+  return res.data;
+};
