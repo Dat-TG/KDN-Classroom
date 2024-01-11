@@ -203,5 +203,7 @@
     "inactiveClass": "inactive class",
     "activeClassSuccessfully": "Active class successfully",
     "inactiveClassSuccessfully": "Inactive class successfully",
-    "downloadTemplateWithData": "Download template with data"
+    "downloadTemplateWithData": "Download template with data",
+    "changeStudentId": "Change student ID",
+    "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID"
 }

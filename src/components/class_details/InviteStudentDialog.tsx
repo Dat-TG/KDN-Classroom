@@ -7,44 +7,32 @@ import {
   DialogTitle,
   Divider,
   IconButton,
-  Skeleton,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import MultipleEmailsInput from "./MultipleEmailsInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ContentCopy } from "@mui/icons-material";
 import toast from "../../utils/toast";
-import { createInviteLink, sendInviteLink } from "../../api/course/apiCourse";
+import { sendInviteLink } from "../../api/course/apiCourse";
 import { RoleCourseString } from "../../types/course";
 
 interface Props {
   courseCode: string;
   open: boolean;
   onClose: () => void;
+  inviteLink: string;
 }
 
 export default function InviteStudentDialog({
   onClose,
   open,
   courseCode,
+  inviteLink,
 }: Props) {
   const { t } = useTranslation("global");
   const [emails, setEmails] = useState<string[]>([]);
-  const [inviteLink, setInviteLink] = useState<string | null>(null);
-  useEffect(() => {
-    createInviteLink({
-      courseCode: courseCode,
-      roleCourse: RoleCourseString.Student,
-    })
-      .then((res) => {
-        setInviteLink(res.url);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [courseCode]);
 
   const handleSendEmail = async () => {
     for (let i = 0; i < emails.length; i++) {
@@ -87,35 +75,31 @@ export default function InviteStudentDialog({
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            {inviteLink != null ? (
-              <>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    textOverflow: "ellipsis",
-                    maxLines: 1,
-                  }}
-                  noWrap
-                >
-                  {inviteLink}
-                </Typography>
+            <>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  textOverflow: "ellipsis",
+                  maxLines: 1,
+                }}
+                noWrap
+              >
+                {inviteLink}
+              </Typography>
 
-                <Tooltip title={t("copyClassInviteLink")}>
-                  <IconButton
-                    onClick={() => {
-                      navigator.clipboard.writeText(inviteLink);
-                      toast.simple(t("copiedToClipboard"));
-                    }}
-                    color="primary"
-                    size="large"
-                  >
-                    <ContentCopy />
-                  </IconButton>
-                </Tooltip>
-              </>
-            ) : (
-              <Skeleton variant="text" width={"300px"} />
-            )}
+              <Tooltip title={t("copyClassInviteLink")}>
+                <IconButton
+                  onClick={() => {
+                    navigator.clipboard.writeText(inviteLink);
+                    toast.simple(t("copiedToClipboard"));
+                  }}
+                  color="primary"
+                  size="large"
+                >
+                  <ContentCopy />
+                </IconButton>
+              </Tooltip>
+            </>
           </Box>
           <Divider
             sx={{

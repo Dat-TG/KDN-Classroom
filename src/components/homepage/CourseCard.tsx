@@ -13,18 +13,18 @@ import { Box, Divider, Menu, MenuItem, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Assignment } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { IGetCoursesRes, RoleCourseNumber } from "../../types/course";
+import { ICourseDisplay, RoleCourseNumber } from "../../types/course";
 import { baseUrlBackground, bgArts, extension } from "../../utils/class_themes";
 import { IUserProfileRes } from "../../types/user";
 import { getUserById } from "../../api/user/apiUser";
 import { useTranslation } from "react-i18next";
 
-const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
+const CourseCard = (props: { classEntity: ICourseDisplay }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [teacher, setTeacher] = useState<IUserProfileRes | null>(null);
 
   useEffect(() => {
-    const teacherId = props.classEntity.course.userCourses.find(
+    const teacherId = props.classEntity.course.course.userCourses.find(
       (item) => item.userRoleCourse == RoleCourseNumber.Teacher
     )?.userId;
     getUserById(teacherId!)
@@ -34,7 +34,8 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [props.classEntity.course.userCourses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -135,10 +136,12 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
               noWrap
               variant="h6"
               onClick={() => {
-                navigate(`/class/${props.classEntity.course.code}/stream`);
+                navigate(
+                  `/class/${props.classEntity.course.course.code}/stream`
+                );
               }}
             >
-              {props.classEntity.course.nameCourse}
+              {props.classEntity.course.course.nameCourse}
             </Typography>
           }
           subheader={
@@ -147,7 +150,7 @@ const CourseCard = (props: { classEntity: IGetCoursesRes }) => {
               noWrap
               component="p"
             >
-              {props.classEntity.course.topic}
+              {props.classEntity.course.course.topic}
             </Typography>
           }
           sx={{

@@ -5,7 +5,7 @@ import toast from "../../utils/toast";
 import { useTranslation } from "react-i18next";
 import readXlsxFile from "read-excel-file";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import { Box} from "@mui/material";
+import { Box } from "@mui/material";
 
 type Props = {
   onChange(data: Student[]): void;
@@ -42,7 +42,7 @@ const StudentListSelector = ({ onChange }: Props) => {
               lastName: item[3],
             };
 
-            console.log(`student ${index}`,student);
+            console.log(`student ${index}`, student);
 
             result.push(student);
           }
@@ -94,16 +94,17 @@ const StudentListSelector = ({ onChange }: Props) => {
       } catch (error) {
         console.error(error);
       }
+      e.target.value = "";
     }
   };
 
   return (
     <>
-      <Button variant="contained" component='label'>
-        <Box sx={{display: 'flex', alignContent: 'flex-end'}}>
+      <Button variant="contained" component="label">
+        <Box sx={{ display: "flex", alignContent: "flex-end" }}>
           <IosShareIcon sx={{ mr: 1 }} />
-          
-            {t("importStudentsFromFile")}
+
+          {t("importStudentsFromFile")}
 
           <input
             id="CSVInput"
@@ -111,6 +112,7 @@ const StudentListSelector = ({ onChange }: Props) => {
             type="file"
             accept=".csv, .xlsx"
             onChange={handleFileChange}
+            capture
           />
         </Box>
       </Button>
