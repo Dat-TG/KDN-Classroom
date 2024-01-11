@@ -110,9 +110,12 @@ export const rejectRequest = async (id: number, comment: string) => {
   return response.data;
 };
 
-export const deleteGradeBoardRows = async (ids: number[]) => {
-  const response = await AxiosClient.post("/grade-board/delete-multi", {
-    ids,
-  });
+export const deleteGradeBoardRow = async (id: number) => {
+  const response = await AxiosClient.delete(`/grade-board/${id}`);
+  return response.data;
+};
+
+export const deleteGradeScale = async (id: number) => {
+  const response = await AxiosClient.delete(`/grade-scale/${id}`);
   return response.data;
 };

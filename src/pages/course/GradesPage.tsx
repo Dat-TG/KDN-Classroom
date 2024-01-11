@@ -16,6 +16,8 @@ import RequestReviewDialog from "../../components/class_details/RequestReviewDia
 import { Reviews, Save } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
+  deleteGradeBoardRow,
+  deleteGradeScale,
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
@@ -437,6 +439,26 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               });
             }
           });
+          gradeTable.on("rowDeleted", function (row) {
+            //row - row component
+            console.log(
+              "Row: " +
+                row.getData().firstName +
+                " " +
+                row.getData().lastName +
+                " " +
+                row.getData().studentId +
+                " has been deleted"
+            );
+            deleteGradeBoardRow(row.getData().id)
+              .then(() => {
+                console.log("delete grade board row", row.getData().id);
+              })
+              .catch((err) => {
+                toast.error(err.detail.message);
+                gradeTable?.addRow(row.getData());
+              });
+          });
         }
 
         if (gradeScaleTableRef && gradeScaleTableRef.current) {
@@ -531,6 +553,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             //deselected - array of row components that were deselected in the last action
             setSelectedGradeScale(rows);
           });
+
           gradeScaleTable.on("rowDeleted", function (row) {
             //row - row component
             console.log(
@@ -540,14 +563,23 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 row.getData().id +
                 " has been deleted"
             );
-            gradeTable?.deleteColumn(row.getData().id.toString()).then(() => {
-              const rows = gradeTable?.getRows();
-              for (let i = 0; i < rows.length; i++) {
-                rows[i].update({
-                  average: avgMutator(null, rows[i].getData()),
-                });
-              }
-            });
+            deleteGradeScale(row.getData().id)
+              .then(() => {
+                gradeTable
+                  ?.deleteColumn(row.getData().id.toString())
+                  .then(() => {
+                    const rows = gradeTable?.getRows();
+                    for (let i = 0; i < rows.length; i++) {
+                      rows[i].update({
+                        average: avgMutator(null, rows[i].getData()),
+                      });
+                    }
+                  });
+              })
+              .catch((err) => {
+                toast.error(err.detail.message);
+                gradeScaleTable?.addRow(row.getData());
+              });
           });
           gradeScaleTable.on("cellEdited", function (cell) {
             //cell - cell component

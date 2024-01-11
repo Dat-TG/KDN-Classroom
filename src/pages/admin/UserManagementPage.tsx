@@ -15,6 +15,8 @@ import toast from "../../utils/toast";
 import ChangeStudentIdDialog from "./ChangeStudentIdDialog";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
+import ImportStudentList from "../TestUpload/ImportStudentList";
+import DownloadStudentsTemplate from "../../components/admin/DownloadStudentsTemplate";
 export default function UserManagementPage() {
   const user = useSelector(sGetUserInfo);
   const [t] = useTranslation("global");
@@ -80,11 +82,21 @@ export default function UserManagementPage() {
       <Typography
         variant="h1"
         sx={{
-          marginBottom: "32px",
+          marginBottom: "16px",
         }}
       >
         {t("usersManagement")}
       </Typography>
+      <div
+        style={{
+          display: "flex",
+          gap: "16px",
+          marginBottom: "16px",
+        }}
+      >
+        <ImportStudentList />
+        <DownloadStudentsTemplate />
+      </div>
       <ReactTabulator
         options={{
           layout: "fitDataTable",

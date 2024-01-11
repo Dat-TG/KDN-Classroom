@@ -1,58 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
 import ExcelJS from "exceljs";
 import { useTranslation } from "react-i18next";
 import { FileDownload } from "@mui/icons-material";
 
-interface IDownloadFileButtonProps {
-  colorTheme?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  gradeScaleData: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  gradeData: any[];
-}
+//  Excel data
+const excelData = [["studentId", "email", "firstName", "lastName"]];
 
-const DownloadDataButton = ({
-  colorTheme,
-  gradeData,
-  gradeScaleData,
-}: IDownloadFileButtonProps) => {
+const DownloadStudentsTemplate = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation("global");
-  //  Excel data
-  const [excelData, setExcelData] = useState<string[][]>([]);
-
-  useEffect(() => {
-    const excelData = [["Name", "Grade scale"]];
-    const gradeRow = ["Student ID", "First Name", "Last Name"];
-    gradeScaleData.forEach((gradeScale) => {
-      excelData.push([gradeScale.title, gradeScale.scale]);
-      gradeRow.push(gradeScale.title);
-    });
-    excelData.push([]);
-    excelData.push(gradeRow);
-    gradeData.forEach((grade) => {
-      excelData.push([
-        grade.studentId,
-        grade.firstName,
-        grade.lastName,
-        ...gradeScaleData.map((gradeScale) => {
-          if (gradeScale.id == undefined) {
-            return "";
-          }
-          return parseFloat(grade[gradeScale.id.toString()]);
-        }),
-      ]);
-    });
-    console.log("excelData", excelData);
-    setExcelData(excelData);
-  }, [gradeData, gradeScaleData]);
   const downloadCSV = () => {
     // Convert data to CSV format
     const csvContent = excelData.map((row) => row.join(",")).join("\n");
 
     // Create a Blob object
-    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv" });
+    const blob = new Blob([csvContent], { type: "text/csv" });
 
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
@@ -60,7 +23,7 @@ const DownloadDataButton = ({
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template_with_data.csv";
+    link.download = "student_list_template.csv";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -95,7 +58,7 @@ const DownloadDataButton = ({
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template_with_data.xlsx";
+    link.download = "student_list_template.xlsx";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -116,20 +79,8 @@ const DownloadDataButton = ({
 
   return (
     <div>
-      <Button
-        onClick={handleDownloadClick}
-        sx={{
-          color: colorTheme,
-        }}
-        startIcon={
-          <FileDownload
-            sx={{
-              color: colorTheme,
-            }}
-          />
-        }
-      >
-        {t("downloadTemplateWithData")}
+      <Button onClick={handleDownloadClick} startIcon={<FileDownload />}>
+        {t("downloadTemplate")}
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem
@@ -153,4 +104,4 @@ const DownloadDataButton = ({
   );
 };
 
-export default DownloadDataButton;
+export default DownloadStudentsTemplate;
