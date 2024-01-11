@@ -34,6 +34,11 @@ export interface ICourse {
   requestReview: any[];
 }
 
+export interface ICourseDisplay {
+  course: IGetCoursesRes;
+  ownerAvatar: string;
+}
+
 export interface IGetCoursesRes {
   id: number;
   userId: number;

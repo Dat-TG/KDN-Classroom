@@ -11,6 +11,7 @@ import { logoutUser } from "../../store/user/thunkApi";
 import toast from "../../utils/toast";
 import { useTranslation } from "react-i18next";
 import ConsecutiveSnackbars from "./Snackbar";
+import { CourseProvider } from "../../context/CourseContext";
 
 function UserLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -39,21 +40,27 @@ function UserLayout() {
 
   return (
     <>
-      <Appbar
-        toggleSidebar={toggleSidebar}
-        isLoggedIn={user != null}
-        onLogout={onLogout}
-      />
-      <div style={{ display: "flex" }}>
-        {user != null && <Sidebar open={isSidebarOpen} />}
-        <main
-          style={{ flex: 1, transition: "margin-left 0.3s", marginTop: "64px" }}
-        >
-          <Outlet />
-        </main>
-      </div>
+      <CourseProvider>
+        <Appbar
+          toggleSidebar={toggleSidebar}
+          isLoggedIn={user != null}
+          onLogout={onLogout}
+        />
+        <div style={{ display: "flex" }}>
+          {user != null && <Sidebar open={isSidebarOpen} />}
+          <main
+            style={{
+              flex: 1,
+              transition: "margin-left 0.3s",
+              marginTop: "64px",
+            }}
+          >
+            <Outlet />
+          </main>
+        </div>
 
-      <ConsecutiveSnackbars />
+        <ConsecutiveSnackbars />
+      </CourseProvider>
     </>
   );
 }

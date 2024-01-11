@@ -1,53 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import CourseCard from "../components/homepage/CourseCard";
-import {
-  IGetCoursesRes,
-  IGetCoursesResList,
-  RoleCourseString,
-} from "../types/course";
-import { getCoursesByRole } from "../api/course/apiCourse";
-import toast from "../utils/toast";
-import { IToastError } from "../types/common";
+import { CourseContext } from "../context/CourseContext";
 
 export default function HomePage() {
-  const [classList, setClassList] = useState<IGetCoursesRes[]>([]);
-  const [teachList, setTeachList] = useState<IGetCoursesRes[]>([]);
-  const [ownList, setOwnList] = useState<IGetCoursesRes[]>([]);
-  const [isLoadingClass, setIsLoadingClass] = useState(true);
-  const [isLoadingTeach, setIsLoadingTeach] = useState(true);
-  const [isLoadingOwn, setIsLoadingOwn] = useState(true);
+  const { courseData, loadingState } = useContext(CourseContext)!;
 
   useEffect(() => {
     document.title = t("homePage");
-    getCoursesByRole(RoleCourseString.Student)
-      .then((res: IGetCoursesResList) => {
-        setClassList(res.listCourse);
-        setIsLoadingClass(false);
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error((err as IToastError).detail.message);
-      });
-    getCoursesByRole(RoleCourseString.Coteacher)
-      .then((res: IGetCoursesResList) => {
-        setTeachList(res.listCourse);
-        setIsLoadingTeach(false);
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error((err as IToastError).detail.message);
-      });
-    getCoursesByRole(RoleCourseString.Teacher)
-      .then((res: IGetCoursesResList) => {
-        setOwnList(res.listCourse);
-        setIsLoadingOwn(false);
-        console.log(res);
-      })
-      .catch((err) => {
-        toast.error((err as IToastError).detail.message);
-      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,14 +22,14 @@ export default function HomePage() {
     >
       <>
         <Typography variant="h4">
-          {isLoadingOwn ? (
+          {loadingState.ownList ? (
             <Skeleton animation="wave" height={50} width="500px" />
           ) : (
-            ownList.length > 0 && t("yourClass")
+            courseData.ownList.length > 0 && t("yourClass")
           )}
         </Typography>
         <Grid container sx={{ margin: "30px", rowGap: 3 }}>
-          {isLoadingOwn
+          {loadingState.ownList
             ? // Skeleton placeholders for CourseCard while loading
               Array.from({ length: 3 }).map((_, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
@@ -76,8 +37,8 @@ export default function HomePage() {
                 </Grid>
               ))
             : // Render actual CourseCards when loaded
-              ownList.length > 0 &&
-              ownList.map((value, index) => (
+              courseData.ownList.length > 0 &&
+              courseData.ownList.map((value, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
                   <CourseCard classEntity={value} />
                 </Grid>
@@ -86,14 +47,14 @@ export default function HomePage() {
       </>
       <>
         <Typography variant="h4">
-          {isLoadingTeach ? (
+          {loadingState.teachList ? (
             <Skeleton animation="wave" height={50} width="500px" />
           ) : (
-            teachList.length > 0 && t("yourJoinedClassAsTeacher")
+            courseData.teachList.length > 0 && t("yourJoinedClassAsTeacher")
           )}
         </Typography>
         <Grid container sx={{ margin: "30px", rowGap: 3 }}>
-          {isLoadingTeach
+          {loadingState.teachList
             ? // Skeleton placeholders for CourseCard while loading
               Array.from({ length: 3 }).map((_, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
@@ -101,25 +62,27 @@ export default function HomePage() {
                 </Grid>
               ))
             : // Render actual CourseCards when loaded
-              teachList.length > 0 &&
-              teachList.map((value, index) => (
+              courseData.teachList.length > 0 &&
+              courseData.teachList.map((value, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
                   <CourseCard classEntity={value} />
                 </Grid>
               ))}
         </Grid>
-        {teachList.length > 0 && <div style={{ height: "30px" }}></div>}
+        {courseData.teachList.length > 0 && (
+          <div style={{ height: "30px" }}></div>
+        )}
       </>
       <>
         <Typography variant="h4">
-          {isLoadingClass ? (
+          {loadingState.classList ? (
             <Skeleton animation="wave" height={50} width="500px" />
           ) : (
-            classList.length > 0 && t("yourJoinedClassAsStudent")
+            courseData.classList.length > 0 && t("yourJoinedClassAsStudent")
           )}
         </Typography>
         <Grid container sx={{ margin: "30px", rowGap: 3 }}>
-          {isLoadingClass
+          {loadingState.classList
             ? // Skeleton placeholders for CourseCard while loading
               Array.from({ length: 3 }).map((_, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
@@ -127,8 +90,8 @@ export default function HomePage() {
                 </Grid>
               ))
             : // Render actual CourseCards when loaded
-              classList.length > 0 &&
-              classList.map((value, index) => (
+              courseData.classList.length > 0 &&
+              courseData.classList.map((value, index) => (
                 <Grid item sx={{ ml: 2, mr: 2 }} key={index}>
                   <CourseCard classEntity={value} />
                 </Grid>
