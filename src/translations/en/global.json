@@ -198,5 +198,7 @@
     "updateGradeSuccessfully": "Update grade successfully",
     "updateGradeUnsuccessfully": "Update grade unsuccessfully",
     "downloadTemplate": "Download template",
-    "download": "Download"
+    "download": "Download",
+    "markAllAsRead": "Mark all as read",
+    "seeAll" : "See all"
 }

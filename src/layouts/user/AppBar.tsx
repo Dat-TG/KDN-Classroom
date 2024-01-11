@@ -4,10 +4,8 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -24,6 +22,7 @@ import {
   Menu,
 } from "@mui/material";
 import AvatarEditorButton from "../../components/AvatarEditorButton";
+import NotificationsList from "./NotificationsList";
 
 interface Props {
   toggleSidebar: () => void;
@@ -225,18 +224,8 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                 }}
               >
                 <ActionMenu />
-                <IconButton
-                  sx={{
-                    width: "40px",
-                    height: "40px", // Set button size
-                  }}
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
+                
+                <NotificationsList />
                 <LanguageMenu />
                 <IconButton
                   size="large"

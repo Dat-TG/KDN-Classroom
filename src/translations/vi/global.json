@@ -198,5 +198,7 @@
     "updateGradeSuccessfully": "Cập nhật điểm thành công",
     "updateGradeUnsuccessfully": "Cập nhật điểm không thành công",
     "downloadTemplate": "Tải file mẫu",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "markAllAsRead": "Đánh dấu đã đọc tất cả",
+    "seeAll" : "Xem tất cả"
 }
