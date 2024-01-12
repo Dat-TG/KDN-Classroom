@@ -6,11 +6,22 @@ import { Typography } from "@mui/material";
 import React from "react";
 import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import { Tabulator } from "react-tabulator/lib/types/TabulatorTypes";
-import { banUser, unbanUser } from "../../api/admin/apiAdmin";
+import {
+  adminMapStudentId,
+  banUser,
+  unbanUser,
+} from "../../api/admin/apiAdmin";
 import toast from "../../utils/toast";
+import ChangeStudentIdDialog from "./ChangeStudentIdDialog";
+import { useSelector } from "react-redux";
+import { sGetUserInfo } from "../../store/user/selector";
+import ImportStudentList from "../TestUpload/ImportStudentList";
+import DownloadStudentsTemplate from "../../components/admin/DownloadStudentsTemplate";
 export default function UserManagementPage() {
+  const user = useSelector(sGetUserInfo);
   const [t] = useTranslation("global");
   const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [openChangeStudentId, setOpenChangeStudentId] = React.useState(false);
   const [confirmContent, setConfirmContent] = React.useState("");
   const [currentCell, setCurrentCell] =
     React.useState<Tabulator.CellComponent>();
@@ -36,6 +47,28 @@ export default function UserManagementPage() {
     }
     setOpenConfirm(false);
   };
+  const onStudentIdChange = async (newStudentId: string) => {
+    adminMapStudentId(
+      currentCell?.getRow().getData().id,
+      newStudentId,
+      user?.id ?? 0
+    )
+      .then(() => {
+        toast.success(t("updateStudentIdSuccessfully"));
+        currentCell?.getRow().update({
+          code: [
+            {
+              code: newStudentId,
+            },
+          ],
+        });
+      })
+      .catch((error) => {
+        toast.error(error.detail.message);
+      });
+
+    setOpenChangeStudentId(false);
+  };
   const onClose = () => {
     currentCell?.restoreOldValue();
     setOpenConfirm(false);
@@ -49,11 +82,21 @@ export default function UserManagementPage() {
       <Typography
         variant="h1"
         sx={{
-          marginBottom: "32px",
+          marginBottom: "16px",
         }}
       >
         {t("usersManagement")}
       </Typography>
+      <div
+        style={{
+          display: "flex",
+          gap: "16px",
+          marginBottom: "16px",
+        }}
+      >
+        <ImportStudentList />
+        <DownloadStudentsTemplate />
+      </div>
       <ReactTabulator
         options={{
           layout: "fitDataTable",
@@ -96,16 +139,6 @@ export default function UserManagementPage() {
             };
           },
         }}
-        events={{
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          rowSelectionChanged: (data: any[]) => {
-            //rows - array of row components for the currently selected rows in order of selection
-            //data - array of data objects for the currently selected rows in order of selection
-            //selected - array of row components that were selected in the last action
-            //deselected - array of row components that were deselected in the last action
-            console.log(data);
-          },
-        }}
         columns={[
           {
             title: "",
@@ -135,6 +168,17 @@ export default function UserManagementPage() {
             title: "Email",
             field: "userName",
             sorter: "string",
+          },
+          {
+            title: "Student ID",
+            field: "code",
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            formatter(cell, _formatterParams, _onRendered) {
+              const arr = cell.getValue();
+              if (arr == null || arr.length == 0 || arr[0].code == null)
+                return "";
+              return arr[0].code;
+            },
           },
           {
             title: "First Name",
@@ -207,6 +251,21 @@ export default function UserManagementPage() {
             hozAlign: "center",
             vertAlign: "middle",
           },
+          {
+            minWidth: 100,
+            title: "",
+            formatter: function () {
+              //plain text value
+              return "<button>Edit</button>";
+            },
+            width: 40,
+            hozAlign: "center",
+            vertAlign: "middle",
+            cellClick: function (_e, cell) {
+              setCurrentCell(cell);
+              setOpenChangeStudentId(true);
+            },
+          },
         ]}
       />
       <ConfirmationDialog
@@ -214,6 +273,13 @@ export default function UserManagementPage() {
         content={confirmContent}
         onClose={() => onClose()}
         onConfirm={() => onConfirm()}
+      />
+      <ChangeStudentIdDialog
+        open={openChangeStudentId}
+        onClose={() => {
+          setOpenChangeStudentId(false);
+        }}
+        onConfirm={onStudentIdChange}
       />
     </div>
   );

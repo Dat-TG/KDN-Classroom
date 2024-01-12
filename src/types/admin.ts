@@ -8,3 +8,9 @@ export interface IGetUsersReq {
   search?: string;
   role?: RoleCourseNumber;
 }
+
+export interface IMapMultipleStudentIdReq {
+  emailAddress: string;
+  code: string;
+  adminId: number;
+}

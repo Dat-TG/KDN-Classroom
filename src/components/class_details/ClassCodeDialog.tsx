@@ -15,11 +15,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import toast from "../../utils/toast";
-import { createInviteLink } from "../../api/course/apiCourse";
-import { RoleCourseString } from "../../types/course";
 
 interface Props {
   open: boolean;
@@ -28,23 +26,11 @@ interface Props {
   colorTheme: string;
   name: string;
   section: string;
+  inviteLink: string;
 }
 export default function ClassCodeDialog(props: Props) {
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const { t } = useTranslation("global");
-  const [inviteLink, setInviteLink] = useState<string | null>(null);
-  useEffect(() => {
-    createInviteLink({
-      courseCode: props.classId,
-      roleCourse: RoleCourseString.Student,
-    })
-      .then((res) => {
-        setInviteLink(res.url);
-      })
-      .catch((err) => {
-        toast.error(err.detail.message);
-      });
-  }, [props.classId]);
   return (
     <>
       <Dialog
@@ -127,34 +113,28 @@ export default function ClassCodeDialog(props: Props) {
               </Typography>
             </Box>
             <Box display={"flex"} gap={"8px"}>
-              {inviteLink != null ? (
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(inviteLink!);
-                    toast.simple(t("copiedToClipboard"));
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(props.inviteLink);
+                  toast.simple(t("copiedToClipboard"));
+                }}
+              >
+                <ContentCopy
+                  sx={{
+                    color: props.colorTheme,
+                  }}
+                />
+                <Typography
+                  sx={{
+                    marginLeft: "8px",
+                    fontWeight: "500",
+                    fontSize: "14px",
+                    color: props.colorTheme,
                   }}
                 >
-                  <ContentCopy
-                    sx={{
-                      color: props.colorTheme,
-                    }}
-                  />
-                  <Typography
-                    sx={{
-                      marginLeft: "8px",
-                      fontWeight: "500",
-                      fontSize: "14px",
-                      color: props.colorTheme,
-                    }}
-                  >
-                    {t("copyInviteLink")}
-                  </Typography>
-                </Button>
-              ) : (
-                <Typography variant="subtitle1">
-                  {t("generatingInviteLink")}
+                  {t("copyInviteLink")}
                 </Typography>
-              )}
+              </Button>
 
               <IconButton
                 onClick={() => {

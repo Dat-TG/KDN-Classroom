@@ -24,6 +24,7 @@ interface Props {
   teacherIds: number[];
   studentIds: number[];
   ownerId: number;
+  inviteLink: string;
 }
 
 export default function PeoplePage(props: Props) {
@@ -232,6 +233,7 @@ export default function PeoplePage(props: Props) {
         open={openInviteStudentDialog}
         onClose={() => setOpenInviteStudentDialog(false)}
         courseCode={props.classEntity.course.code}
+        inviteLink={props.inviteLink}
       />
     </>
   );

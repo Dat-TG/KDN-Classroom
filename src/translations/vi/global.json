@@ -206,5 +206,12 @@
     "finalizedCompositionNotification" : "đã hoàn thành một cột điểm.",
     "reviewRequestNotification": "đã tạo một yêu cầu xem xét điểm.",
     "teacherCommentNotification": "đã trả lời yêu cầu xem xét điểm của bạn.",
-    "studentCommentNotification": "đã bình luận ở yêu cầu xem xét điểm của anh ấy."
+    "studentCommentNotification": "đã bình luận ở yêu cầu xem xét điểm của anh ấy.",
+    "activeClass": "kích hoạt lớp học",
+    "inactiveClass": "lưu trữ lớp học",
+    "activeClassSuccessfully": "Kích hoạt lớp học thành công",
+    "inactiveClassSuccessfully": "Lưu trữ lớp học thành công",
+    "downloadTemplateWithData": "Tải file mẫu với dữ liệu",
+    "changeStudentId": "Thay đổi mã số sinh viên",
+    "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên"
 }

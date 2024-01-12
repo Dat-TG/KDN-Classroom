@@ -4,33 +4,10 @@ import ExcelJS from "exceljs";
 import { useTranslation } from "react-i18next";
 import { FileDownload } from "@mui/icons-material";
 
-interface IDownloadFileButtonProps {
-  colorTheme?: string;
-}
-
 //  Excel data
-const excelData = [
-  ["Name", "Grade scale"],
-  [
-    "Type grade composition name here in this column",
-    "Type grade scale here in this column",
-  ],
-  [""],
-  [
-    "Student ID",
-    "First Name",
-    "Last Name",
-    "Grade composition (type grade compositions name here in this row)",
-  ],
-  [
-    "Type student ID here in this column",
-    "Type first name here in this column",
-    "Type last name here in this column",
-    "Type grade here in this column",
-  ],
-];
+const excelData = [["studentId", "email", "firstName", "lastName"]];
 
-const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
+const DownloadStudentsTemplate = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation("global");
   const downloadCSV = () => {
@@ -46,7 +23,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template.csv";
+    link.download = "student_list_template.csv";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -81,7 +58,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
     // Create a temporary <a> element to trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "grade_board_template.xlsx";
+    link.download = "student_list_template.xlsx";
     document.body.appendChild(link);
 
     // Trigger the download
@@ -102,19 +79,7 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
 
   return (
     <div>
-      <Button
-        onClick={handleDownloadClick}
-        sx={{
-          color: colorTheme,
-        }}
-        startIcon={
-          <FileDownload
-            sx={{
-              color: colorTheme,
-            }}
-          />
-        }
-      >
+      <Button onClick={handleDownloadClick} startIcon={<FileDownload />}>
         {t("downloadTemplate")}
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
@@ -139,4 +104,4 @@ const DownloadFileButton = ({ colorTheme }: IDownloadFileButtonProps) => {
   );
 };
 
-export default DownloadFileButton;
+export default DownloadStudentsTemplate;

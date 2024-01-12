@@ -24,7 +24,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getCoursesByRole } from "../../api/course/apiCourse";
 import {
-  IGetCoursesRes,
+  ICourseDisplay,
   IGetCoursesResList,
   RoleCourseNumber,
   RoleCourseString,
@@ -33,16 +33,12 @@ import toast from "../../utils/toast";
 import { IToastError } from "../../types/common";
 import { getUserById } from "../../api/user/apiUser";
 import { IUserProfileRes } from "../../types/user";
+import { CourseContext } from "../../context/CourseContext";
 
 const drawerWidth = 300;
 
 interface Props {
   open: boolean;
-}
-
-interface ClassPreview {
-  class: IGetCoursesRes;
-  ownerAvatar: string;
 }
 
 class MenuOption {
@@ -76,10 +72,6 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
   const [isTeachingListExpanded, setIsTeachingListExpanded] = useState(false);
   const [isEnrolledListExpanded, setIsEnrolledListExpanded] = useState(false);
 
-  const [classList, setClassList] = useState<ClassPreview[]>([]);
-  const [teachList, setTeachList] = useState<ClassPreview[]>([]);
-  const [ownList, setOwnList] = useState<ClassPreview[]>([]);
-
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -102,9 +94,16 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const { courseData, setCourseData, setLoadingState } =
+    React.useContext(CourseContext)!;
+
   useEffect(() => {
     document.title = t("homePage");
-
+    setLoadingState({
+      ownList: true,
+      teachList: true,
+      classList: true,
+    });
     getCoursesByRole(RoleCourseString.Student)
       .then(async (res: IGetCoursesResList) => {
         const classPreviews = await Promise.all(
@@ -114,16 +113,27 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
             )?.userId;
             const user = await getUserInfoById(teacherId!);
             return {
-              class: course,
+              course: course,
               ownerAvatar: user?.avatar || "",
             };
           })
         );
-        setClassList(classPreviews);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          classList: false,
+        }));
+        setCourseData((prevData) => ({
+          ...prevData,
+          classList: classPreviews,
+        }));
         //setClassList(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          classList: false,
+        }));
       });
     getCoursesByRole(RoleCourseString.Coteacher)
       .then(async (res: IGetCoursesResList) => {
@@ -134,16 +144,27 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
             )?.userId;
             const user = await getUserInfoById(teacherId!);
             return {
-              class: course,
+              course: course,
               ownerAvatar: user?.avatar || "",
             };
           })
         );
-        setTeachList(classPreviews);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          teachList: false,
+        }));
+        setCourseData((prevData) => ({
+          ...prevData,
+          teachList: classPreviews,
+        }));
         //setClassList(res);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          teachList: false,
+        }));
       });
     getCoursesByRole(RoleCourseString.Teacher)
       .then(async (res: IGetCoursesResList) => {
@@ -151,15 +172,26 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           res.listCourse.map(async (course) => {
             const user = await getUserInfoById(course.userId);
             return {
-              class: course,
+              course: course,
               ownerAvatar: user?.avatar || "",
             };
           })
         );
-        setOwnList(classPreviews);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          ownList: false,
+        }));
+        setCourseData((prevData) => ({
+          ...prevData,
+          ownList: classPreviews,
+        }));
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
+        setLoadingState((prevData) => ({
+          ...prevData,
+          ownList: false,
+        }));
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
@@ -327,7 +359,13 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
     );
   }
 
-  function CourseItem({ item, index }: { item: ClassPreview; index: number }) {
+  function CourseItem({
+    item,
+    index,
+  }: {
+    item: ICourseDisplay;
+    index: number;
+  }) {
     return (
       <ListItem
         disablePadding
@@ -351,7 +389,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
           }}
           onClick={() => {
             setSelectedIndex(index);
-            navigate(`/class/${item.class.course.code}/stream`);
+            navigate(`/class/${item.course.course.code}/stream`);
           }}
         >
           <ListItemIcon
@@ -380,7 +418,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <Typography noWrap>{item.class.course.nameCourse}</Typography>
+                <Typography noWrap>{item.course.course.nameCourse}</Typography>
               </div>
               <div
                 style={{
@@ -389,7 +427,7 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
                 }}
               >
                 <Typography variant="subtitle1" noWrap>
-                  {item.class.course.topic}
+                  {item.course.course.topic}
                 </Typography>
               </div>
             </Box>
@@ -437,11 +475,11 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
               <MenuOptionItem item={item} index={index + 2} key={item.name} />
             ))}
           {isTeachingListExpanded &&
-            ownList.map((item, index) => (
+            courseData.ownList.map((item, index) => (
               <CourseItem
                 index={index + 6}
                 item={item}
-                key={item.class.course.nameCourse}
+                key={item.course.course.code}
               />
             ))}
         </List>
@@ -459,11 +497,16 @@ const MiniDrawer: React.FC<Props> = (props: Props) => {
               <MenuOptionItem item={item} index={index + 3} key={item.name} />
             ))}
           {isEnrolledListExpanded &&
-            classList.map((item, index) => (
+            courseData.classList.map((item, index) => (
               <CourseItem
-                index={index + 6 + teachList.length + ownList.length}
+                index={
+                  index +
+                  6 +
+                  courseData.teachList.length +
+                  courseData.ownList.length
+                }
                 item={item}
-                key={item.class.course.nameCourse}
+                key={item.course.course.code}
               />
             ))}
         </List>
