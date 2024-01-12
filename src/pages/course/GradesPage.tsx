@@ -37,6 +37,7 @@ import ConfirmationDialog from "../../components/common/ConfirmDialog";
 import DownloadFileButton from "../../components/class_details/DownloadFileButton";
 import DownloadTabulatorButton from "../../components/class_details/DownloadTabulatorButton";
 import DownloadDataButton from "../../components/class_details/DownloadDataButton";
+import ImportGrades from "../TestUpload/ImportGrades";
 
 interface Props {
   colorTheme: string;
@@ -173,7 +174,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       gradeScale.sort((a, b) => {
         return a.position - b.position;
       });
-      console.log("gradeScale", typeof gradeScale[0].scale);
+      setGradeScaleData(gradeScale);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let grades: any[] = [];
@@ -778,6 +779,13 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             gradeData={gradesData}
             gradeScaleData={gradeScaleData}
           />
+        </div>
+        <div
+          style={{
+            display: isStudent ? "none" : "inline-flex",
+          }}
+        >
+          <ImportGrades colorTheme={classEntity.course.courseColor} />
         </div>
       </Box>
 
