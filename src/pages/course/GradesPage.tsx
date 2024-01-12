@@ -16,8 +16,8 @@ import RequestReviewDialog from "../../components/class_details/RequestReviewDia
 import { Reviews, Save } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
-  deleteGradeBoardRow,
   deleteGradeScale,
+  deleteMultipleGrades,
   getGradeBoard,
   getGradeOfStudent,
   getGradeScale,
@@ -169,19 +169,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     setIsStudent(isStudent);
     console.log("isStudent", isStudent);
     getGradeScale(classEntity.courseId).then((res) => {
-      if (!isStudent) {
-        gradeScale = res.gradeScales as IGradeScaleWithFinalized[];
-        gradeScale.sort((a, b) => {
-          return a.position - b.position;
-        });
-        console.log("gradeScale", typeof gradeScale[0].scale);
-      } else {
-        gradeScale = res.gradeScalesStudent as IGradeScaleWithFinalized[];
-        gradeScale.sort((a, b) => {
-          return a.position - b.position;
-        });
-        console.log("gradeScale", typeof gradeScale[0].scale);
-      }
+      gradeScale = res.gradeScales as IGradeScaleWithFinalized[];
+      gradeScale.sort((a, b) => {
+        return a.position - b.position;
+      });
+      console.log("gradeScale", typeof gradeScale[0].scale);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let grades: any[] = [];
@@ -215,6 +207,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             }
             grades.push(temp);
             console.log("grades", grades);
+            setGradesData(grades);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (err: any) {
             console.log("err", err);
@@ -292,6 +285,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             return a.position - b.position;
           });
           console.log("grades", grades);
+          setGradesData(grades);
         }
       };
       processGrades().then(() => {
@@ -349,7 +343,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               {
                 title: "Student ID",
                 field: "studentId",
-                editable: true,
+                editable: !isStudent,
                 editor: "input",
                 cellDblClick: function (_e, cell) {
                   setOpenUserDialog(true);
@@ -371,30 +365,31 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               {
                 title: "First name",
                 field: "firstName",
-                editable: true,
+                editable: !isStudent,
                 editor: "input",
               },
               {
                 title: "Last name",
                 field: "lastName",
-                editable: true,
+                editable: !isStudent,
                 editor: "input",
               },
             ] as ColumnDefinition[]),
           ];
           for (let i = 0; i < gradeScale.length; i++) {
-            columnDefinitions.push({
-              title: gradeScale[i].title,
-              field: gradeScale[i].id.toString(),
-              editable: true,
-              editor: "number",
-              sorter: "number",
-            });
+            if (!isStudent || gradeScale[i].isFinalized)
+              columnDefinitions.push({
+                title: gradeScale[i].title,
+                field: gradeScale[i].id.toString(),
+                editable: !isStudent,
+                editor: "number",
+                sorter: "number",
+              });
           }
           columnDefinitions.push({
             title: "Average",
             field: "average",
-            editable: true,
+            editable: !isStudent,
             editor: "number",
             sorter: "number",
             mutator: avgMutator,
@@ -424,6 +419,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
           gradeTable.on("dataChanged", function (data) {
             setGradesData(data);
+            console.log("gradesData", data);
           });
           gradeTable.on("rowSelectionChanged", function (_data, rows) {
             //rows - array of row components for the currently selected rows in order of selection
@@ -450,9 +446,18 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                 row.getData().studentId +
                 " has been deleted"
             );
-            deleteGradeBoardRow(row.getData().id)
+            const ids = [];
+            const rowData = row.getData();
+            for (let i = 0; i < gradeScale.length; i++) {
+              ids.push(
+                parseInt(rowData[gradeScale[i].id.toString() + "grade"])
+              );
+            }
+            console.log("ids", ids);
+            deleteMultipleGrades(ids)
               .then(() => {
-                console.log("delete grade board row", row.getData().id);
+                console.log("delete grade board row", row.getData());
+                gradeTable.clearHistory();
               })
               .catch((err) => {
                 toast.error(err.detail.message);
@@ -463,6 +468,17 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
 
         if (gradeScaleTableRef && gradeScaleTableRef.current) {
           // Initialize Tabulator
+          const columnDefinitions: ColumnDefinition[] = isStudent
+            ? []
+            : [
+                {
+                  title: "",
+                  rowHandle: true,
+                  formatter: "handle",
+                  headerSort: false,
+                  frozen: true,
+                },
+              ];
           gradeScaleTable = new Tabulator(gradeScaleTableRef.current, {
             movableRows: true,
             history: true,
@@ -475,84 +491,89 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               // You can perform your logic here when a cell is edited
             },
             columns: [
-              {
-                title: "",
-                rowHandle: true,
-                formatter: "handle",
-                headerSort: false,
-                frozen: true,
-              },
-              {
-                title: "",
-                formatter: "rowSelection",
-                titleFormatter: "rowSelection",
-                hozAlign: "center",
-                vertAlign: "middle",
-                headerHozAlign: "center",
-                headerSort: false,
-              },
-              {
-                title: "",
-                formatter: "rownum",
-                field: "position",
-                hozAlign: "center",
-                vertAlign: "middle",
-                headerHozAlign: "center",
-                headerSort: false,
-                visible: false,
-              },
-              {
-                title: "ID",
-                field: "id",
-                visible: false,
-                sorter: "number",
-              },
-              {
-                title: "Name",
-                field: "title",
-                editable: true,
-                editor: "input",
-              },
-              {
-                title: "Scale",
-                field: "scale",
-                editable: true,
-                editor: "number",
-                editorParams: {
-                  min: 0,
-                  step: 0.1,
+              ...columnDefinitions,
+              ...([
+                {
+                  title: "",
+                  formatter: "rowSelection",
+                  titleFormatter: "rowSelection",
+                  hozAlign: "center",
+                  vertAlign: "middle",
+                  headerHozAlign: "center",
+                  headerSort: false,
                 },
-                sorter: "number",
-              },
-              {
-                title: "Finalized",
-                field: "isFinalized",
-                editable: !isStudent,
-                editor: "tickCross",
-                formatter: "tickCross",
-                cellEdited: function (cell) {
-                  console.log("cell", cell);
-                  if (cell.getValue()) {
-                    setOpenConfirmationDialog(true);
-                    setSelectedCell(cell);
-                  } else {
-                    cell.restoreOldValue();
-                  }
+                {
+                  title: "",
+                  formatter: "rownum",
+                  field: "position",
+                  hozAlign: "center",
+                  vertAlign: "middle",
+                  headerHozAlign: "center",
+                  headerSort: false,
+                  visible: false,
                 },
-              },
+                {
+                  title: "ID",
+                  field: "id",
+                  visible: false,
+                  sorter: "number",
+                },
+                {
+                  title: "Name",
+                  field: "title",
+                  editable: true,
+                  editor: "input",
+                },
+                {
+                  title: "Scale",
+                  field: "scale",
+                  editable: true,
+                  editor: "number",
+                  editorParams: {
+                    min: 0,
+                    step: 0.1,
+                  },
+                  sorter: "number",
+                },
+                {
+                  title: "Finalized",
+                  field: "isFinalized",
+                  editable: !isStudent,
+                  editor: "tickCross",
+                  formatter: "tickCross",
+                  cellEdited: function (cell) {
+                    console.log("cell", cell);
+                    if (cell.getValue()) {
+                      setOpenConfirmationDialog(true);
+                      setSelectedCell(cell);
+                    } else {
+                      cell.restoreOldValue();
+                    }
+                  },
+                },
+              ] as ColumnDefinition[]),
             ],
           });
           setGradeScaleTable(gradeScaleTable);
           gradeScaleTable.on("dataChanged", function (data) {
             setGradeScaleData(data);
           });
-          gradeScaleTable.on("rowSelectionChanged", function (_data, rows) {
-            //rows - array of row components for the currently selected rows in order of selection
-            //data - array of data objects for the currently selected rows in order of selection
-            //selected - array of row components that were selected in the last action
-            //deselected - array of row components that were deselected in the last action
-            setSelectedGradeScale(rows);
-          });
+          gradeScaleTable.on(
+            "rowSelectionChanged",
+            function (_data, rows, selected) {
+              //rows - array of row components for the currently selected rows in order of selection
+              //data - array of data objects for the currently selected rows in order of selection
+              //selected - array of row components that were selected in the last action
+              //deselected - array of row components that were deselected in the last action
+              for (let i = 0; i < selected.length; i++) {
+                if (selected[i].getData().isFinalized == false) {
+                  selected[i].deselect();
+                  toast.error(t("selectFinalizedGradeScaleAlert"));
+                }
+              }
+              setSelectedGradeScale(rows.filter((row) => row.isSelected()));
+            }
+          );
 
           gradeScaleTable.on("rowDeleted", function (row) {
             //row - row component
@@ -574,6 +595,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
                         average: avgMutator(null, rows[i].getData()),
                       });
                     }
+                    gradeScaleTable.clearHistory();
                   });
               })
               .catch((err) => {
@@ -957,13 +979,15 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           onClose={() => {
             setIsOpenRequestDialog(false);
           }}
-          gradeScale={selectedGradeScale.map((row) => {
-            return {
-              id: row.getData().id,
-              name: row.getData().title,
-              scale: row.getData().scale,
-            };
-          })}
+          gradeScale={selectedGradeScale
+            .filter((value) => value.getData().isFinalized == true)
+            .map((row) => {
+              return {
+                id: row.getData().id,
+                name: row.getData().title,
+                scale: row.getData().scale,
+              };
+            })}
           grades={gradesData}
         />
       )}
