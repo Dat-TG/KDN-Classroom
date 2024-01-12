@@ -206,5 +206,7 @@
     "downloadTemplateWithData": "Tải file mẫu với dữ liệu",
     "changeStudentId": "Thay đổi mã số sinh viên",
     "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên",
-    "selectFinalizedGradeScaleAlert": "Vui lòng chọn thành phần điểm cuối cùng"
+    "selectFinalizedGradeScaleAlert": "Vui lòng chọn thành phần điểm cuối cùng",
+    "updateGradeBoardSuccessfully": "Cập nhật bảng điểm thành công",
+    "updateGradeScaleSuccessfully": "Cập nhật thành phần điểm thành công"
 }

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import readXlsxFile from "read-excel-file";
 import toast from "../../utils/toast";
 import IosShareIcon from "@mui/icons-material/IosShare";
+import { IGradeScale } from "../../types/grade";
 
 type GradeScale = {
   [key: string]: number;
@@ -15,28 +16,27 @@ type Student = {
   firstName: string;
   lastName: string;
   grades: GradeScale;
+  position: number;
   // average: number;
 };
 
-type GradeComponent = {
-  name: string;
-  scale: number;
-};
-
 type Props = {
-  onChange(gradeComponents: GradeComponent[], students: Student[]): void;
+  onChange(gradeComponents: IGradeScale[], students: Student[]): void;
   colorTheme?: string;
 };
 
 function parseRawData(csvData: string[][]): {
-  gradeComponents: GradeComponent[];
+  gradeComponents: IGradeScale[];
   students: Student[];
 } {
-  const gradeComponents: GradeComponent[] = [];
+  const gradeComponents: IGradeScale[] = [];
   const students: Student[] = [];
 
   let isGradeScaleSection = true;
   let isStudentDataSection = false;
+
+  let position = 0;
+  let positionStudent = 0;
 
   for (const row of csvData) {
     if (isGradeScaleSection) {
@@ -48,7 +48,13 @@ function parseRawData(csvData: string[][]): {
       } else {
         const name = row[0].trim();
         const scale = parseFloat(row[1].trim());
-        gradeComponents.push({ name, scale });
+        gradeComponents.push({
+          title: name,
+          scale,
+          id: 0,
+          courseId: 0,
+          position: ++position,
+        });
       }
     } else if (
       isStudentDataSection &&
@@ -61,12 +67,18 @@ function parseRawData(csvData: string[][]): {
       const grades: GradeScale = {};
 
       for (let i = 0; i < gradeComponents.length; i++) {
-        grades[gradeComponents[i].name] = parseFloat(row[i + 3].trim());
+        grades[gradeComponents[i].title] = parseFloat(row[i + 3].trim());
       }
 
       // grades['Average'] = calculateAverage(grades, gradeComponents);
 
-      students.push({ studentId, firstName, lastName, grades });
+      students.push({
+        studentId,
+        firstName,
+        lastName,
+        grades,
+        position: ++positionStudent,
+      });
     }
   }
   return { gradeComponents, students };

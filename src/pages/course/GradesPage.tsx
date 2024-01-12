@@ -705,6 +705,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     <div
       style={{
         padding: "24px",
+        overflow: "auto",
       }}
     >
       <Box display={"flex"} gap={"16px"}>
@@ -785,7 +786,12 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             display: isStudent ? "none" : "inline-flex",
           }}
         >
-          <ImportGrades colorTheme={classEntity.course.courseColor} />
+          <ImportGrades
+            colorTheme={classEntity.course.courseColor}
+            gradeData={gradesData}
+            gradeScaleData={gradeScaleData}
+            courseId={classEntity.courseId}
+          />
         </div>
       </Box>
 
@@ -980,6 +986,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       )}
       <div ref={gradeTableRef} />
       {gradesTable == null && <CircularProgress />}
+      <div
+        style={{
+          height: "32px",
+        }}
+      ></div>
       {isStudent && (
         <RequestReviewDialog
           open={isOpenRequestDialog}

@@ -16,6 +16,13 @@ import {
 } from "@mui/material";
 import GradesSelector from "./GradesSelector";
 import { useTranslation } from "react-i18next";
+import { IGradeBoard, IGradeScale } from "../../types/grade";
+import {
+  getGradeScale,
+  updateGradeBoard,
+  updateGradeScales,
+} from "../../api/grade/apiGrade";
+import toast from "../../utils/toast";
 // import ExportGrades from "./ExportGradesCSV";
 
 type GradeScale = {
@@ -27,11 +34,7 @@ type Student = {
   firstName: string;
   lastName: string;
   grades: GradeScale;
-};
-
-type GradeComponent = {
-  name: string;
-  scale: number;
+  position: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,11 +63,144 @@ function convertStudents(studentArray: Student[]): any[] {
 
 interface Props {
   colorTheme?: string;
+  gradeScaleData: IGradeScale[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gradeData: any[];
+  courseId: number;
 }
 
-const ImportGrades = ({ colorTheme }: Props) => {
+function combineGradeScale(
+  oldArray: IGradeScale[],
+  newArray: IGradeScale[],
+  courseId: number
+): IGradeScale[] {
+  const combinedArray: IGradeScale[] = [];
+
+  // Add elements from oldArray to combinedArray
+  for (const oldItem of oldArray) {
+    const matchingNewItem = newArray.find(
+      (newItem) => newItem.title === oldItem.title
+    );
+
+    if (matchingNewItem) {
+      // If title matches, use id from oldArray and other properties from newArray
+      combinedArray.push({
+        title: oldItem.title,
+        scale: matchingNewItem.scale,
+        id: oldItem.id,
+        courseId: oldItem.courseId,
+        position: matchingNewItem.position,
+      });
+    } else {
+      // If no match found, simply add the oldItem to combinedArray
+      combinedArray.push({
+        title: oldItem.title,
+        scale: parseFloat(oldItem.scale.toString()),
+        id: oldItem.id,
+        courseId: oldItem.courseId,
+        position: oldItem.position,
+      });
+    }
+  }
+
+  // Add elements from newArray that do not have a matching title in oldArray
+  for (const newItem of newArray) {
+    const titleExistsInOldArray = oldArray.some(
+      (oldItem) => oldItem.title === newItem.title
+    );
+
+    if (!titleExistsInOldArray) {
+      combinedArray.push({
+        title: newItem.title,
+        scale: newItem.scale,
+        id: 0,
+        courseId: courseId,
+        position: newItem.position,
+      });
+    }
+  }
+
+  return combinedArray;
+}
+
+function transformStudentObject(
+  studentObject: Student,
+  gradeScale: IGradeScale[],
+  courseId: number
+) {
+  const gradesArray: IGradeBoard[] = [];
+
+  // Iterate over each grade in the grades object
+  for (const [gradeName, gradeValue] of Object.entries(studentObject.grades)) {
+    const transformedObject = {
+      id: 0, // You can set the appropriate values for these fields
+      courseId: courseId,
+      studentCode: studentObject.studentId,
+      name: studentObject.firstName,
+      surname: studentObject.lastName,
+      grade: gradeValue,
+      gradeScaleId: gradeScale.find((grade) => grade.title === gradeName)?.id,
+      position: studentObject.position,
+    };
+
+    gradesArray.push(transformedObject as IGradeBoard);
+  }
+
+  return gradesArray;
+}
+
+function combineGradeData(
+  gradeBoards: IGradeBoard[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  grades: any[]
+): IGradeBoard[] {
+  const combinedArray: IGradeBoard[] = [];
+
+  for (const gradeBoard of gradeBoards) {
+    const studentId = gradeBoard.studentCode;
+    const matchingGradeObject = grades.find(
+      (grade) => grade.studentId === studentId
+    );
+
+    if (matchingGradeObject) {
+      // Extract grade value from gradeObject based on the id
+      const grade = parseFloat(
+        matchingGradeObject[gradeBoard.gradeScaleId.toString()] ??
+          gradeBoard.grade
+      );
+
+      // Create a new IGradeBoard object
+      const combinedObject: IGradeBoard = {
+        id:
+          matchingGradeObject[gradeBoard.gradeScaleId.toString() + "grade"] ??
+          0,
+        courseId: gradeBoard.courseId,
+        studentCode: gradeBoard.studentCode,
+        name: gradeBoard.name,
+        surname: gradeBoard.surname,
+        grade: grade,
+        gradeScaleId: gradeBoard.gradeScaleId,
+        position: gradeBoard.position,
+      };
+
+      combinedArray.push(combinedObject);
+    } else {
+      // If no matching grade object found, add the original grade board
+      combinedArray.push(gradeBoard);
+    }
+  }
+
+  return combinedArray;
+}
+
+const ImportGrades = ({
+  colorTheme,
+  gradeScaleData,
+  gradeData,
+  courseId,
+}: Props) => {
   const { t } = useTranslation("global");
-  const [gradeComponents, setGradeComponents] = useState<GradeComponent[]>([]);
+  const [gradeComponents, setGradeComponents] = useState<IGradeScale[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
 
   const [selectedGradeScales, setSelectedGradeScales] = useState<
@@ -90,7 +226,7 @@ const ImportGrades = ({ colorTheme }: Props) => {
   const gradeScaleTableRef = useRef(null);
 
   const handleDataFromSelector = (
-    gradeComponents: GradeComponent[],
+    gradeComponents: IGradeScale[],
     students: Student[]
   ) => {
     setGradeComponents(gradeComponents);
@@ -98,8 +234,48 @@ const ImportGrades = ({ colorTheme }: Props) => {
   };
 
   const ConfirmImport = () => {
-    if (students && students.length > 0) {
-      console.log(students);
+    if (gradeComponents && gradeComponents.length > 0) {
+      console.log(gradeComponents);
+      const updateGradeScaleData = combineGradeScale(
+        gradeScaleData,
+        gradeComponents,
+        courseId
+      );
+      console.log("update gradescale", updateGradeScaleData);
+      updateGradeScales(updateGradeScaleData)
+        .then(() => {
+          toast.success(t("updateGradeScaleSuccessfully"));
+          getGradeScale(courseId)
+            .then((res) => {
+              setGradeComponents(res.gradeScales);
+              const newGradeScale = res.gradeScales as IGradeScale[];
+              let transformedGradeData: IGradeBoard[] = [];
+              for (const student of students) {
+                transformedGradeData = transformedGradeData.concat(
+                  transformStudentObject(student, newGradeScale, courseId)
+                );
+              }
+              console.log("transformedGradeData", transformedGradeData);
+              const updatedGradeData = combineGradeData(
+                transformedGradeData,
+                gradeData
+              );
+              console.log("updatedGradeData", updatedGradeData);
+              updateGradeBoard(updatedGradeData)
+                .then(() => {
+                  toast.success(t("updateGradeBoardSuccessfully"));
+                })
+                .catch((error) => {
+                  toast.error(error.detail.message);
+                });
+            })
+            .catch((error) => {
+              toast.error(error.detail.message);
+            });
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+        });
     }
 
     // Handle import data here
@@ -155,8 +331,8 @@ const ImportGrades = ({ colorTheme }: Props) => {
       ];
       for (let i = 0; i < gradeComponents.length; i++) {
         columnDefinitions.push({
-          title: gradeComponents[i].name,
-          field: gradeComponents[i].name,
+          title: gradeComponents[i].title,
+          field: gradeComponents[i].title,
           editable: true,
           editor: "number",
           sorter: "number",
@@ -208,7 +384,7 @@ const ImportGrades = ({ colorTheme }: Props) => {
           },
           {
             title: "Name",
-            field: "name",
+            field: "title",
             editable: true,
             editor: "input",
           },
@@ -257,7 +433,7 @@ const ImportGrades = ({ colorTheme }: Props) => {
       const newGradeComponents = prevGradeComponents.filter(
         (gradeScale) =>
           !selectedGradeScales.some(
-            (selected) => selected.getData().name === gradeScale.name
+            (selected) => selected.getData().name === gradeScale.title
           )
       );
 

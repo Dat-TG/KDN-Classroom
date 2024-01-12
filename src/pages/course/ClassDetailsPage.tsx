@@ -122,7 +122,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
           {t("youAreNotMemberOfThisClass")}
         </Typography>
       ) : (
-        <>
+        <div>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -259,7 +259,12 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
                   inviteLink={inviteLink}
                 />
               </div>
-              <div hidden={value != 3}>
+              <div
+                hidden={value != 3}
+                style={{
+                  overflow: "auto",
+                }}
+              >
                 <GradesPage
                   colorTheme={colorTheme}
                   classEntity={classEntity}
@@ -281,7 +286,7 @@ export default function ClassDetailsPage({ initTab }: { initTab: number }) {
               />
             </>
           )}
-        </>
+        </div>
       )}
     </>
   );

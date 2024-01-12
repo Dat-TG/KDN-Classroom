@@ -206,5 +206,7 @@
     "downloadTemplateWithData": "Download template with data",
     "changeStudentId": "Change student ID",
     "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID",
-    "selectFinalizedGradeScaleAlert": "Please select a finalized grade scale"
+    "selectFinalizedGradeScaleAlert": "Please select a finalized grade scale",
+    "updateGradeBoardSuccessfully": "Update grade board successfully",
+    "updateGradeScaleSuccessfully": "Update grade scale successfully"
 }
