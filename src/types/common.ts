@@ -1,3 +1,4 @@
+import { IRequestReviewReq } from './grade';
 import { IPaginationParams } from './pagination';
 
 export interface IFulfilledAction<ThunkArg, PromiseResult> {
