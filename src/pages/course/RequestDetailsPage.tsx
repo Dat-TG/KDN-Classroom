@@ -54,8 +54,8 @@ export default function RequestDetailsPage() {
           {
             id: res.id,
             comment: comment,
-            createdTime: new Date().toLocaleString(),
-            updatedTime: new Date().toLocaleString(),
+            createdTime: new Date().toISOString(),
+            updatedTime: new Date().toISOString(),
             userId: user!.id,
             requestReviewId: parseInt(requestId!),
           },
