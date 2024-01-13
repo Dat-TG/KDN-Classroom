@@ -27,7 +27,8 @@ const SingleComment: React.FC<CommentProps> = ({ commentData }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [commentData.userId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Card

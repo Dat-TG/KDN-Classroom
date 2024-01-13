@@ -169,7 +169,7 @@
     "importConfirmation": "Do you want to import this information?",
     "import": "Import",
     "importStudentsFromFile": "Import students from file",
-    "importGradesFromFile": "Import grades from file",
+    "importGradesFromFile": "Import grades",
     "saveChanges": "Save changes",
     "updateStudentIdSuccessfully": "Update student ID successfully",
     "userInformation": "User information",
@@ -205,5 +205,9 @@
     "inactiveClassSuccessfully": "Inactive class successfully",
     "downloadTemplateWithData": "Download template with data",
     "changeStudentId": "Change student ID",
-    "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID"
+    "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID",
+    "selectFinalizedGradeScaleAlert": "Please select a finalized grade scale",
+    "updateGradeBoardSuccessfully": "Update grade board successfully",
+    "updateGradeScaleSuccessfully": "Update grade scale successfully",
+    "downloadStudentListTemplate": "Download student list template"
 }

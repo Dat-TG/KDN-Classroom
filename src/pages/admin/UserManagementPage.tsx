@@ -97,177 +97,186 @@ export default function UserManagementPage() {
         <ImportStudentList />
         <DownloadStudentsTemplate />
       </div>
-      <ReactTabulator
-        options={{
-          layout: "fitDataTable",
-          pagination: true, //enable pagination
-          paginationSize: 5,
-          paginationInitialPage: 1,
-          paginationCounter: function (
-            pageSize: number,
-            currentRow: number,
-            _currentPage: number,
-            totalRows: number,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            _totalPages: number
-          ) {
-            return (
-              "Showing " +
-              currentRow +
-              "-" +
-              Math.min(currentRow + pageSize - 1, totalRows) +
-              " of " +
-              totalRows +
-              " users total"
-            );
-          },
-          paginationSizeSelector: [5, 10, 25, 50, 100],
-          paginationMode: "remote",
-          ajaxURL: `${import.meta.env.VITE_REACT_APP_BASE_URL}/user`,
-          ajaxConfig: {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ajaxResponse: function (_url: string, _params: any, response: any) {
-            return {
-              last_page: response.pageCount,
-              last_row: response.itemCount,
-              data: response.data,
-            };
-          },
-        }}
-        columns={[
-          {
-            title: "",
-            formatter: "rowSelection",
-            titleFormatter: "rowSelection",
-            hozAlign: "center",
-            vertAlign: "middle",
-            headerHozAlign: "center",
-            headerSort: false,
-          },
-          {
-            title: "#",
-            formatter(cell) {
-              return `${
-                ((cell.getTable().getPage() || 1) - 1) *
-                  cell.getTable().getPageSize() +
-                cell.getRow().getPosition()
-              }`;
-            },
-          },
-          {
-            title: "ID",
-            field: "id",
-            sorter: "number",
-          },
-          {
-            title: "Email",
-            field: "userName",
-            sorter: "string",
-          },
-          {
-            title: "Student ID",
-            field: "code",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              const arr = cell.getValue();
-              if (arr == null || arr.length == 0 || arr[0].code == null)
-                return "";
-              return arr[0].code;
-            },
-          },
-          {
-            title: "First Name",
-            field: "name",
-            sorter: "string",
-          },
-          {
-            title: "Last Name",
-            field: "surname",
-            sorter: "string",
-          },
-          {
-            title: "Avatar",
-            field: "avatar",
-            formatter: "image",
-            formatterParams: {
-              height: "50px",
-              width: "50px",
-            },
-          },
-          {
-            title: "Role",
-            field: "roles",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              const arr = cell.getValue();
-              let roles = "";
-              arr.forEach((element: { id: number; name: string }) => {
-                roles += element.name + ", ";
-              });
-              roles = roles.slice(0, -2);
-              return roles;
-            },
-          },
-          {
-            minWidth: 100,
-            editable: true,
-            title: "Status",
-            field: "isBan",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              const isBan = cell.getValue();
-              return isBan ? "Ban ❌" : "Active ✔️";
-            },
-            editor: "select",
-            editorParams: {
-              values: [
-                {
-                  label: "Ban ❌",
-                  value: true,
-                },
-                {
-                  label: "Active ✔️",
-                  value: false,
-                },
-              ],
-            },
-            cellEdited: function (cell) {
-              setCurrentCell(cell);
-              const isBan = cell.getValue();
-              const email = cell.getRow().getData().userName;
-              setConfirmContent(
-                `${t("areYouSureYouWantTo")} ${
-                  isBan ? t("banUser") : t("unbanUser")
-                } ${email}?`
+      <div
+        style={{ overflow: "auto", maxHeight: "500px", marginBottom: "32px" }}
+      >
+        <ReactTabulator
+          options={{
+            layout: "fitDataTable",
+            pagination: true, //enable pagination
+            paginationSize: 5,
+            paginationInitialPage: 1,
+            paginationCounter: function (
+              pageSize: number,
+              currentRow: number,
+              _currentPage: number,
+              totalRows: number,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              _totalPages: number
+            ) {
+              return (
+                "Showing " +
+                currentRow +
+                "-" +
+                Math.min(currentRow + pageSize - 1, totalRows) +
+                " of " +
+                totalRows +
+                " users total"
               );
-              setOpenConfirm(true);
             },
-            width: 30,
-            hozAlign: "center",
-            vertAlign: "middle",
-          },
-          {
-            minWidth: 100,
-            title: "",
-            formatter: function () {
-              //plain text value
-              return "<button>Edit</button>";
+            paginationSizeSelector: [5, 10, 25, 50, 100],
+            paginationMode: "remote",
+            ajaxURL: `${import.meta.env.VITE_REACT_APP_BASE_URL}/user`,
+            ajaxConfig: {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
             },
-            width: 40,
-            hozAlign: "center",
-            vertAlign: "middle",
-            cellClick: function (_e, cell) {
-              setCurrentCell(cell);
-              setOpenChangeStudentId(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ajaxResponse: function (_url: string, _params: any, response: any) {
+              return {
+                last_page: response.pageCount,
+                last_row: response.itemCount,
+                data: response.data,
+              };
             },
-          },
-        ]}
-      />
+          }}
+          columns={[
+            {
+              title: "",
+              formatter: "rowSelection",
+              titleFormatter: "rowSelection",
+              hozAlign: "center",
+              vertAlign: "middle",
+              headerHozAlign: "center",
+              headerSort: false,
+            },
+            {
+              title: "#",
+              formatter(cell) {
+                return `${
+                  ((cell.getTable().getPage() || 1) - 1) *
+                    cell.getTable().getPageSize() +
+                  cell.getRow().getPosition()
+                }`;
+              },
+            },
+            {
+              title: "ID",
+              field: "id",
+              sorter: "number",
+            },
+            {
+              title: "Email",
+              field: "userName",
+              sorter: "string",
+            },
+            {
+              title: "Student ID",
+              field: "code",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                const arr = cell.getValue();
+                if (arr == null || arr.length == 0 || arr[0].code == null)
+                  return "";
+                return arr[0].code;
+              },
+            },
+            {
+              title: "First Name",
+              field: "name",
+              sorter: "string",
+            },
+            {
+              title: "Last Name",
+              field: "surname",
+              sorter: "string",
+            },
+            {
+              title: "Avatar",
+              field: "avatar",
+              formatter: "image",
+              formatterParams: {
+                height: "50px",
+                width: "50px",
+              },
+            },
+            {
+              title: "Role",
+              field: "roles",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                const arr = cell.getValue();
+                let roles = "";
+                arr.forEach((element: { id: number; name: string }) => {
+                  roles += element.name + ", ";
+                });
+                roles = roles.slice(0, -2);
+                return roles;
+              },
+            },
+            {
+              minWidth: 100,
+              editable: true,
+              title: "Status",
+              field: "isBan",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                const isBan = cell.getValue();
+                return isBan ? "Ban ❌" : "Active ✔️";
+              },
+              editor: "select",
+              editorParams: {
+                values: [
+                  {
+                    label: "Ban ❌",
+                    value: true,
+                  },
+                  {
+                    label: "Active ✔️",
+                    value: false,
+                  },
+                ],
+              },
+              cellEdited: function (cell) {
+                setCurrentCell(cell);
+                const isBan = cell.getValue();
+                const email = cell.getRow().getData().userName;
+                setConfirmContent(
+                  `${t("areYouSureYouWantTo")} ${
+                    isBan ? t("banUser") : t("unbanUser")
+                  } ${email}?`
+                );
+                setOpenConfirm(true);
+              },
+              width: 30,
+              hozAlign: "center",
+              vertAlign: "middle",
+            },
+            {
+              minWidth: 100,
+              title: "",
+              formatter: function () {
+                //plain text value
+                return "<button>Edit</button>";
+              },
+              width: 40,
+              hozAlign: "center",
+              vertAlign: "middle",
+              cellClick: function (_e, cell) {
+                setCurrentCell(cell);
+                setOpenChangeStudentId(true);
+              },
+            },
+          ]}
+        />
+        <div
+          style={{
+            height: "32px",
+          }}
+        ></div>
+      </div>
       <ConfirmationDialog
         open={openConfirm}
         content={confirmContent}

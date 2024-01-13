@@ -75,7 +75,8 @@ export default function PeoplePage(props: Props) {
           console.log(err);
         });
     }
-  }, [props.ownerId, props.studentIds, props.teacherIds]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
