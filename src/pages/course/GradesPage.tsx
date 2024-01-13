@@ -403,6 +403,8 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           });
           console.log("grades add table", grades);
           gradeTable = new Tabulator(gradeTableRef.current, {
+            maxHeight: "500px",
+            height: "500px",
             movableRows: !isStudent,
             movableColumns: !isStudent,
             data: grades,
@@ -706,6 +708,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
       style={{
         padding: "24px",
         overflow: "auto",
+        height: "100vh",
       }}
     >
       <Box display={"flex"} gap={"16px"}>
@@ -984,7 +987,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           </Button>
         </div>
       )}
+
       <div ref={gradeTableRef} />
+
       {gradesTable == null && <CircularProgress />}
       <div
         style={{
