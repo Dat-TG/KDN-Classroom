@@ -77,6 +77,7 @@ Then goto http://localhost:5173/
 - Sign out
 - Managing sign-in and sign-out UI states for users
 - Restrict feature access based on the user’s role
+- Use a popular authentication library
 
 ### User Profile Management
 Users can edit:
@@ -100,11 +101,83 @@ Users can edit:
 - Invite student by email
 - Invite teacher by email
 
+#### Grade structure
+- Interactive UI to manage grade structure (like Google Form)
+- Show current grade structure
+- Add a grade composition with a name and grade scale
+- Remove a grade composition
+- Update a grade composition (name, grade scale)
+- Arrange a grade composition position
+
+#### Grade management
+- Download default csv/Excel (xlsx) template for student list (StudentId, FullName)
+- Class owner uploads a csv/xlsx file with student list (StudentId, Full name): Update new student to current grade board
+- Show Students (pre-upload full student list) x Grades board
+- Map Student Id with Student account in grade board
+- Input grade for a student at a specific assignment: or multiple assignments
+- Download default csv/Excel (xlsx) template for grades for an assignment (StudentId, Grade): or multiple assignments
+- Teacher uploads a csv/xlsx file for grades of all students for a specific assignment: or multiple assignment
+- Show total grade column at grade board: auto calculate
+- Export Grade board to a csv/xlsx file
+- Mark a grade composition as finalized
+
 ### Student
 
 #### Join class
 - By code
 - By invitation link
+
+#### Profile
+
+- Manage profile: change information, avatar, student ID
+- Student ID and account mapping
+
+#### Class information
+- List joined classes
+- View Grade structure
+- View class members: teachers, students
+  
+#### Grade viewer
+- View his grade compositions, overall grade
+- Request a review of each grade composition
+- View and comment on grade review between the teacher and themself
+
+### Notification
+
+#### Students receive a notification when:
+- When a teacher finalizes a grade composition, create notifications to all students in the class
+- When a teacher replies to a student grade review
+- When a teacher creates a final decision on a mark review
+
+#### Teachers receive a notification when:
+- The student requests a grade review
+- When a student replies to a teacher grade review
+
+#### Navigate to the coresponding location when click on a notification
+
+### Admin page
+
+- Authentication
+- Manage user accounts
+- Lock/ban an account
+- Student ID and account mapping
+- Manually map or unmap the StudentId of an account
+- Map a list of student Ids by uploading Excel file
+- Manage classes
+- View, sort, filter classes
+- Inactive/active a class
+
+### Bonus
+
+- Globalization localization i18n
+- Course theme and background
+- Table data interactive, friendly, easy use, auto calculation
+
+
+
+
+
+
 
 ### Public Hosting
 - Includes functionality to upload projects to a public host, facilitating easy sharing and accessibility.
