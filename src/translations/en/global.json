@@ -208,5 +208,6 @@
     "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID",
     "selectFinalizedGradeScaleAlert": "Please select a finalized grade scale",
     "updateGradeBoardSuccessfully": "Update grade board successfully",
-    "updateGradeScaleSuccessfully": "Update grade scale successfully"
+    "updateGradeScaleSuccessfully": "Update grade scale successfully",
+    "downloadStudentListTemplate": "Download student list template"
 }

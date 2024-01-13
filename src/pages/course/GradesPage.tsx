@@ -38,6 +38,8 @@ import DownloadFileButton from "../../components/class_details/DownloadFileButto
 import DownloadTabulatorButton from "../../components/class_details/DownloadTabulatorButton";
 import DownloadDataButton from "../../components/class_details/DownloadDataButton";
 import ImportGrades from "../TestUpload/ImportGrades";
+import DownloadTemplateImportStudent from "../../components/admin/DownloadTemplateImportStudents";
+import ImportStudents from "../../components/admin/ImportStudents";
 
 interface Props {
   colorTheme: string;
@@ -569,7 +571,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               //selected - array of row components that were selected in the last action
               //deselected - array of row components that were deselected in the last action
               for (let i = 0; i < selected.length; i++) {
-                if (selected[i].getData().isFinalized == false) {
+                if (isStudent && selected[i].getData().isFinalized == false) {
                   selected[i].deselect();
                   toast.error(t("selectFinalizedGradeScaleAlert"));
                 }
@@ -795,6 +797,25 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             gradeScaleData={gradeScaleData}
             courseId={classEntity.courseId}
           />
+        </div>
+      </Box>
+
+      <Box display={"flex"} gap={"16px"}>
+        <div
+          style={{
+            display: isStudent ? "none" : "inline-flex",
+          }}
+        >
+          <DownloadTemplateImportStudent
+            colorTheme={classEntity.course.courseColor}
+          />
+        </div>
+        <div
+          style={{
+            display: isStudent ? "none" : "inline-flex",
+          }}
+        >
+          <ImportStudents colorTheme={classEntity.course.courseColor} />
         </div>
       </Box>
 
