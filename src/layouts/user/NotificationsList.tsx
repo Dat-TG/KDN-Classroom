@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import { sGetUserId } from "../../store/user/selector";
 import { markReadNotification } from "../../api/notification/apiNotification";
 import { INotification, NotificationTypes } from "../../types/common";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 
 
@@ -86,7 +86,7 @@ const NotificationsList: React.FC = () => {
   const [notificationContentList, setNotificationContentList] = useState<notificationContent[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -115,22 +115,6 @@ const NotificationsList: React.FC = () => {
 
     setUnreadCount(newUnreadCount);
   }, [notificationContentList]);
-
-
-  useEffect(() => {
-    const convertNotifications = async () => {
-      try {
-        const convertedList: notificationContent[] = await Promise.all(
-          notificationDTOList.map(async (dto) => await convertNotification(dto))
-        );
-        setNotificationContentList(convertedList);
-      } catch (error) {
-        console.error('Error converting notifications:', error);
-      }
-    };
-
-    convertNotifications();
-  }, [notificationDTOList]);
 
   async function convertNotification(dto: INotification): Promise<notificationContent> {
     const notification: notificationContent = {
@@ -176,6 +160,24 @@ const NotificationsList: React.FC = () => {
 
     return notification;
   }
+
+  useEffect(() => {
+    const convertNotifications = async () => {
+      try {
+        const convertedList: notificationContent[] = await Promise.all(
+          notificationDTOList.map(async (dto) => await convertNotification(dto))
+        );
+        setNotificationContentList(convertedList);
+      } catch (error) {
+        console.error('Error converting notifications:', error);
+      }
+    };
+
+    convertNotifications();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationDTOList]);
+
+ 
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
