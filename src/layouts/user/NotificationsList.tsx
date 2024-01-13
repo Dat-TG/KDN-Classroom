@@ -18,7 +18,7 @@ import { getNotifications, markReadNotification } from "../../api/notification/a
 import { INotification, IToastError, NotificationTypes } from "../../types/common";
 import { useNavigate } from "react-router-dom";
 import { getUserById } from "../../api/user/apiUser";
-
+import { getCourseById } from "../../api/course/apiCourse";
 
 
 type notificationContent = {
@@ -90,18 +90,18 @@ const NotificationsList: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-        console.log(userId);
-        if (userId !== undefined) {
-          //setNotificationDTOList(seedNotificationDTOList);
-          getNotifications().then((res) => {
-            const notifications = res.notifications as INotification[];
-            console.log(notifications);
+    console.log(userId);
+    if (userId !== undefined) {
+      //setNotificationDTOList(seedNotificationDTOList);
+      getNotifications().then((res) => {
+        const notifications = res.notifications as INotification[];
+        console.log(notifications);
 
-            setNotificationDTOList(notifications);
-            console.log("notifications: ", notificationDTOList);
-          }). catch((error : IToastError) => { console.log(error.detail.message)});
-        }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+        setNotificationDTOList(notifications);
+        console.log("notifications: ", notificationDTOList);
+      }).catch((error: IToastError) => { console.log(error.detail.message) });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
@@ -128,44 +128,69 @@ const NotificationsList: React.FC = () => {
 
 
       notification.id = dto.id;
-      
+
       notification.creatorName = senderName;
-      console.log("dto",dto);
+      console.log("dto", dto);
+
+      const getCourseCode = async () => {
+        try {
+          let courseId;
+
+          // Lựa chọn course id dựa vào loại thông báo
+          if (dto.type !== NotificationTypes.finalized) {
+            courseId = dto.requestReview.courseId;
+          } else {
+            courseId = dto.courseId;
+          }
+
+          const res = await getCourseById(courseId);
+          const courseCode = res.data.code as string;
+          console.log("Course Code:", courseCode);
+
+          return courseCode;
+        } catch (error) {
+          console.error('Error fetching course code:', error);
+
+          return null;
+        }
+      };
+
+      // Gọi hàm getCourseCode khi cần
+      const courseCode = await getCourseCode();
 
       if (dto.type === NotificationTypes.finalized) {
         notification.message = t('finalizedCompositionNotification');
-        const courseId = dto.courseId.toString();
-        notification.link = "/class/" + courseId + "/grades";
-      } 
+        notification.link = "/class/" + courseCode + "/grades";
+      }
       else if (dto.type === NotificationTypes.approve) {
         notification.message = t('approveReviewRequesNotification');
-        const requestReview = dto.requestReview.id;  
+        const requestReview = dto.requestReview.id;
         console.log("request Review", requestReview);
-        notification.link = "/grades/request/" + requestReview;
-      } 
+        notification.link = `class/${courseCode}/grades/request/${requestReview}`;
+      }
       else if (dto.type === NotificationTypes.reject) {
         notification.message = t('rejectReviewRequesNotification');
         const requestReview = dto.requestReview.id;
         console.log("reques tReview", requestReview);
-        notification.link = `/grades/request/${requestReview.toString()}`;
-      } 
+        notification.link = `class/${courseCode}/grades/request/${requestReview}`;
+      }
       else if (dto.type === NotificationTypes.requestReview) {
         notification.message = t('reviewRequestNotification');
         const requestReview = dto.requestReview.id;
         console.log("request Review", requestReview);
-        notification.link = "/grades/request/" +requestReview;
-      } 
+        notification.link = `class/${courseCode}/grades/request/${requestReview}`;
+      }
       else if (dto.type === NotificationTypes.teacherComment) {
         notification.message = t('teacherCommentNotification');
         const requestReview = dto.requestReview.id;
         console.log("request Review", requestReview);
-        notification.link = "/grades/request/" +requestReview;
-      } 
+        notification.link = `class/${courseCode}/grades/request/${requestReview}`;
+      }
       else if (dto.type === NotificationTypes.studentComment) {
         notification.message = t('studentCommentNotification');
         const requestReview = dto.requestReview.id;
         console.log("request Review", requestReview);
-        notification.link = "/grades/request/" +requestReview;
+        notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
 
       notification.isRead = dto.isRead;
@@ -244,7 +269,6 @@ const NotificationsList: React.FC = () => {
       console.error('Error marking all notifications as read:', error);
     }
   }
-
 
 
   return (

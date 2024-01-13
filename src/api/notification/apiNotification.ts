@@ -7,7 +7,7 @@ export const getNotifications = async () => {
 };
 
 export const markReadNotification = async (notificationId: number) => {
-    const response = await AxiosClient.post(`/notification/read/${ notificationId }`);
+    const response = await AxiosClient.post("/notification/read", { notificationId });
     return response.data;
 };
 

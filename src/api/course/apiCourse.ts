@@ -16,6 +16,11 @@ export const getCourseByCode = async (courseCode: string) => {
   return res.data;
 };
 
+export const getCourseById = async (courseId: number) => {
+  const res = await AxiosClient.get(`/course/detail/${courseId}`);
+  return res.data;
+};
+
 export const getCoursesByRole = async (role: RoleCourseString) => {
   const res = await AxiosClient.get(`/course/all-course?roleCourse=${role}`);
   return res.data.data;
