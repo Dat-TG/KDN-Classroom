@@ -61,7 +61,7 @@ Then goto http://localhost:5173/
 ## Features
 
 ### User Navigation
-- Users can navigate between the Landing page, Sign Up, Sign In, Home page, and Profile page.
+- Users can navigate between all pages.
 
 ### React UI Framework
 - Utilizes a React UI Framework for the project's user interface, ensuring a responsive and modern design.
