@@ -47,7 +47,7 @@ export default function JoinClassByCodeDialog(props: Props) {
     setIsLoading(true);
     try {
       await joinCourse(data.code.trim());
-      navigate(`/class/${data.code.trim()}`);
+      navigate(`/class/${data.code.trim()}/stream`);
       toast.success(t("joinClassSuccessfully"));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

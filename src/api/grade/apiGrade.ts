@@ -116,7 +116,7 @@ export const deleteGradeBoardRow = async (id: number) => {
 };
 
 export const deleteMultipleGrades = async (ids: number[]) => {
-  const response = await AxiosClient.delete("/grade-board/multi", {
+  const response = await AxiosClient.delete("/grade-board/delete/multi", {
     data: { ids: ids.map((id) => ({ id })) },
   });
   return response.data;

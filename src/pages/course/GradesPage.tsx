@@ -87,7 +87,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
   const [selectedCell, setSelectedCell] = useState<CellComponent>();
 
   const onSave = async () => {
-    const gradeScaleTemp: IGradeScale[] = gradeScaleData.map((grade) => {
+    let gradeScaleTemp: IGradeScale[] = gradeScaleData.map((grade) => {
       const position = gradeScaleTable?.getRows().findIndex((row) => {
         return row.getData().id === grade.id;
       });
@@ -105,54 +105,64 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
         toast.success(res.message);
         gradeScaleTable?.clearHistory();
         gradesTable?.clearHistory();
-        const grades = gradesTable?.getData() ?? [];
-        console.log("gradesTable", gradesTable?.getData());
-        const gradesTemp = grades.map((grade) => {
-          const position = gradesTable?.getRows().findIndex((row) => {
-            return row.getData().studentId === grade.studentId;
-          });
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const temp: any = {
-            studentId: grade.studentId,
-            firstName: grade.firstName,
-            lastName: grade.lastName,
-            average: grade.average,
-            position: position != undefined ? position + 1 : 0,
-          };
-          for (let i = 0; i < gradeScaleTemp.length; i++) {
-            temp[gradeScaleTemp[i].id.toString()] =
-              grade[gradeScaleTemp[i].id.toString()];
-            temp[gradeScaleTemp[i].id.toString() + "grade"] =
-              grade[gradeScaleTemp[i].id.toString() + "grade"];
-            if (gradeScaleTemp[i].id == 0) {
-              delete temp[gradeScaleTemp[i].id.toString()];
-              temp[gradeScaleTemp[i].title] = grade[gradeScaleTemp[i].title];
-            }
-          }
-          return temp;
-        });
-        const gradeBoardTemp: IGradeBoard[] = [];
-        for (let i = 0; i < gradesTemp.length; i++) {
-          for (let j = 0; j < gradeScaleTemp.length; j++) {
-            if (gradeScaleTemp[j].id == 0) {
-              continue;
-            }
-            gradeBoardTemp.push({
-              id: gradesTemp[i][gradeScaleTemp[j].id.toString() + "grade"] || 0,
-              courseId: classEntity.courseId,
-              studentCode: gradesTemp[i].studentId,
-              name: gradesTemp[i].firstName ?? "",
-              surname: gradesTemp[i].lastName ?? "",
-              grade: parseFloat(gradesTemp[i][gradeScaleTemp[j].id.toString()]),
-              gradeScaleId: gradeScaleTemp[j].id,
-              position: gradesTemp[i].position,
-            });
-          }
-        }
-        console.log("gradesTemp", gradeBoardTemp);
-        updateGradeBoard(gradeBoardTemp)
+        getGradeScale(classEntity.courseId)
           .then((res) => {
-            toast.success(res.message);
+            gradeScaleTemp = res.gradeScales;
+            console.log("gradescale update", gradeScaleTemp);
+            const grades = gradesTable?.getData() ?? [];
+            console.log("gradesTable", gradesTable?.getData());
+            const gradesTemp = grades.map((grade) => {
+              const position = gradesTable?.getRows().findIndex((row) => {
+                return row.getData().studentId === grade.studentId;
+              });
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const temp: any = {
+                studentId: grade.studentId,
+                firstName: grade.firstName,
+                lastName: grade.lastName,
+                average: grade.average,
+                position: position != undefined ? position + 1 : 0,
+              };
+              for (let i = 0; i < gradeScaleTemp.length; i++) {
+                temp[gradeScaleTemp[i].id.toString()] =
+                  grade[gradeScaleTemp[i].id.toString()];
+                temp[gradeScaleTemp[i].id.toString() + "grade"] =
+                  grade[gradeScaleTemp[i].id.toString() + "grade"];
+                if (temp[gradeScaleTemp[i].id.toString()] == undefined) {
+                  temp[gradeScaleTemp[i].id.toString()] =
+                    grade[gradeScaleTemp[i].title];
+                }
+              }
+              return temp;
+            });
+            const gradeBoardTemp: IGradeBoard[] = [];
+            for (let i = 0; i < gradesTemp.length; i++) {
+              for (let j = 0; j < gradeScaleTemp.length; j++) {
+                gradeBoardTemp.push({
+                  id:
+                    gradesTemp[i][gradeScaleTemp[j].id.toString() + "grade"] ||
+                    0,
+                  courseId: classEntity.courseId,
+                  studentCode: gradesTemp[i].studentId,
+                  name: gradesTemp[i].firstName ?? "",
+                  surname: gradesTemp[i].lastName ?? "",
+                  grade: parseFloat(
+                    gradesTemp[i][gradeScaleTemp[j].id.toString()]
+                  ),
+                  gradeScaleId: gradeScaleTemp[j].id,
+                  position: gradesTemp[i].position,
+                });
+              }
+            }
+            console.log("gradesTemp", gradeBoardTemp);
+            updateGradeBoard(gradeBoardTemp)
+              .then((res) => {
+                toast.success(res.message);
+                setRestart(restart + 1);
+              })
+              .catch((err) => {
+                toast.error(err.detail.message);
+              });
           })
           .catch((err) => {
             toast.error(err.detail.message);
@@ -222,34 +232,33 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           if (res_1.gradesBoard.data.length == 0) {
             return;
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grades = res_1.gradesBoard.data.map((e: any) => {
+          grades = res_1.gradesBoard.data
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const temp: any = {
-              studentId: e.codeUser,
-              firstName:
-                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.name : e.name,
-              lastName:
-                e.gradeData.lenght > 0
-                  ? e.gradeData[0].gradeData.surname
-                  : e.surname,
-              average: 0,
-              position:
-                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.position : 0,
-            };
-            for (let i = 0; i < e.gradeData.length; i++) {
-              temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
-                e.gradeData[i].gradeData.grade;
-              temp[e.gradeData[i].gradeData.gradeScaleId.toString() + "grade"] =
-                e.gradeData[i].gradeData.id;
-            }
-            for (let i_1 = 0; i_1 < gradeScale.length; i_1++) {
-              if (temp[gradeScale[i_1].id.toString()] == undefined) {
-                temp[gradeScale[i_1].id.toString()] = 0;
+            .filter((item: any) => item.gradeData.length > 0)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((e: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const temp: any = {
+                studentId: e.codeUser,
+                firstName: e.gradeData[0].gradeData.name,
+                lastName: e.gradeData[0].gradeData.surname,
+                average: 0,
+                position: e.gradeData[0].gradeData.position,
+              };
+              for (let i = 0; i < e.gradeData.length; i++) {
+                temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
+                  e.gradeData[i].gradeData.grade;
+                temp[
+                  e.gradeData[i].gradeData.gradeScaleId.toString() + "grade"
+                ] = e.gradeData[i].gradeData.id;
               }
-            }
-            return temp;
-          });
+              for (let i_1 = 0; i_1 < gradeScale.length; i_1++) {
+                if (temp[gradeScale[i_1].id.toString()] == undefined) {
+                  temp[gradeScale[i_1].id.toString()] = 0;
+                }
+              }
+              return temp;
+            });
           const groupedByStudentCode =
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             res_1.gradesBoard.gradesBoardDesist.reduce((acc: any, obj: any) => {
@@ -466,6 +475,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               ids.push(
                 parseInt(rowData[gradeScale[i].id.toString() + "grade"])
               );
+            }
+            if (rowData["0grade"] != undefined) {
+              ids.push(parseInt(rowData["0grade"]));
             }
             console.log("ids", ids);
             deleteMultipleGrades(ids)
@@ -805,6 +817,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             gradeData={gradesData}
             gradeScaleData={gradeScaleData}
             courseId={classEntity.courseId}
+            callback={() => setRestart(restart + 1)}
           />
         </div>
       </Box>
@@ -828,7 +841,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             colorTheme={classEntity.course.courseColor}
             courseId={classEntity.courseId}
             callback={() => setRestart(restart + 1)}
-            grades={[]}
+            grades={gradesData}
           />
         </div>
       </Box>
