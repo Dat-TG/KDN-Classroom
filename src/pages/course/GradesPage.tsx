@@ -51,6 +51,7 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function GradesPage({ classEntity, studentIds }: Props) {
+  const [restart, setRestart] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [gradesData, setGradesData] = useState<any[]>([]);
   const gradeTableRef = useRef(null);
@@ -703,7 +704,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [restart]);
 
   return (
     <div
@@ -815,7 +816,11 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             display: isStudent ? "none" : "inline-flex",
           }}
         >
-          <ImportStudents colorTheme={classEntity.course.courseColor} />
+          <ImportStudents
+            colorTheme={classEntity.course.courseColor}
+            courseId={classEntity.courseId}
+            callback={() => setRestart(restart + 1)}
+          />
         </div>
       </Box>
 

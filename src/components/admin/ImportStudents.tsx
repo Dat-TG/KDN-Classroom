@@ -16,6 +16,9 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ImportStudentSelector from "./ImportStudentSelector";
+import { updateGradeBoard } from "../../api/grade/apiGrade";
+import { IGradeBoard } from "../../types/grade";
+import toast from "../../utils/toast";
 // import ExportStudentsCSV from "./ExportStudentsCSV";
 
 type Student = {
@@ -26,9 +29,13 @@ type Student = {
 
 interface Props {
   colorTheme?: string;
+  courseId: number;
+  callback: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  grades: any[];
 }
 
-const ImportStudents = ({ colorTheme }: Props) => {
+const ImportStudents = ({ colorTheme, courseId, callback }: Props) => {
   const { t } = useTranslation("global");
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
@@ -58,6 +65,27 @@ const ImportStudents = ({ colorTheme }: Props) => {
   const ConfirmImport = async () => {
     if (students && students.length > 0) {
       console.log(students);
+      const gradeData: IGradeBoard[] = [];
+      for (const student of students) {
+        gradeData.push({
+          studentCode: student.studentId,
+          courseId: courseId,
+          grade: 0,
+          gradeScaleId: 0,
+          id: 0,
+          name: student.firstName,
+          position: 0,
+          surname: student.lastName,
+        });
+      }
+      updateGradeBoard(gradeData)
+        .then(() => {
+          toast.success(t("updateGradeBoardSuccessfully"));
+          callback();
+        })
+        .catch((error) => {
+          toast.error(error.detail.message);
+        });
     }
 
     //hande import data
