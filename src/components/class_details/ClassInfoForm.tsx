@@ -65,7 +65,7 @@ const ClassInfoForm: React.FC<Props> = (props) => {
         toast.success(t("createClassSuccessfully"));
         setIsLoading(false);
         props.onDialogClose!();
-        navigate(`/class/${res.code}`);
+        navigate(`/class/${res.code}/stream`);
       })
       .catch((err) => {
         toast.error((err as IToastError).detail.message);
