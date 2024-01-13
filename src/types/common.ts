@@ -1,3 +1,4 @@
+import { IRequestReviewReq } from './grade';
 import { IPaginationParams } from './pagination';
 
 export interface IFulfilledAction<ThunkArg, PromiseResult> {
@@ -7,6 +8,18 @@ export interface IFulfilledAction<ThunkArg, PromiseResult> {
     requestId: string;
     arg: ThunkArg;
   };
+}
+
+
+export interface INotification  {
+  id: number;
+  courseId: number;
+  createdTime: Date;
+  requestReview: IRequestReviewReq;
+  type: string;
+  isRead: boolean;
+  isStudent: boolean;
+  createdBy: number;
 }
 
 export interface IRequestParams {
@@ -60,4 +73,14 @@ export interface IResponseError {
   detail: string,
   path: string,
   timestamp: Date
+}
+
+export enum NotificationTypes{
+  teacherComment = "teacher_comment",
+  studentComment = "student_comment",
+  finalized = "finalized",
+  requestReview = "request_review",
+  approve = "approve",
+  reject = "reject",
+  all = "all",
 }
