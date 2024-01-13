@@ -201,7 +201,7 @@
     "download": "Download",
     "markAllAsRead": "Mark all as read",
     "seeAll" : "See all",
-    "approveNotification" : "has approved your request to review your grade.",
+    "approveReviewRequesNotification" : "has approved your request to review your grade.",
     "rejectReviewRequesNotification" : "has rejected your request to review your grade.",
     "finalizedCompositionNotification" : "has finalized a grade composition.",
     "reviewRequestNotification": "has requested a grade review.",
@@ -213,5 +213,7 @@
     "inactiveClassSuccessfully": "Inactive class successfully",
     "downloadTemplateWithData": "Download template with data",
     "changeStudentId": "Change student ID",
-    "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID"
+    "changeStudentIdHelper": "Type a unique student ID here to change or leave it blank to unmap student ID",
+    "notifications": "Notifications",
+    "noNotifications": "There are no notifications"
 }

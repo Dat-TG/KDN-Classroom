@@ -9,6 +9,16 @@ export interface IFulfilledAction<ThunkArg, PromiseResult> {
   };
 }
 
+
+export interface INotification  {
+  id: number;
+  creatorId: number;
+  createdTime: Date;
+  requestReviewId: number;
+  type: string;
+  isRead: boolean;
+}
+
 export interface IRequestParams {
   page?: number;
   size?: number;
@@ -60,4 +70,14 @@ export interface IResponseError {
   detail: string,
   path: string,
   timestamp: Date
+}
+
+export enum NotificationTypes{
+  teacherComment = "teacher_comment",
+  studentComment = "student_comment",
+  finalized = "finalized",
+  requestReview = "request_review",
+  approve = "approve",
+  reject = "reject",
+  all = "all",
 }

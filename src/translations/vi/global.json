@@ -213,5 +213,7 @@
     "inactiveClassSuccessfully": "Lưu trữ lớp học thành công",
     "downloadTemplateWithData": "Tải file mẫu với dữ liệu",
     "changeStudentId": "Thay đổi mã số sinh viên",
-    "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên"
+    "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên",
+    "notifications": "Thông báo",
+    "noNotifications": "Không có thông báo nào"
 }
