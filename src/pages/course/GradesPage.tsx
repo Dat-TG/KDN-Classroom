@@ -820,6 +820,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             colorTheme={classEntity.course.courseColor}
             courseId={classEntity.courseId}
             callback={() => setRestart(restart + 1)}
+            grades={[]}
           />
         </div>
       </Box>
