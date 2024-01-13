@@ -219,15 +219,23 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           }
         } else {
           const res_1 = await getGradeBoard(classEntity.courseId);
+          if (res_1.gradesBoard.data.length == 0) {
+            return;
+          }
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           grades = res_1.gradesBoard.data.map((e: any) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const temp: any = {
               studentId: e.codeUser,
-              firstName: e.gradeData[0].gradeData.name,
-              lastName: e.gradeData[0].gradeData.surname,
+              firstName:
+                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.name : e.name,
+              lastName:
+                e.gradeData.lenght > 0
+                  ? e.gradeData[0].gradeData.surname
+                  : e.surname,
               average: 0,
-              position: e.gradeData[0].gradeData.position,
+              position:
+                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.position : 0,
             };
             for (let i = 0; i < e.gradeData.length; i++) {
               temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
