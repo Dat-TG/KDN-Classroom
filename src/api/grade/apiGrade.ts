@@ -84,6 +84,7 @@ export const postComment = async (requestReviewId: number, comment: string) => {
     id: 0,
     comment,
     requestReviewId,
+    studentId: 0,
   });
   return response.data;
 };
