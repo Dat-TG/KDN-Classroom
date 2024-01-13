@@ -136,16 +136,16 @@ const NotificationsList: React.FC = () => {
         try {
           let courseId;
 
-          // Lựa chọn course id dựa vào loại thông báo
-          if (dto.type !== NotificationTypes.finalized) {
-            courseId = dto.requestReview.courseId;
-          } else {
+          if (dto.type == NotificationTypes.finalized || dto.type == NotificationTypes.studentComment || dto.type == NotificationTypes.teacherComment) {
+            console.log("Id của lớp học kiểu bên ngoài",dto.courseId);
             courseId = dto.courseId;
+          } else {
+            console.log("Id của lớp học bên trong",dto.courseId);
+            courseId = dto.requestReview.courseId;
           }
 
           const res = await getCourseById(courseId);
           const courseCode = res.data.code as string;
-          console.log("Course Code:", courseCode);
 
           return courseCode;
         } catch (error) {
@@ -165,31 +165,26 @@ const NotificationsList: React.FC = () => {
       else if (dto.type === NotificationTypes.approve) {
         notification.message = t('approveReviewRequesNotification');
         const requestReview = dto.requestReview.id;
-        console.log("request Review", requestReview);
         notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
       else if (dto.type === NotificationTypes.reject) {
         notification.message = t('rejectReviewRequesNotification');
         const requestReview = dto.requestReview.id;
-        console.log("reques tReview", requestReview);
         notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
       else if (dto.type === NotificationTypes.requestReview) {
         notification.message = t('reviewRequestNotification');
         const requestReview = dto.requestReview.id;
-        console.log("request Review", requestReview);
         notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
       else if (dto.type === NotificationTypes.teacherComment) {
         notification.message = t('teacherCommentNotification');
-        const requestReview = dto.requestReview.id;
-        console.log("request Review", requestReview);
+        const requestReview = dto.commentRequest.requestReviewId;
         notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
       else if (dto.type === NotificationTypes.studentComment) {
         notification.message = t('studentCommentNotification');
-        const requestReview = dto.requestReview.id;
-        console.log("request Review", requestReview);
+        const requestReview = dto.commentRequest.requestReviewId;
         notification.link = `class/${courseCode}/grades/request/${requestReview}`;
       }
 
@@ -234,8 +229,7 @@ const NotificationsList: React.FC = () => {
 
     try {
       if (!notification.isRead) {
-        console.log(notification.id);
-        //await markReadNotification(notification.id);
+        await markReadNotification(notification.id);
         const updatedNotificationList = [...notificationContentList];
 
         const index = updatedNotificationList.findIndex(item => item.id === notification.id);
@@ -244,8 +238,9 @@ const NotificationsList: React.FC = () => {
         }
 
         setNotificationContentList(updatedNotificationList);
-        navigate(notification.link);
       }
+      handleClose();
+        navigate(notification.link);
     } catch (error) {
       console.error('Error marking notification as read:', error);
     }
