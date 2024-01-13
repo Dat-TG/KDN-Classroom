@@ -13,10 +13,11 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useTranslation } from "react-i18next";
 import CircleIcon from "@mui/icons-material/Circle";
 import { useSelector } from "react-redux";
-import { sGetUserId } from "../../store/user/selector";
-import { markReadNotification } from "../../api/notification/apiNotification";
-import { INotification, NotificationTypes } from "../../types/common";
-//import { useNavigate } from "react-router-dom";
+import { sGetUserInfo } from "../../store/user/selector";
+import { getNotifications, markReadNotification } from "../../api/notification/apiNotification";
+import { INotification, IToastError, NotificationTypes } from "../../types/common";
+import { useNavigate } from "react-router-dom";
+import { getUserById } from "../../api/user/apiUser";
 
 
 
@@ -28,84 +29,79 @@ type notificationContent = {
   link: string;
 }
 
-const seedNotificationDTOList: INotification[] = [
-  {
-    id: 1,
-    creatorId: 101,
-    createdTime: new Date(),
-    requestReviewId: 201,
-    type: "approve",
-    isRead: false,
-  },
-  {
-    id: 2,
-    creatorId: 102,
-    createdTime: new Date(),
-    requestReviewId: 202,
-    type: "reject",
-    isRead: true,
-  },
-  {
-    id: 3,
-    creatorId: 103,
-    createdTime: new Date(),
-    requestReviewId: 203,
-    type: "request_review",
-    isRead: false,
-  },
-  {
-    id: 4,
-    creatorId: 104,
-    createdTime: new Date(),
-    requestReviewId: 204,
-    type: "finalized",
-    isRead: false,
-  },
-  {
-    id: 5,
-    creatorId: 105,
-    createdTime: new Date(),
-    requestReviewId: 205,
-    type: "teacher_comment",
-    isRead: false,
-  },
-  {
-    id: 6,
-    creatorId: 106,
-    createdTime: new Date(),
-    requestReviewId: 206,
-    type: "student_comment",
-    isRead: false,
-  },
-];
+// const seedNotificationDTOList: INotification[] = [
+//   {
+//     id: 1,
+//     creatorId: 101,
+//     createdTime: new Date(),
+//     requestReviewId: 201,
+//     type: "approve",
+//     isRead: false,
+//   },
+//   {
+//     id: 2,
+//     creatorId: 102,
+//     createdTime: new Date(),
+//     requestReviewId: 202,
+//     type: "reject",
+//     isRead: true,
+//   },
+//   {
+//     id: 3,
+//     creatorId: 103,
+//     createdTime: new Date(),
+//     requestReviewId: 203,
+//     type: "request_review",
+//     isRead: false,
+//   },
+//   {
+//     id: 4,
+//     creatorId: 104,
+//     createdTime: new Date(),
+//     requestReviewId: 204,
+//     type: "finalized",
+//     isRead: false,
+//   },
+//   {
+//     id: 5,
+//     creatorId: 105,
+//     createdTime: new Date(),
+//     requestReviewId: 205,
+//     type: "teacher_comment",
+//     isRead: false,
+//   },
+//   {
+//     id: 6,
+//     creatorId: 106,
+//     createdTime: new Date(),
+//     requestReviewId: 206,
+//     type: "student_comment",
+//     isRead: false,
+//   },
+// ];
 
 const NotificationsList: React.FC = () => {
-  const userId = useSelector(sGetUserId);
+  const userId = useSelector(sGetUserInfo)?.id;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationDTOList, setNotificationDTOList] = useState<INotification[]>([]);
   const [notificationContentList, setNotificationContentList] = useState<notificationContent[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
+        console.log(userId);
         if (userId !== undefined) {
-          setNotificationDTOList(seedNotificationDTOList);
+          //setNotificationDTOList(seedNotificationDTOList);
+          getNotifications().then((res) => {
+            const notifications = res.notifications as INotification[];
+            console.log(notifications);
 
-          // const notifications = await getNotifications(userId);
-          // setNotificationDTOList(notifications);
-
+            setNotificationDTOList(notifications);
+            console.log("notifications: ", notificationDTOList);
+          }). catch((error : IToastError) => { console.log(error.detail.message)});
         }
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
-    if (userId) {
-      fetchNotifications();
-    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
@@ -114,6 +110,7 @@ const NotificationsList: React.FC = () => {
     ).length;
 
     setUnreadCount(newUnreadCount);
+    console.log(newUnreadCount);
   }, [notificationContentList]);
 
   async function convertNotification(dto: INotification): Promise<notificationContent> {
@@ -126,30 +123,49 @@ const NotificationsList: React.FC = () => {
     };
 
     try {
-      // const creator = await getUserById(dto.creatorId);
-      // const creatorName = creator.name + ' ' + creator.surname;
-      notification.id = dto.id;
+      const creator = await getUserById(dto.createdBy);
+      const senderName = creator.name + ' ' + creator.surname;
 
-      notification.creatorName = "Nguyen Huy Khanh";
+
+      notification.id = dto.id;
+      
+      notification.creatorName = senderName;
+      console.log("dto",dto);
 
       if (dto.type === NotificationTypes.finalized) {
         notification.message = t('finalizedCompositionNotification');
-
-      } else if (dto.type === NotificationTypes.approve) {
+        const courseId = dto.courseId.toString();
+        notification.link = "/class/" + courseId + "/grades";
+      } 
+      else if (dto.type === NotificationTypes.approve) {
         notification.message = t('approveReviewRequesNotification');
-        notification.link = `/grades/request/${dto.requestReviewId}`
-      } else if (dto.type === NotificationTypes.reject) {
+        const requestReview = dto.requestReview.id;  
+        console.log("request Review", requestReview);
+        notification.link = "/grades/request/" + requestReview;
+      } 
+      else if (dto.type === NotificationTypes.reject) {
         notification.message = t('rejectReviewRequesNotification');
-        notification.link = `/grades/request/${dto.requestReviewId}`
-      } else if (dto.type === NotificationTypes.requestReview) {
+        const requestReview = dto.requestReview.id;
+        console.log("reques tReview", requestReview);
+        notification.link = `/grades/request/${requestReview.toString()}`;
+      } 
+      else if (dto.type === NotificationTypes.requestReview) {
         notification.message = t('reviewRequestNotification');
-        notification.link = `/grades/request/${dto.requestReviewId}`
-      } else if (dto.type === NotificationTypes.teacherComment) {
+        const requestReview = dto.requestReview.id;
+        console.log("request Review", requestReview);
+        notification.link = "/grades/request/" +requestReview;
+      } 
+      else if (dto.type === NotificationTypes.teacherComment) {
         notification.message = t('teacherCommentNotification');
-        notification.link = `/grades/request/${dto.requestReviewId}`
-      } else if (dto.type === NotificationTypes.studentComment) {
+        const requestReview = dto.requestReview.id;
+        console.log("request Review", requestReview);
+        notification.link = "/grades/request/" +requestReview;
+      } 
+      else if (dto.type === NotificationTypes.studentComment) {
         notification.message = t('studentCommentNotification');
-        notification.link = `/grades/request/${dto.requestReviewId}`
+        const requestReview = dto.requestReview.id;
+        console.log("request Review", requestReview);
+        notification.link = "/grades/request/" +requestReview;
       }
 
       notification.isRead = dto.isRead;
@@ -174,10 +190,10 @@ const NotificationsList: React.FC = () => {
     };
 
     convertNotifications();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationDTOList]);
 
- 
+
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -191,19 +207,32 @@ const NotificationsList: React.FC = () => {
 
   const viewNotification = async (notification: notificationContent) => {
 
-    if (!notification.isRead) {
-      await markReadNotification(notification.id);
-    }
+    try {
+      if (!notification.isRead) {
+        console.log(notification.id);
+        //await markReadNotification(notification.id);
+        const updatedNotificationList = [...notificationContentList];
 
-    //navigate(notificationLink);
+        const index = updatedNotificationList.findIndex(item => item.id === notification.id);
+        if (index !== -1) {
+          updatedNotificationList[index].isRead = true;
+        }
+
+        setNotificationContentList(updatedNotificationList);
+        navigate(notification.link);
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
     console.log(notification.link);
   }
+
 
   const markAllAsRead = async () => {
     try {
       const updatedList = notificationContentList.map(notification => {
         if (!notification.isRead) {
-          // await markReadNotification(notification.id);
+          markReadNotification(notification.id);
           return { ...notification, isRead: true };
         }
         return notification;
@@ -315,7 +344,7 @@ const NotificationsList: React.FC = () => {
           (
             <Box sx={{
               display: 'flex',
-              alignItems: 'center', 
+              alignItems: 'center',
               justifyContent: 'center',
               width: '250px',
               height: '200px'

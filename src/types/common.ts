@@ -12,11 +12,13 @@ export interface IFulfilledAction<ThunkArg, PromiseResult> {
 
 export interface INotification  {
   id: number;
-  creatorId: number;
+  courseId: number;
   createdTime: Date;
-  requestReviewId: number;
+  requestReview: IRequestReviewReq;
   type: string;
   isRead: boolean;
+  isStudent: boolean;
+  createdBy: number;
 }
 
 export interface IRequestParams {
