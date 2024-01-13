@@ -169,7 +169,7 @@
     "importConfirmation": "Bạn có muốn nhập những dữ liệu này?",
     "import": "Nhập",
     "importStudentsFromFile": "Thêm học sinh từ file",
-    "importGradesFromFile": "Nhập điểm từ file",
+    "importGradesFromFile": "Tải điểm lên",
     "saveChanges": "Lưu thay đổi",
     "updateStudentIdSuccessfully": "Cập nhật mã số sinh viên thành công",
     "userInformation": "Thông tin người dùng",
@@ -215,5 +215,9 @@
     "changeStudentId": "Thay đổi mã số sinh viên",
     "changeStudentIdHelper": "Nhập mã số sinh viên duy nhất ở đây để thay đổi hoặc để trống để bỏ mã số sinh viên",
     "notifications": "Thông báo",
-    "noNotifications": "Không có thông báo nào"
+    "noNotifications": "Không có thông báo nào",
+    "selectFinalizedGradeScaleAlert": "Vui lòng chọn thành phần điểm cuối cùng",
+    "updateGradeBoardSuccessfully": "Cập nhật bảng điểm thành công",
+    "updateGradeScaleSuccessfully": "Cập nhật thành phần điểm thành công",
+    "downloadStudentListTemplate": "Tải file mẫu danh sách học sinh"
 }

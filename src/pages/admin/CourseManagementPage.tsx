@@ -71,188 +71,202 @@ export default function CourseManagementPage() {
         orderBy={orderBy}
         searchText={searchText}
       />
-      <ReactTabulator
-        key={`${isActive}-${orderBy}-${order}-${searchText}`}
-        options={{
-          layout: "fitDataTable",
-          pagination: true, //enable pagination
-          paginationSize: 5,
-          paginationInitialPage: 1,
-          paginationCounter: function (
-            pageSize: number,
-            currentRow: number,
-            _currentPage: number,
-            totalRows: number,
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            _totalPages: number
-          ) {
-            return (
-              "Showing " +
-              currentRow +
-              "-" +
-              Math.min(currentRow + pageSize - 1, totalRows) +
-              " of " +
-              totalRows +
-              " classes total"
-            );
-          },
-          paginationSizeSelector: [5, 10, 25, 50, 100],
-          paginationMode: "remote",
-          ajaxURL:
-            `${import.meta.env.VITE_REACT_APP_BASE_URL}/course/admin/all?` +
-            (isActive !== null ? `isActive=${isActive}&` : "") +
-            (orderBy !== null ? `orderBy=${orderBy}&` : "") +
-            (order !== null ? `order=${order}&` : "") +
-            (searchText !== null && searchText.length > 0
-              ? `search=${searchText}`
-              : ""),
-          ajaxConfig: {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ajaxResponse: function (_url: string, _params: any, response: any) {
-            return {
-              last_page: response.pageCount,
-              last_row: response.itemCount,
-              data: response.data,
-            };
-          },
-        }}
-        events={{
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          rowSelectionChanged: (data: any[]) => {
-            //rows - array of row components for the currently selected rows in order of selection
-            //data - array of data objects for the currently selected rows in order of selection
-            //selected - array of row components that were selected in the last action
-            //deselected - array of row components that were deselected in the last action
-            console.log(data);
-          },
-        }}
-        columns={[
-          {
-            title: "",
-            formatter: "rowSelection",
-            titleFormatter: "rowSelection",
-            hozAlign: "center",
-            vertAlign: "middle",
-            headerHozAlign: "center",
-            headerSort: false,
-          },
-          {
-            title: "#",
-            formatter(cell) {
-              return `${
-                ((cell.getTable().getPage() || 1) - 1) *
-                  cell.getTable().getPageSize() +
-                cell.getRow().getPosition()
-              }`;
-            },
-          },
-          {
-            title: "ID",
-            field: "id",
-            sorter: "number",
-          },
-          {
-            maxWidth: 150,
-            title: t("className"),
-            field: "nameCourse",
-            sorter: "string",
-          },
-          {
-            maxWidth: 200,
-            title: t("topic"),
-            field: "topic",
-            sorter: "string",
-          },
-          { maxWidth: 100, title: t("room"), field: "room", sorter: "string" },
-          {
-            title: t("classCode"),
-            field: "code",
-            sorter: "string",
-          },
-          {
-            title: t("teachers"),
-            sorter: "number",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              return cell
-                .getRow()
-                .getData()
-                .userCourses.filter(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (item: any) =>
-                    item.userRoleCourse === RoleCourseNumber.Teacher ||
-                    item.userRoleCourse === RoleCourseNumber.Coteacher
-                ).length;
-            },
-          },
-          {
-            title: t("students"),
-            sorter: "number",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              return cell
-                .getRow()
-                .getData()
-                .userCourses.filter(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (item: any) =>
-                    item.userRoleCourse === RoleCourseNumber.Student
-                ).length;
-            },
-          },
-          {
-            title: t("gradeReviewRequest"),
-            sorter: "number",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              return cell.getRow().getData().requestReview.length;
-            },
-          },
-          {
-            minWidth: 100,
-            editable: true,
-            title: "Status",
-            field: "isActive",
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            formatter(cell, _formatterParams, _onRendered) {
-              const isActive = cell.getValue();
-              return isActive ? "Active ✔️" : "Inactive ❌";
-            },
-            editor: "select",
-            editorParams: {
-              values: [
-                {
-                  label: "Active ✔️",
-                  value: true,
-                },
-                {
-                  label: "Inactive ❌",
-                  value: false,
-                },
-              ],
-            },
-            cellEdited: function (cell) {
-              setCurrentCell(cell);
-              const isActive = cell.getValue();
-              const id = cell.getRow().getData().id;
-              setConfirmContent(
-                `${t("areYouSureYouWantTo")} ${
-                  isActive ? t("activeClass") : t("inactiveClass")
-                } ${id}?`
+      <div
+        style={{ overflow: "auto", maxHeight: "500px", marginBottom: "32px" }}
+      >
+        <ReactTabulator
+          key={`${isActive}-${orderBy}-${order}-${searchText}`}
+          options={{
+            layout: "fitDataTable",
+            pagination: true, //enable pagination
+            paginationSize: 5,
+            paginationInitialPage: 1,
+            paginationCounter: function (
+              pageSize: number,
+              currentRow: number,
+              _currentPage: number,
+              totalRows: number,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              _totalPages: number
+            ) {
+              return (
+                "Showing " +
+                currentRow +
+                "-" +
+                Math.min(currentRow + pageSize - 1, totalRows) +
+                " of " +
+                totalRows +
+                " classes total"
               );
-              setOpenConfirm(true);
             },
-            width: 30,
-            hozAlign: "center",
-            vertAlign: "middle",
-          },
-        ]}
-      />
+            paginationSizeSelector: [5, 10, 25, 50, 100],
+            paginationMode: "remote",
+            ajaxURL:
+              `${import.meta.env.VITE_REACT_APP_BASE_URL}/course/admin/all?` +
+              (isActive !== null ? `isActive=${isActive}&` : "") +
+              (orderBy !== null ? `orderBy=${orderBy}&` : "") +
+              (order !== null ? `order=${order}&` : "") +
+              (searchText !== null && searchText.length > 0
+                ? `search=${searchText}`
+                : ""),
+            ajaxConfig: {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ajaxResponse: function (_url: string, _params: any, response: any) {
+              return {
+                last_page: response.pageCount,
+                last_row: response.itemCount,
+                data: response.data,
+              };
+            },
+          }}
+          events={{
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            rowSelectionChanged: (data: any[]) => {
+              //rows - array of row components for the currently selected rows in order of selection
+              //data - array of data objects for the currently selected rows in order of selection
+              //selected - array of row components that were selected in the last action
+              //deselected - array of row components that were deselected in the last action
+              console.log(data);
+            },
+          }}
+          columns={[
+            {
+              title: "",
+              formatter: "rowSelection",
+              titleFormatter: "rowSelection",
+              hozAlign: "center",
+              vertAlign: "middle",
+              headerHozAlign: "center",
+              headerSort: false,
+            },
+            {
+              title: "#",
+              formatter(cell) {
+                return `${
+                  ((cell.getTable().getPage() || 1) - 1) *
+                    cell.getTable().getPageSize() +
+                  cell.getRow().getPosition()
+                }`;
+              },
+            },
+            {
+              title: "ID",
+              field: "id",
+              sorter: "number",
+            },
+            {
+              maxWidth: 150,
+              title: t("className"),
+              field: "nameCourse",
+              sorter: "string",
+            },
+            {
+              maxWidth: 200,
+              title: t("topic"),
+              field: "topic",
+              sorter: "string",
+            },
+            {
+              maxWidth: 100,
+              title: t("room"),
+              field: "room",
+              sorter: "string",
+            },
+            {
+              title: t("classCode"),
+              field: "code",
+              sorter: "string",
+            },
+            {
+              title: t("teachers"),
+              sorter: "number",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                return cell
+                  .getRow()
+                  .getData()
+                  .userCourses.filter(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (item: any) =>
+                      item.userRoleCourse === RoleCourseNumber.Teacher ||
+                      item.userRoleCourse === RoleCourseNumber.Coteacher
+                  ).length;
+              },
+            },
+            {
+              title: t("students"),
+              sorter: "number",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                return cell
+                  .getRow()
+                  .getData()
+                  .userCourses.filter(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (item: any) =>
+                      item.userRoleCourse === RoleCourseNumber.Student
+                  ).length;
+              },
+            },
+            {
+              title: t("gradeReviewRequest"),
+              sorter: "number",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                return cell.getRow().getData().requestReview.length;
+              },
+            },
+            {
+              minWidth: 100,
+              editable: true,
+              title: "Status",
+              field: "isActive",
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              formatter(cell, _formatterParams, _onRendered) {
+                const isActive = cell.getValue();
+                return isActive ? "Active ✔️" : "Inactive ❌";
+              },
+              editor: "select",
+              editorParams: {
+                values: [
+                  {
+                    label: "Active ✔️",
+                    value: true,
+                  },
+                  {
+                    label: "Inactive ❌",
+                    value: false,
+                  },
+                ],
+              },
+              cellEdited: function (cell) {
+                setCurrentCell(cell);
+                const isActive = cell.getValue();
+                const id = cell.getRow().getData().id;
+                setConfirmContent(
+                  `${t("areYouSureYouWantTo")} ${
+                    isActive ? t("activeClass") : t("inactiveClass")
+                  } ${id}?`
+                );
+                setOpenConfirm(true);
+              },
+              width: 30,
+              hozAlign: "center",
+              vertAlign: "middle",
+            },
+          ]}
+        />
+        <div
+          style={{
+            height: "32px",
+          }}
+        ></div>
+      </div>
       <ConfirmationDialog
         open={openConfirm}
         content={confirmContent}
