@@ -35,7 +35,7 @@ interface Props {
   grades: any[];
 }
 
-const ImportStudents = ({ colorTheme, courseId, callback }: Props) => {
+const ImportStudents = ({ colorTheme, courseId, callback, grades }: Props) => {
   const { t } = useTranslation("global");
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudents, setSelectedStudent] = useState<RowComponent[]>([]);
@@ -67,6 +67,12 @@ const ImportStudents = ({ colorTheme, courseId, callback }: Props) => {
       console.log(students);
       const gradeData: IGradeBoard[] = [];
       for (const student of students) {
+        const matchStudent = grades.find(
+          (item) => item.studentId === student.studentId
+        );
+        if (matchStudent) {
+          continue;
+        }
         gradeData.push({
           studentCode: student.studentId,
           courseId: courseId,
