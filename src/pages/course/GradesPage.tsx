@@ -222,34 +222,33 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
           if (res_1.gradesBoard.data.length == 0) {
             return;
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grades = res_1.gradesBoard.data.map((e: any) => {
+          grades = res_1.gradesBoard.data
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const temp: any = {
-              studentId: e.codeUser,
-              firstName:
-                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.name : e.name,
-              lastName:
-                e.gradeData.lenght > 0
-                  ? e.gradeData[0].gradeData.surname
-                  : e.surname,
-              average: 0,
-              position:
-                e.gradeData.lenght > 0 ? e.gradeData[0].gradeData.position : 0,
-            };
-            for (let i = 0; i < e.gradeData.length; i++) {
-              temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
-                e.gradeData[i].gradeData.grade;
-              temp[e.gradeData[i].gradeData.gradeScaleId.toString() + "grade"] =
-                e.gradeData[i].gradeData.id;
-            }
-            for (let i_1 = 0; i_1 < gradeScale.length; i_1++) {
-              if (temp[gradeScale[i_1].id.toString()] == undefined) {
-                temp[gradeScale[i_1].id.toString()] = 0;
+            .filter((item: any) => item.gradeData.length > 0)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((e: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const temp: any = {
+                studentId: e.codeUser,
+                firstName: e.gradeData[0].gradeData.name,
+                lastName: e.gradeData[0].gradeData.surname,
+                average: 0,
+                position: e.gradeData[0].gradeData.position,
+              };
+              for (let i = 0; i < e.gradeData.length; i++) {
+                temp[e.gradeData[i].gradeData.gradeScaleId.toString()] =
+                  e.gradeData[i].gradeData.grade;
+                temp[
+                  e.gradeData[i].gradeData.gradeScaleId.toString() + "grade"
+                ] = e.gradeData[i].gradeData.id;
               }
-            }
-            return temp;
-          });
+              for (let i_1 = 0; i_1 < gradeScale.length; i_1++) {
+                if (temp[gradeScale[i_1].id.toString()] == undefined) {
+                  temp[gradeScale[i_1].id.toString()] = 0;
+                }
+              }
+              return temp;
+            });
           const groupedByStudentCode =
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             res_1.gradesBoard.gradesBoardDesist.reduce((acc: any, obj: any) => {
@@ -466,6 +465,9 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
               ids.push(
                 parseInt(rowData[gradeScale[i].id.toString() + "grade"])
               );
+            }
+            if (rowData["0grade"] != undefined) {
+              ids.push(parseInt(rowData["0grade"]));
             }
             console.log("ids", ids);
             deleteMultipleGrades(ids)
@@ -828,7 +830,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             colorTheme={classEntity.course.courseColor}
             courseId={classEntity.courseId}
             callback={() => setRestart(restart + 1)}
-            grades={[]}
+            grades={gradesData}
           />
         </div>
       </Box>
