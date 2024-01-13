@@ -807,6 +807,7 @@ export default function GradesPage({ classEntity, studentIds }: Props) {
             gradeData={gradesData}
             gradeScaleData={gradeScaleData}
             courseId={classEntity.courseId}
+            callback={() => setRestart(restart + 1)}
           />
         </div>
       </Box>

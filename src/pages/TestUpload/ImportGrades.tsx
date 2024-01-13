@@ -67,6 +67,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gradeData: any[];
   courseId: number;
+  callback: () => void;
 }
 
 function combineGradeScale(
@@ -164,10 +165,7 @@ function combineGradeData(
 
     if (matchingGradeObject) {
       // Extract grade value from gradeObject based on the id
-      const grade = parseFloat(
-        matchingGradeObject[gradeBoard.gradeScaleId.toString()] ??
-          gradeBoard.grade
-      );
+      const grade = parseFloat(gradeBoard.grade.toString());
 
       // Create a new IGradeBoard object
       const combinedObject: IGradeBoard = {
@@ -190,6 +188,26 @@ function combineGradeData(
     }
   }
 
+  for (const grade of grades) {
+    if (grade["0grade"] != undefined) {
+      const matchingGradeBoard = gradeBoards.find(
+        (gradeBoard) => gradeBoard.studentCode === grade.studentId
+      );
+      if (matchingGradeBoard) {
+        combinedArray.push({
+          id: grade["0grade"],
+          courseId: matchingGradeBoard.courseId,
+          studentCode: matchingGradeBoard.studentCode,
+          name: matchingGradeBoard.name,
+          surname: matchingGradeBoard.surname,
+          grade: parseFloat(grade["0"].toString()),
+          gradeScaleId: 0,
+          position: matchingGradeBoard.position,
+        });
+      }
+    }
+  }
+
   return combinedArray;
 }
 
@@ -198,6 +216,7 @@ const ImportGrades = ({
   gradeScaleData,
   gradeData,
   courseId,
+  callback,
 }: Props) => {
   const { t } = useTranslation("global");
   const [gradeComponents, setGradeComponents] = useState<IGradeScale[]>([]);
@@ -264,6 +283,8 @@ const ImportGrades = ({
               updateGradeBoard(updatedGradeData)
                 .then(() => {
                   toast.success(t("updateGradeBoardSuccessfully"));
+                  callback();
+                  HideDialog();
                 })
                 .catch((error) => {
                   toast.error(error.detail.message);
