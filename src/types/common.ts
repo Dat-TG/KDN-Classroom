@@ -1,4 +1,4 @@
-import { IRequestReviewReq } from './grade';
+import { IComment, IRequestReviewReq } from './grade';
 import { IPaginationParams } from './pagination';
 
 export interface IFulfilledAction<ThunkArg, PromiseResult> {
@@ -20,6 +20,7 @@ export interface INotification  {
   isRead: boolean;
   isStudent: boolean;
   createdBy: number;
+  commentRequest: IComment;
 }
 
 export interface IRequestParams {
@@ -76,8 +77,8 @@ export interface IResponseError {
 }
 
 export enum NotificationTypes{
-  teacherComment = "teacher_comment",
-  studentComment = "student_comment",
+  teacherComment = "comment_request_teacher",
+  studentComment = "comment_request_student",
   finalized = "finalized",
   requestReview = "request_review",
   approve = "approve",
