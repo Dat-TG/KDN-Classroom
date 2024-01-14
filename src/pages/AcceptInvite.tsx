@@ -17,14 +17,14 @@ export default function AcceptInvite() {
     }
     acceptInviteLink(token!)
       .then((res) => {
-        navigate(`/class/${res.courseCode}`);
+        navigate(`/class/${res.courseCode}/stream`);
         toast.success(t("joinClassSuccessfully"), {
           preventDuplicate: true,
         });
       })
       .catch((err) => {
         if (err.courseCode) {
-          navigate(`/class/${err.courseCode}`);
+          navigate(`/class/${err.courseCode}/stream`);
           toast.error(err.message, {
             preventDuplicate: true,
           });
