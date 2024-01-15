@@ -6,7 +6,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [react()],
-    base: env.VITE_REACT_APP_BASE || "/AdvancedWebFinalProject/",
+    base: env.VITE_REACT_APP_BASE || "./",
     optimizeDeps: {
       exclude: ["js-big-decimal"],
     },
