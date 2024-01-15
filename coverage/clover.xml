@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1705330821121" clover="3.2.0">
+  <project timestamp="1705330821121" name="All files">
+    <metrics statements="25" coveredstatements="11" conditionals="8" coveredconditionals="4" methods="12" coveredmethods="1" elements="45" coveredelements="16" complexity="0" loc="25" ncloc="25" packages="2" files="2" classes="2"/>
+    <package name="components.class_details">
+      <metrics statements="16" coveredstatements="9" conditionals="8" coveredconditionals="4" methods="5" coveredmethods="1"/>
+      <file name="ClassCodeDialog.tsx" path="F:\dev\projects\react\final-project\src\components\class_details\ClassCodeDialog.tsx">
+        <metrics statements="16" coveredstatements="9" conditionals="8" coveredconditionals="4" methods="5" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="118" count="0" type="stmt"/>
+        <line num="119" count="0" type="stmt"/>
+        <line num="141" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="9" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <file name="toast.ts" path="F:\dev\projects\react\final-project\src\utils\toast.ts">
+        <metrics statements="9" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
