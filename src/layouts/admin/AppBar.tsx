@@ -4,21 +4,18 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useLocation, useNavigate } from "react-router-dom";
-//import { AuthContext } from "../../context/AuthContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useTranslation } from "react-i18next";
-import LanguageMenu from "../user/LanguageMenu";
+import { Backdrop, CircularProgress, Divider, Menu } from "@mui/material";
+import AvatarEditorButton from "../../components/AvatarEditorButton";
 import { useSelector } from "react-redux";
 import { sGetUserInfo } from "../../store/user/selector";
-import { Edit } from "@mui/icons-material";
-import { Divider } from "@mui/material";
+import LanguageMenu from "../user/LanguageMenu";
+import NotificationsList from "../user/NotificationsList";
 
 interface Props {
   toggleSidebar: () => void;
@@ -50,7 +47,10 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
   const user = useSelector(sGetUserInfo);
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -79,24 +79,22 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <label htmlFor="avatar-input">
+        <div style={{ position: "relative" }}>
           <IconButton
             edge="end"
             aria-label="account of current user"
             aria-controls={menuId}
             aria-haspopup="true"
-            onClick={() => navigate("/profile")}
+            onClick={() => {
+              setAnchorEl(null);
+              navigate("/profile");
+            }}
             color="inherit"
             sx={{
               mb: 2,
-              position: "relative",
               "&:hover": {
                 backgroundColor: "transparent",
-
-                "& .edit-icon": {
-                  color: "darkblue",
-                  backgroundColor: "#E7E9EB",
-                },
+                position: "relative",
               },
             }}
           >
@@ -106,26 +104,18 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
               src={user?.avatar}
               sx={{
                 border: "2px solid white",
-
                 width: "100px",
                 height: "100px",
               }}
             />
-            <IconButton
-              className="edit-icon"
-              size="small"
-              sx={{
-                position: "absolute",
-                bottom: 3,
-                right: 2,
-                backgroundColor: "white",
-                transition: "background-color 0.3s",
-              }}
-            >
-              <Edit />
-            </IconButton>
           </IconButton>
-        </label>
+
+          <div style={{ position: "absolute", right: -5, bottom: 10 }}>
+            {" "}
+            <AvatarEditorButton callback={setIsLoading} />
+          </div>
+        </div>
+
         <Typography variant="h5" sx={{ color: "black" }}>
           {`${user?.name} ${user?.surname}`}
         </Typography>
@@ -144,6 +134,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
       >
         {t("home")}
       </MenuItem>
+
       <MenuItem
         onClick={() => {
           setAnchorEl(null);
@@ -198,7 +189,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                 component="div"
                 sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
                 onClick={() => {
-                  navigate("/admin/dashboard");
+                  navigate("/");
                 }}
               >
                 {t("classroomAdmin")}
@@ -216,18 +207,7 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
                   },
                 }}
               >
-                <IconButton
-                  sx={{
-                    width: "40px",
-                    height: "40px", // Set button size
-                  }}
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
+                <NotificationsList />
                 <LanguageMenu />
                 <IconButton
                   size="large"
@@ -262,6 +242,61 @@ const PrimaryAppbar: React.FC<Props> = (props: Props) => {
           {renderMenu}
         </>
       )}
+
+      {!props.isLoggedIn && (
+        <>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/landing");
+                }}
+              >
+                {t("classroomUppercase")}
+              </Typography>
+
+              <Box sx={{ flexGrow: 1 }} />
+
+              <div style={{ marginRight: "16px" }}>
+                <LanguageMenu />
+              </div>
+
+              <Link
+                to="/register"
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                  marginRight: "16px",
+                }}
+              >
+                {t("register")}
+              </Link>
+
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                  marginRight: "2px",
+                }}
+              >
+                {t("login")}
+              </Link>
+            </Toolbar>
+          </AppBar>
+        </>
+      )}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+        onClick={() => {}}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 };
