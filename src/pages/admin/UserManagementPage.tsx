@@ -126,7 +126,10 @@ export default function UserManagementPage() {
             },
             paginationSizeSelector: [5, 10, 25, 50, 100],
             paginationMode: "remote",
-            ajaxURL: `${import.meta.env.VITE_REACT_APP_BASE_URL}/user`,
+            ajaxURL: `${
+              import.meta.env.VITE_REACT_APP_BASE_URL ||
+              "https://web-advanced-server-v2.onrender.com/api"
+            }/user`,
             ajaxConfig: {
               method: "GET",
               headers: {

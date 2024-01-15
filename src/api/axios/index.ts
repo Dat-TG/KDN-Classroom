@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { setupInterceptors } from './interceptors';
-export * as userApi from '../user/apiUser';
-export * as logApi from '../log/apiLog';
+import axios from "axios";
+import { setupInterceptors } from "./interceptors";
+export * as userApi from "../user/apiUser";
+export * as logApi from "../log/apiLog";
 
 const AxiosClient = axios.create({
   baseURL:
     !import.meta.env.VITE_USE_MOCK && import.meta.env.VITE_REACT_APP_BASE_URL
       ? import.meta.env.VITE_REACT_APP_BASE_URL
-      : '',
+      : "https://web-advanced-server-v2.onrender.com/api",
   headers: {
-    Accept: 'application/json',
+    Accept: "application/json",
   },
 });
 

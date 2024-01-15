@@ -23,7 +23,10 @@ import SnackbarCloseButton from "./components/SnackbarCloseButton";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider
-    clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}
+    clientId={
+      import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID ||
+      "405078031478-2ijmsuolss017s9egteko00bhro73lpc.apps.googleusercontent.com"
+    }
   >
     <React.StrictMode>
       <CssBaseline>
