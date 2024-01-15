@@ -56,7 +56,9 @@ export default function SocialLogin() {
         ></img> */}
 
         <FacebookLogin
-          appId={import.meta.env.VITE_REACT_APP_FACEBOOK_APP_ID}
+          appId={
+            import.meta.env.VITE_REACT_APP_FACEBOOK_APP_ID || "1143865149911728"
+          }
           onSuccess={onFacebookLoginSuccess}
           onFail={(error) => {
             console.log("Login Failed!", error);

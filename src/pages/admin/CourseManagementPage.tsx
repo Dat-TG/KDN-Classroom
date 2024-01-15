@@ -102,7 +102,10 @@ export default function CourseManagementPage() {
             paginationSizeSelector: [5, 10, 25, 50, 100],
             paginationMode: "remote",
             ajaxURL:
-              `${import.meta.env.VITE_REACT_APP_BASE_URL}/course/admin/all?` +
+              `${
+                import.meta.env.VITE_REACT_APP_BASE_URL ||
+                "https://web-advanced-server-v2.onrender.com/api"
+              }/course/admin/all?` +
               (isActive !== null ? `isActive=${isActive}&` : "") +
               (orderBy !== null ? `orderBy=${orderBy}&` : "") +
               (order !== null ? `order=${order}&` : "") +
