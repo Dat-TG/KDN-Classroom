@@ -184,6 +184,8 @@ Users can edit:
 
 ## Contributing
 
+Evaluation Document: https://drive.google.com/file/d/1COMGZzpJelZ_T7zwBXaw70zbE2L9i8nI/view?usp=sharing
+
 This project was created and is actively maintained by:
 
 - [19120260 Hoàng Trần Thiên Khôi](https://github.com/thienkhoi0604/)
